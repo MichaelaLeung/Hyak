@@ -6,7 +6,6 @@ from matplotlib import pyplot as plt
 import matplotlib
 from matplotlib.collections import LineCollection
 from astropy.io import fits 
-import coronagraph as cg
 from pylab import *
 import matplotlib
 matplotlib.rcParams['text.usetex'] = False
