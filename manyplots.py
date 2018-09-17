@@ -91,7 +91,7 @@ def manyplot(res, lamin, lamax):
 
     obs_wl = np.outer(wl,(1+rv/c))
     import platform
-    if platform.system() == 'Darwin':
+    if platform.system() == 'Jarvis':
         # On a Mac: usetex ok
         mpl.rc('font',**{'family':'serif','serif':['Computer Modern']})
         mpl.rcParams['font.size'] = 25.0
@@ -149,7 +149,10 @@ def manyplot(res, lamin, lamax):
     ax2.set_xlabel(r"Wavelength [$\mu$]")
 
     fig_name = str(lamin) + "to" + str(lamax)
-    fig.savefig(out_plot/fig_name +  ".png")
+    f = open("outputs_many.txt", "a")
+    f.write(str(fig_name) + "\n")
+    fig.savefig(fig_name +  ".png")
+    f.write(str(fig_name) + "\n")
  
 
 if __name__ == '__main__':
