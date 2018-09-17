@@ -62,6 +62,9 @@ def manyplot(res, lamin, lamax):
     sim2.open_outputs()
     earth_wl = sim2.output.rad.lam
     earth_flux = sim2.output.rad.pflux
+    f = open("outputs_many.txt", "a")
+    f.write("end of smart" + "\n")
+
 
     n_phase = 1000
     phases = np.linspace(0,2*np.pi,n_phase)
@@ -90,6 +93,8 @@ def manyplot(res, lamin, lamax):
     rv = rv_sys + rv_orb - rv_bary
 
     obs_wl = np.outer(wl,(1+rv/c))
+    f.write("plot time" + "\n")
+
     import platform
     if platform.system() == 'Jarvis':
         # On a Mac: usetex ok
@@ -149,7 +154,6 @@ def manyplot(res, lamin, lamax):
     ax2.set_xlabel(r"Wavelength [$\mu$]")
 
     fig_name = str(lamin) + "to" + str(lamax)
-    f = open("outputs_many.txt", "a")
     f.write(str(fig_name) + "\n")
     fig.savefig(fig_name +  ".png")
     f.write(str(fig_name) + "\n")
