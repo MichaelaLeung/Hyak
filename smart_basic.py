@@ -135,7 +135,7 @@ def smart_basic(res, lamin, lamax):
     ax2.set_xlabel(r"Wavelength [$\mu$]")
 
     fig_name = str(lamin) + "to" + str(lamax)
-    fig.savefig("plots/fig_name "+  ".png")    
+    fig.savefig("plots/" + fig_name +  ".png")    
  
 
 if __name__ == '__main__':
@@ -162,7 +162,7 @@ if __name__ == '__main__':
         for i in number:
             i = float(i)
             i = i/1000
-            smart_basic(1, i, i+0.1)
+            smart_basic(10, i, i+0.1)
     else:
         # Presumably, on a regular computer: ready to run
         number = range(80,82,1)
