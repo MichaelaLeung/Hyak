@@ -79,7 +79,7 @@ def smart_basic(res, lamin, lamax):
     fig, ax = plt.subplots(figsize=(12,10))
     ax.plot(wl,flux)
     ax.plot(earth_wl, earth_flux)
-    fig.savefig(lamin + ".png")
+    fig.savefig(str(lamin) + ".png")
     
  
 
