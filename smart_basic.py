@@ -17,7 +17,7 @@ def smart_basic(res, lamin, lamax):
     earth_infile = "earth_avg.pt"
     
     HERE = os.path.dirname(os.path.abspath(__file__))
-    place = os.path.join(HERE, "smart_basic2")
+    place = os.path.join(HERE, "smart_basic3")
 
     try:
         os.mkdir(place)
@@ -135,7 +135,7 @@ def smart_basic(res, lamin, lamax):
     ax2.set_xlabel(r"Wavelength [$\mu$]")
 
     fig_name = str(lamin) + "to" + str(lamax)
-    fig.savefig(fig_name +  ".png")    
+    fig.savefig(/plots/fig_name +  ".png")    
  
 
 if __name__ == '__main__':
@@ -158,11 +158,11 @@ if __name__ == '__main__':
                                rm_after_submit = True)
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
-        number = range(500,2000, 1)
+        number = range(500,600, 1)
         for i in number:
             i = float(i)
             i = i/1000
-            smart_basic(0.01, i, i+0.1)
+            smart_basic(1, i, i+0.1)
     else:
         # Presumably, on a regular computer: ready to run
         number = range(80,82,1)
