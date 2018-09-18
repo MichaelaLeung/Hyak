@@ -17,7 +17,7 @@ def manyplot(res, lamin, lamax):
     earth_infile = "earth_avg.pt"
     
     HERE = os.path.dirname(os.path.abspath(__file__))
-    place = os.path.join(HERE, "manyplot")
+    place = os.path.join(HERE, "manyplot_new")
 
     try:
         os.mkdir(place)
@@ -179,14 +179,19 @@ if __name__ == '__main__':
                                rm_after_submit = True)
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
-        number = range(50,200,1)
+        number = range(500,2000,5)
         for i in number:
             i = float(i)
-            i = i/100
+            i = i/1000
             manyplot(0.01, i, i+0.1)
     else:
         # Presumably, on a regular computer: ready to run
-        manyplot(1, 0.5,0.51)
+        number = range(40,45,1)
+        for i in number:
+            i = float(i)
+            i = i/100
+            manyplot(1, i, i+0.1)
+
 
 
 
