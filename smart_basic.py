@@ -95,7 +95,6 @@ def smart_basic(res, lamin, lamax):
     rv = rv_sys + rv_orb - rv_bary
 
     obs_wl = np.outer(wl,(1+rv/c))
-    f.write("plot time" + "\n")
 
     # Create figure
     fig, ax = plt.subplots(figsize=(12,10))
@@ -136,10 +135,7 @@ def smart_basic(res, lamin, lamax):
     ax2.set_xlabel(r"Wavelength [$\mu$]")
 
     fig_name = str(lamin) + "to" + str(lamax)
-    f.write(str(fig_name) + "\n")
-    fig.savefig(fig_name +  ".png")
-    f.write(str(fig_name) + "\n")
-    
+    fig.savefig(fig_name +  ".png")    
  
 
 if __name__ == '__main__':
