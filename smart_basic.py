@@ -83,7 +83,7 @@ def smart_basic(res, lamin, lamax):
     sma = 7500000
     c = 299792.458
     
-    fluxes = np.outer(flux2, np.ones(n_phase)) 
+    fluxes = np.outer(flux, np.ones(n_phase)) 
     temp = np.arccos(-np.sin(inclination)*np.cos(phases))
     phase_function = ((np.sin(temp)+(np.pi-temp)*(np.cos(temp)))/(np.pi)) 
 
