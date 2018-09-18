@@ -76,8 +76,10 @@ def smart_basic(res, lamin, lamax):
         mpl.rc('text', usetex=False)
         plt.switch_backend('agg')
 
-  #  fig, ax = plt.subplots(figsize=(12,10))
- #   plt.plot(wl,flux)
+    fig, ax = plt.subplots(figsize=(12,10))
+    ax.plot(wl,flux)
+    ax.plot(earth_wl, earth_flux)
+    fig.savefig(lamin + ".png")
     
  
 
@@ -105,7 +107,7 @@ if __name__ == '__main__':
         for i in number:
             i = float(i)
             i = i/100
-            smart_basic(1, i, i+0.1)
+            smart_basic(10, i, i+0.1)
     else:
         # Presumably, on a regular computer: ready to run
         number = range(80,82,1)
