@@ -139,7 +139,7 @@ def outputs(lamin, lamax):
     fouri = interval(wl,fourier(flux))
     label = str(lamin) + "to" + str(lamax)
     out = label, "fpfs", np.median(adj_flux), "line cutoff", high, "integral", adds, "together", (np.median(adj_flux)*high*adds)
-    f = open("outputs3.txt", "a")
+    f = open("outputs_small.txt", "a")
     f.write(str(out) + "\n")
     
 
@@ -163,11 +163,15 @@ if __name__ == '__main__':
                                rm_after_submit = True)
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
-        number = range(50,250,1)
+        number = range(50,250, 2)
         for i in number:
             i = float(i)
             i = i/100
             outputs(i, i+0.1)
     else:
         # Presumably, on a regular computer: ready to run
-        outputs(0.5,0.51)
+       number = range(50,250, 2)
+       for i in number:
+            i = float(i)
+            i = i/100
+            outputs(i, i+0.1)
