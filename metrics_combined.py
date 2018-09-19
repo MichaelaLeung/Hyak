@@ -4,7 +4,7 @@ from matplotlib import pyplot as plt
 import matplotlib
 from matplotlib.collections import LineCollection
 from astropy.io import fits 
-import matplotlib
+import matplotlib as mpl
 import sys, os
 import datetime
 matplotlib.rcParams['text.usetex'] = False
