@@ -81,15 +81,19 @@ def clouds(res, cirrus, strato):
 
     adj_flux = flux/sflux * ((sim.smartin.radius / sim.smartin.r_AU) **2 )
 
+    return(wl, adj_flux)
+
+
+
+def plotting():
+    cirrus_wl, cirrus_flux = clouds(0.01, 1, 0)
+    strato_wl, strato_flux = clouds(0.01, 0, 1)
+    avg_wl = (cirrus_wl + strato_wl)/2
+    avg_flux = (cirrus_flux + strato_flux)/2
     fig, ax = plt.subplots(figsize = (30, 10))
-    ax.plot(wl, adj_flux)
-    name = sim.tag
-    ax.set_title(name)
-    fig.savefig(name + ".png", bbox_inches = 'tight')
-
-
-
-
+    ax.plot(avg_wl, avg_flux)
+    fig.savefig("avg_clougs.png", bbox_inches = 'tight')
+    
 if __name__ == '__main__':
 
     import platform
@@ -103,7 +107,7 @@ if __name__ == '__main__':
                                workdir = "",
                                nodes = 1,
                                mem = "500G",
-                               walltime = "0",
+                               walltime = "5:00:00",
                                ntasks = 28,
                                account = "vsm",
                                submit = True,
