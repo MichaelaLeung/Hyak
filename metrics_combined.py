@@ -186,6 +186,18 @@ def outputs(lamin, lamax):
 
     obs_wl = np.outer(wl,(1+rv/c))
 
+    import platform
+    if platform.system() == 'Jarvis':
+        # On a Mac: usetex ok
+        mpl.rc('font',**{'family':'serif','serif':['Computer Modern']})
+        mpl.rcParams['font.size'] = 25.0
+        mpl.rc('text', usetex=True)
+    elif platform.node().startswith("n"):
+        # On hyak: usetex not ok, must change backend to 'agg'
+        mpl.rc('font',**{'family':'serif','serif':['Computer Modern']})
+        mpl.rcParams['font.size'] = 25.0
+        mpl.rc('text', usetex=False)
+        plt.switch_backend('agg')
     # Create figure
     fig, ax = plt.subplots(figsize=(12,10))
     ax.set_ylabel("Phase Angle")
