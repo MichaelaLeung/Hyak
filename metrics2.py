@@ -17,7 +17,7 @@ def smart_basic(res, lamin, lamax):
     earth_infile = "earth_avg.pt"
     
     HERE = os.path.dirname(os.path.abspath(__file__))
-    place = os.path.join(HERE, "metrics")
+    place = os.path.join(HERE, "plots_folder")
 
     try:
         os.mkdir(place)
@@ -146,7 +146,7 @@ if __name__ == '__main__':
         # On the mox login node: submit job
         runfile = __file__
         smart.utils.write_slurm_script_python(runfile,
-                               name="metrics",
+                               name="plots",
                                subname="submit.csh",
                                workdir = "",
                                nodes = 1,
