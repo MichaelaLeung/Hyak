@@ -158,11 +158,11 @@ if __name__ == '__main__':
                                rm_after_submit = True)
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
-        number = range(500,1000, 5)
+        number = range(50,250, 1)
         for i in number:
             i = float(i)
-            i = i/1000
-            smart_basic(0.1, i, i+0.05)
+            i = i/100
+            smart_basic(0.1, i, i+0.1)
     else:
         # Presumably, on a regular computer: ready to run
         number = range(500,1000, 5)
