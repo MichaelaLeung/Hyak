@@ -162,16 +162,14 @@ if __name__ == '__main__':
         for i in number:
             i = float(i)
             i = i/1000
-            smart_basic(0.01, i, i+0.1)
+            smart_basic(0.1, i, i+0.05)
     else:
         # Presumably, on a regular computer: ready to run
-        number = range(80,82,1)
+        number = range(500,1000, 5)
         for i in number:
             i = float(i)
-            i = i/100
-            smart_basic(1, i, i+0.1)
-
-
+            i = i/1000
+            smart_basic(10, i, i+0.05)
 
 
 
