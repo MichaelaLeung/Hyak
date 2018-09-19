@@ -17,7 +17,7 @@ def smart_basic(res, lamin, lamax):
     earth_infile = "earth_avg.pt"
     
     HERE = os.path.dirname(os.path.abspath(__file__))
-    place = os.path.join(HERE, "smart_basic3")
+    place = os.path.join(HERE, "smart_basic4")
 
     try:
         os.mkdir(place)
