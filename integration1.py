@@ -30,6 +30,7 @@ def integration_metric(lamin, lamax, mode):
     sim.set_run_in_place(place) 
     sim.set_executables_automatically()
     sim.set_planet_proxima_b()
+    sim.set_star_proxima()
     sim.load_atmosphere_from_pt(infile, addn2 = False)
     sim.smartin.FWHM = res
     sim.smartin.sample_res = res
@@ -48,8 +49,8 @@ def integration_metric(lamin, lamax, mode):
     sim3.set_run_in_place(place)
     
     sim3.set_executables_automatically()
-    sim3.set_planet_proxima_b()
-    sim3.load_atmosphere_from_pt(infile, addn2 = False)
+    sim.set_planet_proxima_b()
+    sim.set_star_proxima()    sim3.load_atmosphere_from_pt(infile, addn2 = False)
     sim3.smartin.FWHM = res2
     sim3.smartin.sample_res = res2
     sim3.smartin.minwn = 1e4/lamax
@@ -64,11 +65,16 @@ def integration_metric(lamin, lamax, mode):
     sim.open_outputs()
     wl = sim.output.rad.lam
     flux = sim.output.rad.pflux
+    sflux = sim.output.rad.sflux
 
+    flux = flux/sflux
 
     sim3.open_outputs()
     wl_low = sim3.output.rad.lam
     flux_low = sim3.output.rad.pflux
+    sflux_low = sim3.output.rad.sflux
+
+    flux_low = flux_low/sflux_low
 
     long_flux = []
     for i in flux_low:
