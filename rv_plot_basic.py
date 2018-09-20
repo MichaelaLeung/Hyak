@@ -131,6 +131,7 @@ def smart_basic(res, lamin, lamax):
     # Create colorbar
     cbar = fig.colorbar(line)
     cbar.set_label(r"Flux [W/m$^2$/$\mu$m]", rotation = 270, labelpad = 25)
+    ax.set_xlim(lamin-0.05, lamax-0.05)
 
     ax2 = ax.twinx()
     ax2.plot(earth_wl, earth_flux, 'r')
