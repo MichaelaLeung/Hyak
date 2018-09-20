@@ -141,9 +141,13 @@ if __name__ == '__main__':
         integration_metric(0.61,0.65,0)
         integration_metric(0.66,0.7,0)
         integration_metric(0.74, 0.78,0)
+        integration_metric(1.25, 1.29,0)
+
         integration_metric(0.61,0.65,1)
         integration_metric(0.66,0.7,1)
         integration_metric(0.74, 0.78,1)
+        integration_metric(1.25, 1.29,1)
+
     else:
         # Presumably, on a regular computer: ready to run
         integration_metric(0.62,0.64,0)

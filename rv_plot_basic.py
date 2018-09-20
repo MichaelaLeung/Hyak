@@ -129,8 +129,8 @@ def smart_basic(res, lamin, lamax):
     
     # Set the axis ranges
     ax.set_ylim(min(phases), max(phases))
-    lower = lamin+0.05
-    upper = lamax-0.05
+    lower = lamin+0.02
+    upper = lamax-0.02
     ax.set_xlim(upper, lower)
 
 
