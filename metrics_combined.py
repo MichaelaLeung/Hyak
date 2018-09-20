@@ -142,8 +142,8 @@ def high_pass(flux, flux_low):
         x = x+25
         
         
-    while z < len(mixed[:-25]): 
-        diff = abs(mixed[z] - flattened[z])
+    while z < len(mixed): 
+        diff = abs(mixed[z] - flux_low)
         out.append(diff)
         z = z+1
         
