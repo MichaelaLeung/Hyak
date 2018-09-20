@@ -101,6 +101,8 @@ def smart_basic(res, lamin, lamax):
     # Create figure
     fig, ax = plt.subplots(figsize=(12,10))
     ax.set_ylabel("Phase Angle")
+    ax.set_xlim(lamin+0.005, lamax-0.005)
+
 
     # Create a continuous norm to map from flux to colors
     norm = plt.Normalize(np.min(fluxes2), np.max(fluxes2))
@@ -131,7 +133,6 @@ def smart_basic(res, lamin, lamax):
     # Create colorbar
     cbar = fig.colorbar(line)
     cbar.set_label(r"Flux [W/m$^2$/$\mu$m]", rotation = 270, labelpad = 25)
-    ax.set_xlim(lamin-0.05, lamax-0.05)
 
     ax2 = ax.twinx()
     ax2.plot(earth_wl, earth_flux, 'r')

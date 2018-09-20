@@ -97,10 +97,10 @@ if __name__ == '__main__':
 
     else:
         # Presumably, on a regular computer: ready to run
-        smart_basic(0.01, 0.75, 0.77)
-        smart_basic(0.01, 1.26, 1.28)
-        smart_basic(0.01, 0.61, 0.65)
-        smart_basic(0.01, 0.66, 0.70)
+        smart_basic(0.01, 1.4, 1.8)
+        smart_basic(0.01, 0.7, 0.74)
+        smart_basic(0.01, 0.86, 0.90)
+        smart_basic(0.01, 2.1, 2.5)
 
 
 
