@@ -23,11 +23,13 @@ def run_smart(lamin, lamax):
 
     sim = smart.interface.Smart(tag = "prox")
     infile = "profile_Earth_proxb_.pt_filtered"
-    res = 1/(100*lamin)
+    res = 1/(1000*lamin)
     low_res = 1*lamin
     print(res, low_res)
     sim.set_run_in_place(place) 
     sim.set_executables_automatically()
+    sim.set_planet_proxima_b()
+    sim.set_star_proxima()
     sim.load_atmosphere_from_pt(infile, addn2 = False)
     sim.smartin.FWHM = res
     sim.smartin.sample_res = res
@@ -44,6 +46,8 @@ def run_smart(lamin, lamax):
 
     sim2.set_run_in_place(place) 
     sim2.set_executables_automatically()
+    sim2.set_planet_proxima_b()
+    sim2.set_star_proxima()
     sim2.load_atmosphere_from_pt(infile, addn2 = False)
     sim2.smartin.FWHM = low_res
     sim2.smartin.sample_res = low_res
@@ -61,12 +65,16 @@ def run_smart(lamin, lamax):
     flux = sim.output.rad.pflux
     sflux = sim.output.rad.sflux
     adj_flux = flux/sflux * ((sim.smartin.radius / (sim.smartin.r_AU * 149598000)) **2 )
+    flux = flux/sflux
 
     sim2.open_outputs()
     wl_low = sim2.output.rad.lam
     flux_low = sim2.output.rad.pflux
-    sim3 = smart.interface.Smart(tag = "earth")
+    sflux_low = sim2.output.rad.sflux
+    flux_low = flux_low/sflux_low
 
+
+    sim3 = smart.interface.Smart(tag = "earth")
 
     sim3.set_run_in_place(place) 
     sim3.set_executables_automatically()
@@ -83,11 +91,11 @@ def run_smart(lamin, lamax):
     sim3.write_smart(write_file = True)
     sim3.run_smart()
 
-
-
     sim3.open_outputs()
     earth_wl = sim3.output.rad.lam
     earth_flux = sim3.output.rad.pflux
+    sflux_earth = sim3.output.rad.sflux
+    earth_flux = earth_flux/sflux_earth
 
     return (wl, flux, adj_flux, wl_low, flux_low, earth_wl, earth_flux)
  
@@ -124,24 +132,14 @@ def high_pass(flux, flux_low):
         while j < 100: 
             long_flux.append(i)
             j = j+1
-    print(len(long_flux))
-        
+            
     while k < len(flux):
         temp = (flux[k] + long_flux[k]) / 2
         mixed.append(temp)
         k = k+1
     
     print(len(mixed))
-        
-    while x < len(flux)- 25: 
-        avg = np.mean(flux[x:x+25])
-        y = 0
-        while y < 25:
-            flattened.append(avg)
-            y = y+1
-        x = x+25
-        
-        
+       
     while z < len(mixed): 
         diff = abs(mixed[z] - flux_low[z])
         out.append(diff)
@@ -149,11 +147,6 @@ def high_pass(flux, flux_low):
         
     return(out)
 
-
-def fourier(flux):
-    from scipy.fftpack import fft, rfft, fftfreq
-    yf = rfft(flux)
-    return(yf)
 
 
 def outputs(lamin, lamax):
@@ -163,7 +156,7 @@ def outputs(lamin, lamax):
     fouri = interval(wl,fourier(flux))
     label = str(lamin) + "to" + str(lamax)
     out = label, "fpfs", np.median(adj_flux), "line cutoff", high, "integral", adds, "together", (np.median(adj_flux)*high*adds)
-    f = open("outputs_small2.txt", "a")
+    f = open("outputs_small3.txt", "a")
     f.write(str(out) + "\n")
 
     n_phase = 1000
@@ -231,7 +224,7 @@ def outputs(lamin, lamax):
 
     # Create colorbar
     cbar = fig.colorbar(line)
-    cbar.set_label(r"Flux [W/m$^2$/$\mu$m]", rotation = 270, labelpad = 25)
+    cbar.set_label(r"Reflectance", rotation = 270, labelpad = 25)
 
     ax2 = ax.twinx()
     ax2.plot(earth_wl, earth_flux, 'r')
@@ -260,11 +253,11 @@ if __name__ == '__main__':
                                rm_after_submit = True)
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
-        number = range(50,200, 5)
+        number = range(50,200, 2)
         for i in number:
             i = float(i)
             i = i/100
-            outputs(i, i+0.05)
+            outputs(i, i+0.02)
     else:
         # Presumably, on a regular computer: ready to run
        number = range(50,250, 5)

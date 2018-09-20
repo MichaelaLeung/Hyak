@@ -9,11 +9,11 @@ import sys, os
 import datetime
 matplotlib.rcParams['text.usetex'] = False
 
-def smart_basic(res, lamin, lamax):
+def smart_basic(res, lamin, lamax, title):
     res = 1/(10*lamin)
-    sim = smart.interface.Smart(tag = "prox")
+    sim = smart.interface.Smart(tag = "prox_higho2")
     sim2 = smart.interface.Smart(tag = "earth")
-    infile = "profile_Earth_proxb_.pt_filtered"
+    infile = "10bar_O2_dry.pt_filtered.pt"
     earth_infile = "earth_avg.pt"
     
     HERE = os.path.dirname(os.path.abspath(__file__))
@@ -68,8 +68,9 @@ def smart_basic(res, lamin, lamax):
     ax.plot(wl, flux)
     ax.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength (microns")
+    ax.set_title(title)
     fig_name = str(lamin) + "to" + str(lamax)
-    fig.savefig(fig_name +  ".png", bbox_inches = "tight")    
+    fig.savefig("highO2" + fig_name +  ".png", bbox_inches = "tight")    
  
 
 if __name__ == '__main__':
@@ -97,10 +98,18 @@ if __name__ == '__main__':
 
     else:
         # Presumably, on a regular computer: ready to run
-        smart_basic(0.01, 1.4, 1.8)
-        smart_basic(0.01, 0.7, 0.74)
-        smart_basic(0.01, 0.86, 0.90)
-        smart_basic(0.01, 2.1, 2.5)
+ #       smart_basic(0.01, 1.5, 1.7, "1.6 $\mu$ Carbon Dioxide")
+ #       smart_basic(0.01, 0.7, 0.74, "0.72 $\mu$ Methane")
+ #       smart_basic(0.01, 0.86, 0.90, "0.88 $\mu$ Methane")
+ #       smart_basic(0.01, 2.2, 2.4, "2.3 $\mu$ Carbon Monoxide")
+ #       smart_basic(0.01, 4.5, 4.7, "4.6 $\mu$ Carbon Monoxide")
+
+  #      smart_basic(0.01, 1.4, 1.8, "1.6 $\mu$ Carbon Dioxide")
+        smart_basic(0.01, 0.74, 0.78, "10 bar O2 0.76 $\mu$ Oxygen")
+        smart_basic(0.01, 0.61, 0.65, "10 bar O2 0.63$\mu$ Oxygen")
+        smart_basic(0.01, 0.66, 0.7, "10 bar O2 0.68 $\mu$ Oxygen")
+
+
 
 
 

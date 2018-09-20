@@ -59,10 +59,14 @@ def smart_basic(res, lamin, lamax):
     sim.open_outputs()
     wl = sim.output.rad.lam
     flux = sim.output.rad.pflux
+    sflux = sim.output.rad.sflux
+    flux = flux/sflux
 
     sim2.open_outputs()
     earth_wl = sim2.output.rad.lam
     earth_flux = sim2.output.rad.pflux
+    sflux_earth = sim2.output.rad.sflux
+    earth_flux = earth_flux/sflux_earth
 
 
     import platform
@@ -136,7 +140,7 @@ def smart_basic(res, lamin, lamax):
 
     # Create colorbar
     cbar = fig.colorbar(line)
-    cbar.set_label(r"Flux [W/m$^2$/$\mu$m]", rotation = 270, labelpad = 25)
+    cbar.set_label(r"Reflectance", rotation = 270, labelpad = 25)
 
     ax2 = ax.twinx()
     ax2.plot(earth_wl, earth_flux, 'r')
