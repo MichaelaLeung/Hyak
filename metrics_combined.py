@@ -153,7 +153,6 @@ def outputs(lamin, lamax):
     wl, flux, adj_flux, wl_low, flux_low, earth_wl, earth_flux = run_smart(lamin, lamax)
     adds = max(abs(integrate.trapz((high_pass(flux, flux_low), wl))))
     high = interval(wl, (high_pass(flux, flux_low)))
-    fouri = interval(wl,fourier(flux))
     label = str(lamin) + "to" + str(lamax)
     out = label, "fpfs", np.median(adj_flux), "line cutoff", high, "integral", adds, "together", (np.median(adj_flux)*high*adds)
     f = open("outputs_small3.txt", "a")
