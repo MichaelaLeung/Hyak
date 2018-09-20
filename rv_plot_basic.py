@@ -129,9 +129,9 @@ def smart_basic(res, lamin, lamax):
     
     # Set the axis ranges
     ax.set_ylim(min(phases), max(phases))
-    lower = lamin+0.005
+    lower = lamin+0.05
     upper = lamax-0.05
-    ax.set_xlim(lower, upper)
+    ax.set_xlim(upper, lower)
 
 
     # Create colorbar
