@@ -227,9 +227,7 @@ def outputs(lamin, lamax):
     
     # Set the axis ranges
     ax.set_ylim(min(phases), max(phases))
-    lower = lamin+0.05
-    upper = lamax+0.05
-    ax.set_xlim(lower,upper)
+    
 
     # Create colorbar
     cbar = fig.colorbar(line)
@@ -240,7 +238,7 @@ def outputs(lamin, lamax):
     ax2.set_xlabel(r"Wavelength [$\mu$]")
 
     fig_name = str(lamin) + "to" + str(lamax)
-    fig.savefig("oxygen_test"+ fig_name +  ".png") 
+    fig.savefig("plots/" + fig_name +  ".png") 
 
 if __name__ == '__main__':
 
