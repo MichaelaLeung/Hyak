@@ -17,7 +17,7 @@ def smart_basic(res, lamin, lamax):
     earth_infile = "earth_avg.pt"
     
     HERE = os.path.dirname(os.path.abspath(__file__))
-    place = os.path.join(HERE, "smart_basic4")
+    place = os.path.join(HERE, "oxygen_outplot")
 
     try:
         os.mkdir(place)
@@ -28,7 +28,7 @@ def smart_basic(res, lamin, lamax):
         
     sim.set_executables_automatically()
     sim.load_atmosphere_from_pt(infile, addn2 = False)
-    sim.set_planet_proximab()
+    sim.set_planet_proxima_b()
     sim.set_star_proxima()
     sim.smartin.FWHM = res
     sim.smartin.sample_res = res
