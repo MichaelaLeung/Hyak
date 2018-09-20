@@ -24,7 +24,7 @@ def run_smart(lamin, lamax):
     sim = smart.interface.Smart(tag = "prox")
     infile = "profile_Earth_proxb_.pt_filtered"
     res = 1/(100*lamin)
-    low_res = 10*lamin
+    low_res = 1*lamin
     print(res, low_res)
     sim.set_run_in_place(place) 
     sim.set_executables_automatically()
@@ -163,7 +163,7 @@ def outputs(lamin, lamax):
     fouri = interval(wl,fourier(flux))
     label = str(lamin) + "to" + str(lamax)
     out = label, "fpfs", np.median(adj_flux), "line cutoff", high, "integral", adds, "together", (np.median(adj_flux)*high*adds)
-    f = open("outputs_small.txt", "a")
+    f = open("outputs_small2.txt", "a")
     f.write(str(out) + "\n")
 
     n_phase = 1000
@@ -260,7 +260,7 @@ if __name__ == '__main__':
                                rm_after_submit = True)
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
-        number = range(50,250, 5)
+        number = range(50,200, 5)
         for i in number:
             i = float(i)
             i = i/100
