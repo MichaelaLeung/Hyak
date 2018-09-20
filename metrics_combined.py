@@ -143,7 +143,7 @@ def high_pass(flux, flux_low):
         
         
     while z < len(mixed): 
-        diff = abs(mixed[z] - flux_low)
+        diff = abs(mixed[z] - flux_low[z])
         out.append(diff)
         z = z+1
         
