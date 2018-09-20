@@ -143,7 +143,7 @@ def smart_basic(res, lamin, lamax):
     ax2.set_xlabel(r"Wavelength [$\mu$]")
 
     fig_name = str(lamax) + "to" + str(lamin)
-    fig.savefig(fig_name +  ".png")    
+    fig.savefig("o2test" + fig_name +  ".png")    
  
 
 if __name__ == '__main__':
