@@ -10,7 +10,7 @@ import datetime
 matplotlib.rcParams['text.usetex'] = False
 
 def smart_basic(res, lamin, lamax):
-
+    res = 1/(10*lamin)
     sim = smart.interface.Smart(tag = "prox")
     sim2 = smart.interface.Smart(tag = "earth")
     infile = "profile_Earth_proxb_.pt_filtered"
@@ -28,6 +28,8 @@ def smart_basic(res, lamin, lamax):
         
     sim.set_executables_automatically()
     sim.load_atmosphere_from_pt(infile, addn2 = False)
+    sim.set_planet_proximab()
+    sim.set_star_proxima()
     sim.smartin.FWHM = res
     sim.smartin.sample_res = res
     sim.smartin.minwn = 1e4/lamax
@@ -158,11 +160,9 @@ if __name__ == '__main__':
                                rm_after_submit = True)
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
-        number = range(500,2500, 1)
-        for i in number:
-            i = float(i)
-            i = i/1000
-            smart_basic(0.01, i, i+0.1)
+        smart_basic(0.01, 0.75, 0.77)
+        smart_basic(0.01, 1.26, 1.28)
+
     else:
         # Presumably, on a regular computer: ready to run
         number = range(80,82,1)
