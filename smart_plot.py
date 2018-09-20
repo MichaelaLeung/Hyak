@@ -13,7 +13,7 @@ def smart_basic(res, lamin, lamax):
     res = 1/(10*lamin)
     sim = smart.interface.Smart(tag = "prox")
     sim2 = smart.interface.Smart(tag = "earth")
-    infile = "10bar_O2_dry.pt_filtered.pt"
+    infile = "profile_Earth_proxb_.pt_filtered"
     earth_infile = "earth_avg.pt"
     
     HERE = os.path.dirname(os.path.abspath(__file__))
@@ -69,7 +69,7 @@ def smart_basic(res, lamin, lamax):
     ax.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength (microns")
     fig_name = str(lamin) + "to" + str(lamax)
-    fig.savefig("higho2" + fig_name +  ".png", bbox_inches = "tight")    
+    fig.savefig(fig_name +  ".png", bbox_inches = "tight")    
  
 
 if __name__ == '__main__':

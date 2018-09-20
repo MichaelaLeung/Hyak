@@ -138,7 +138,7 @@ def smart_basic(res, lamin, lamax):
     ax2.plot(earth_wl, earth_flux, 'r')
     ax2.set_xlabel(r"Wavelength [$\mu$]")
 
-    fig_name = str(lamin) + "to" + str(lamax)
+    fig_name = str(lamax) + "to" + str(lamin)
     fig.savefig(fig_name +  ".png")    
  
 
