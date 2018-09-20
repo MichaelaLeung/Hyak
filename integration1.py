@@ -50,7 +50,8 @@ def integration_metric(lamin, lamax, mode):
     
     sim3.set_executables_automatically()
     sim.set_planet_proxima_b()
-    sim.set_star_proxima()    sim3.load_atmosphere_from_pt(infile, addn2 = False)
+    sim.set_star_proxima()
+    sim3.load_atmosphere_from_pt(infile, addn2 = False)
     sim3.smartin.FWHM = res2
     sim3.smartin.sample_res = res2
     sim3.smartin.minwn = 1e4/lamax
@@ -113,7 +114,7 @@ def integration_metric(lamin, lamax, mode):
     import scipy.integrate as integrate
     adds = integrate.trapz(out, wl[:-25])
     name = str(lamin) + "to" + str(lamax), str(info), str(abs(adds))
-    f = open("integrations.txt", "a")
+    f = open("integrations2.txt", "a")
     f.write(str(name) + "\n")
 
 
