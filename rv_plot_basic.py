@@ -10,7 +10,7 @@ import datetime
 matplotlib.rcParams['text.usetex'] = False
 
 def smart_basic(res, lamin, lamax):
-    res = (10*lamin)
+    res = 1/(10*lamin)
     sim = smart.interface.Smart(tag = "prox")
     sim2 = smart.interface.Smart(tag = "earth")
     infile = "profile_Earth_proxb_.pt_filtered"
@@ -103,7 +103,7 @@ def smart_basic(res, lamin, lamax):
     obs_wl = np.outer(wl,(1+rv/c))
 
     # Create figure
-    fig, ax = plt.subplots(figsize=(12,10))
+    fig, ax = plt.subplots(figsize=(14,10))
     ax.set_ylabel("Phase Angle")
     ax.set_xlim(lamin+0.005, lamax-0.005)
 
@@ -139,7 +139,7 @@ def smart_basic(res, lamin, lamax):
 
 
     # Create colorbar
-    cbar = fig.colorbar(line, pad = 25)
+    cbar = fig.colorbar(line, pad = .15)
     cbar.set_label(r"Reflectance", rotation = 270, labelpad = 35)
 
     ax2 = ax.twinx()

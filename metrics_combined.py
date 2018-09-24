@@ -23,7 +23,7 @@ def run_smart(lamin, lamax):
 
     sim = smart.interface.Smart(tag = "prox")
     infile = "profile_Earth_proxb_.pt_filtered"
-    res = 1/(1000*lamin)
+    res = 1/(100000*lamin)
     low_res = 1*lamin
     print(res, low_res)
     sim.set_run_in_place(place) 
@@ -150,12 +150,12 @@ def high_pass(flux, flux_low):
 
 
 def outputs(lamin, lamax):
-    wl, flux, adj_flux, wl_low, flux_low, earth_wl, earth_flux = run_smart(lamin, lamax)
+    wl, flux, adj_flux, wl_low, flux_low, earth_wl, earth_flux = run_smart(lamin, lamax) #wl, flux, adj_flux, wl_low, flux_low, earth_wl, earth_flux
     adds = max(abs(integrate.trapz((high_pass(flux, flux_low), wl))))
     high = interval(wl, (high_pass(flux, flux_low)))
     label = str(lamin) + "to" + str(lamax)
     out = label, "fpfs", np.median(adj_flux), "line cutoff", high, "integral", adds, "together", (np.median(adj_flux)*high*adds)
-    f = open("outputs_small3.txt", "a")
+    f = open("outputs_small4.txt", "a")
     f.write(str(out) + "\n")
 
     n_phase = 1000
@@ -230,7 +230,7 @@ def outputs(lamin, lamax):
     ax2.set_xlabel(r"Wavelength [$\mu$]")
 
     fig_name = str(lamin) + "to" + str(lamax)
-    fig.savefig("plots/" + fig_name +  ".png") 
+    fig.savefig("plots_test/" + fig_name +  ".png") 
 
 if __name__ == '__main__':
 
@@ -259,8 +259,8 @@ if __name__ == '__main__':
             outputs(i, i+0.02)
     else:
         # Presumably, on a regular computer: ready to run
-       number = range(50,250, 5)
+       number = range(50,250, 10)
        for i in number:
             i = float(i)
             i = i/100
-            outputs(i, i+0.05)
+            outputs(i, i+0.01)
