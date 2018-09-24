@@ -9,14 +9,7 @@ import sys, os
 import datetime
 matplotlib.rcParams['text.usetex'] = False
 
-def clouds(res, cirrus, strato):
-    lamin = 0.5
-    lamax = 2.0
-    
-    sim = smart.interface.Smart(tag = "earth")
-    sim.smartin.alb_file = "composite1_txt.txt"
-    infile = "earth_avg.pt"
-
+def plotting():
     HERE = os.path.dirname(os.path.abspath(__file__))
     place = os.path.join(HERE, "clouds")
 
@@ -26,36 +19,6 @@ def clouds(res, cirrus, strato):
         pass
 
         
-    sim.set_run_in_place(place) 
-    sim.set_executables_automatically()
-
-
-    sim.load_atmosphere_from_pt(infile, addn2 = False)
-
-
-    sim.smartin.FWHM = res
-    sim.smartin.sample_res = res
-
-    sim.smartin.minwn = 1e4/lamax
-    sim.smartin.maxwn = 1e4/lamin 
-
-    sim.lblin.minwn = 1e4/lamax
-    sim.lblin.maxwn = 1e4/lamin 
-
-
-    sim.gen_lblscripts()
-    sim.run_lblabc()
-
-    if cirrus == 1:
-        sim.aerosols = smart.interface.Aerosols(cirrus=True, stratocum=False)
-        sim.tag = "_cirrus"
-
-    elif strato == 1:
-        sim.aerosols = smart.interface.Aerosols(cirrus=False, stratocum=True)
-        sim.tag = "_strato"
-
-    else:
-        pass
 
     import platform
     
@@ -70,26 +33,14 @@ def clouds(res, cirrus, strato):
         mpl.rcParams['font.size'] = 25.0
         mpl.rc('text', usetex=False)
         plt.switch_backend('agg')
-
-    sim.write_smart(write_file = True)
-    sim.run_smart()
-
-    sim.open_outputs()
-    wl = sim.output.rad.lam
-    flux = sim.output.rad.pflux
-    sflux = sim.output.rad.sflux
-
-    adj_flux = flux/sflux * ((sim.smartin.radius / sim.smartin.r_AU) **2 )
-
-    return(wl, adj_flux)
-
-
-
-def plotting():
-    cirrus_wl, cirrus_flux = clouds(0.01, 1, 0)
-    strato_wl, strato_flux = clouds(0.01, 0, 1)
-    avg_wl = (cirrus_wl + strato_wl)/2
-    avg_flux = (cirrus_flux + strato_flux)/2
+    cirrus = _cirrus_hitran2012_5000_20000cm_toa.rad
+    cirrus_wl = cirrus.lam
+    cirrus_flux = cirrus.pflux/cirrus_sflux
+    strato = _strato_hitran2012_5000_20000cm_toa.rad
+    strato_wl = strato.lam
+    strato_flux = strato.pflux/strato_sflux
+    avg_wl = (cirrus_wl[:len(strato_wl) + strato_wl)/2
+    avg_flux = cirrus_flux[:len(strato_flux) + strato_flux)/2
     fig, ax = plt.subplots(figsize = (30, 10))
     ax.plot(avg_wl, avg_flux)
     fig.savefig("avg_clougs.png", bbox_inches = 'tight')
