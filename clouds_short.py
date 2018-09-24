@@ -72,7 +72,7 @@ def plotting():
     strato_wl = strato.lam
     strato_flux = strato.pflux
     strato_sflux = strato.sflux
-    strato_flux = strato_flux/strato_sflux
+    strato_flux = strato_flux/strato_sflux * ((sim.smartin.radius / sim.smartin.r_AU) **2 )
     avg_wl = (cirrus_wl[:len(strato_wl)] + strato_wl)/2
     avg_flux = (cirrus_flux[:len(strato_flux)] + strato_flux)/2
     fig, ax = plt.subplots(figsize = (30, 10))
