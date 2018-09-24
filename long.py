@@ -110,7 +110,7 @@ if __name__ == '__main__':
                                workdir = "",
                                nodes = 1,
                                mem = "500G",
-                               walltime = "0",
+                               walltime = "10:00:00",
                                ntasks = 28,
                                account = "vsm",
                                submit = True,
