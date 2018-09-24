@@ -37,16 +37,6 @@ def plotting():
 
 
     sim.load_atmosphere_from_pt(infile, addn2 = False)
-
-
-    sim.smartin.FWHM = res
-    sim.smartin.sample_res = res
-
-    sim.smartin.minwn = 1e4/lamax
-    sim.smartin.maxwn = 1e4/lamin 
-
-    sim.lblin.minwn = 1e4/lamax
-    sim.lblin.maxwn = 1e4/lamin
     sim.set_planet_proxima_b()
         
 
