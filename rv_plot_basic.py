@@ -139,7 +139,7 @@ def smart_basic(res, lamin, lamax):
 
 
     # Create colorbar
-    cbar = fig.colorbar(line)
+    cbar = fig.colorbar(line, pad = 25)
     cbar.set_label(r"Reflectance", rotation = 270, labelpad = 35)
 
     ax2 = ax.twinx()

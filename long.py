@@ -19,6 +19,7 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
         infile = "profile_Earth_proxb_.pt_filtered"
     elif atmos == "highd":
         infile = "10bar_O2_dry.pt_filtered.pt"
+        label = "10 bar O2 atmosphere"
     elif atmos == "highw":
         infile = "10bar_O2_wet.pt_filtered.pt"
     elif atmos == "arch_prox":
@@ -90,7 +91,7 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
     fig, ax = plt.subplots(figsize = (30, 10))
     ax.plot(wl, adj_flux)
     name = atmos
-    ax.set_title(name)
+    ax.set_title(label)
     fig.savefig(name + ".png", bbox_inches = 'tight')
 
 
@@ -116,12 +117,12 @@ if __name__ == '__main__':
                                rm_after_submit = True)
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
-        longplot("earth", 0.01, 0.5, 2, True, False)
-        longplot("earth", 0.01, 0.5, 2, False, True)
-        longplot("prox", 0.01, 0.5, 2, False, False)
+ #       longplot("earth", 0.01, 0.5, 2, True, False)
+ #       longplot("earth", 0.01, 0.5, 2, False, True)
+ #       longplot("prox", 0.01, 0.5, 2, False, False)
         longplot("highd", 0.01, 0.5, 2, False, False)
-        longplot("highw", 0.01, 0.5, 2, False, False)
-        longplot("arch_prox", 0.01, 0.5, 2, False, False)
+ #       longplot("highw", 0.01, 0.5, 2, False, False)
+ #       longplot("arch_prox", 0.01, 0.5, 2, False, False)
     else:
         # Presumably, on a regular computer: ready to run
         longplot("earth", 1, 0.5, 0.501, True, False)
