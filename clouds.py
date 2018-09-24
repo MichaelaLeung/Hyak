@@ -114,8 +114,7 @@ if __name__ == '__main__':
                                rm_after_submit = True)
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
-        clouds(0.01, 1, 0)
-        clouds(0.01, 0, 1)
+        plotting()
     else:
         # Presumably, on a regular computer: ready to run
         clouds(10, True, False)
