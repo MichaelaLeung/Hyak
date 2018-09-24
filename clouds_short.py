@@ -36,12 +36,12 @@ def plotting():
     cirrus = smart.readsmart.Rad("clouds/_cirrus_hitran2012_5000_20000cm_toa.rad")
     cirrus_wl = cirrus.lam
     cirrus_flux = cirrus.pflux
-    cirrus_sflux = cirrus_sflux
+    cirrus_sflux = cirrus.sflux
     cirrus_flux = cirrus_flux/cirrus_sflux
     strato = smart.readsmart.Rad("clouds/_strato_hitran2012_5000_20000cm_toa.rad")
     strato_wl = strato.lam
     strato_flux = strato.pflux
-    strato_sflux = strato_sflux
+    strato_sflux = strato.sflux
     strato_flux = strato_flux/strato_sflux
     avg_wl = (cirrus_wl[:len(strato_wl)] + strato_wl)/2
     avg_flux = (cirrus_flux[:len(strato_flux)] + strato_flux)/2
