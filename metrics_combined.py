@@ -23,7 +23,7 @@ def run_smart(lamin, lamax):
 
     sim = smart.interface.Smart(tag = "prox")
     infile = "profile_Earth_proxb_.pt_filtered"
-    res = 1/(100000*lamin)
+    res = 1/(15*lamin)
     low_res = 1*lamin
     print(res, low_res)
     sim.set_run_in_place(place) 
@@ -41,6 +41,13 @@ def run_smart(lamin, lamax):
     sim.run_lblabc()
     sim.write_smart(write_file = True)
     sim.run_smart()
+    sim.open_outputs()
+
+    wl = sim.output.rad.lam
+    flux = sim.output.rad.pflux
+    sflux = sim.output.rad.sflux
+    adj_flux = flux/sflux * ((sim.smartin.radius / (sim.smartin.r_AU * 149598000)) **2 )
+    flux = flux/sflux
 
     sim2 = smart.interface.Smart(tag = "prox")
 
@@ -60,13 +67,7 @@ def run_smart(lamin, lamax):
     sim2.write_smart(write_file = True)
     sim2.run_smart()
 
-    sim.open_outputs()
-    wl = sim.output.rad.lam
-    flux = sim.output.rad.pflux
-    sflux = sim.output.rad.sflux
-    adj_flux = flux/sflux * ((sim.smartin.radius / (sim.smartin.r_AU * 149598000)) **2 )
-    flux = flux/sflux
-
+ 
     sim2.open_outputs()
     wl_low = sim2.output.rad.lam
     flux_low = sim2.output.rad.pflux
@@ -191,7 +192,7 @@ def outputs(lamin, lamax):
         mpl.rc('text', usetex=False)
         plt.switch_backend('agg')
     # Create figure
-    fig, ax = plt.subplots(figsize=(12,10))
+    fig, ax = plt.subplots(figsize=(13,10))
     ax.set_ylabel("Phase Angle")
 
     # Create a continuous norm to map from flux to colors
@@ -222,7 +223,7 @@ def outputs(lamin, lamax):
     
 
     # Create colorbar
-    cbar = fig.colorbar(line)
+    cbar = fig.colorbar(line, pad = 0.5)
     cbar.set_label(r"Reflectance", rotation = 270, labelpad = 25)
 
     ax2 = ax.twinx()
