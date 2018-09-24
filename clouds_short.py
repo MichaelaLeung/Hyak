@@ -33,10 +33,10 @@ def plotting():
         mpl.rcParams['font.size'] = 25.0
         mpl.rc('text', usetex=False)
         plt.switch_backend('agg')
-    cirrus = clouds/_cirrus_hitran2012_5000_20000cm_toa.rad
+    cirrus = "clouds/_cirrus_hitran2012_5000_20000cm_toa.rad"
     cirrus_wl = cirrus.lam
     cirrus_flux = cirrus.pflux/cirrus_sflux
-    strato = clouds/_strato_hitran2012_5000_20000cm_toa.rad
+    strato = "clouds/_strato_hitran2012_5000_20000cm_toa.rad"
     strato_wl = strato.lam
     strato_flux = strato.pflux/strato_sflux
     avg_wl = (cirrus_wl[:len(strato_wl)] + strato_wl)/2
