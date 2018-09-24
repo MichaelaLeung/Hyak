@@ -40,7 +40,7 @@ def plotting():
     strato_wl = strato.lam
     strato_flux = strato.pflux/strato_sflux
     avg_wl = (cirrus_wl[:len(strato_wl)] + strato_wl)/2
-    avg_flux = cirrus_flux[:len(strato_flux)] + strato_flux)/2
+    avg_flux = (cirrus_flux[:len(strato_flux)] + strato_flux)/2
     fig, ax = plt.subplots(figsize = (30, 10))
     ax.plot(avg_wl, avg_flux)
     fig.savefig("avg_clougs.png", bbox_inches = 'tight')
