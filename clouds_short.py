@@ -37,7 +37,7 @@ def plotting():
     cirrus_wl = cirrus.lam
     cirrus_flux = cirrus.pflux
     cirrus_sflux = cirrus.sflux
-    cirrus_flux = cirrus_flux/cirrus_sflux
+    adj_flux = flux/sflux * ((sim.smartin.radius / sim.smartin.r_AU) **2 )
     strato = smart.readsmart.Rad("clouds/_strato_hitran2012_5000_20000cm_toa.rad")
     strato_wl = strato.lam
     strato_flux = strato.pflux
@@ -47,6 +47,10 @@ def plotting():
     avg_flux = (cirrus_flux[:len(strato_flux)] + strato_flux)/2
     fig, ax = plt.subplots(figsize = (30, 10))
     ax.plot(avg_wl, avg_flux)
+    ax.set_ylabel("Reflectance")
+    ax.set_xlabel("Wavelength ($\mu$ m)")
+    ax.set_title("Earth Atmosphere")
+    fig.savefig(name + ".png", bbox_inches = 'tight')
     fig.savefig("avg_clougs.png", bbox_inches = 'tight')
     
 if __name__ == '__main__':

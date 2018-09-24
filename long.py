@@ -17,13 +17,17 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
         infile = "earth_avg.pt"
     elif atmos == "prox":
         infile = "profile_Earth_proxb_.pt_filtered"
+        sim.set_planet_proxima_b()
     elif atmos == "highd":
         infile = "10bar_O2_dry.pt_filtered.pt"
         label = "10 bar O2 atmosphere"
+        sim.set_planet_proxima_b()
     elif atmos == "highw":
         infile = "10bar_O2_wet.pt_filtered.pt"
+        sim.set_planet_proxima_b()
     elif atmos == "arch_prox":
         infile = "clearsky_archean.pt"
+        sim.set_planet_proxima_b()
     HERE = os.path.dirname(os.path.abspath(__file__))
     place = os.path.join(HERE, "longplot")
 
@@ -90,7 +94,8 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
 
     fig, ax = plt.subplots(figsize = (30, 10))
     ax.plot(wl, adj_flux)
-    name = atmos
+    ax.set_ylabel("Reflectance")
+    ax.set_xlabel("Wavelength ($\mu$ m)")
     ax.set_title(label)
     fig.savefig(name + ".png", bbox_inches = 'tight')
 
