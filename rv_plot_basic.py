@@ -10,7 +10,7 @@ import datetime
 matplotlib.rcParams['text.usetex'] = False
 
 def smart_basic(res, lamin, lamax):
-    res = 1/(10*lamin)
+    res = (10*lamin)
     sim = smart.interface.Smart(tag = "prox")
     sim2 = smart.interface.Smart(tag = "earth")
     infile = "profile_Earth_proxb_.pt_filtered"
@@ -140,7 +140,7 @@ def smart_basic(res, lamin, lamax):
 
     # Create colorbar
     cbar = fig.colorbar(line)
-    cbar.set_label(r"Reflectance", rotation = 270, labelpad = 25)
+    cbar.set_label(r"Reflectance", rotation = 270, labelpad = 35)
 
     ax2 = ax.twinx()
     ax2.plot(earth_wl, earth_flux, 'r')
