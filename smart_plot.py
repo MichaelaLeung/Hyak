@@ -74,7 +74,7 @@ def smart_basic(mode, lamin, lamax, title):
     ax.set_xlabel("Wavelength ($\mu$ m)")
     ax.set_title(title)
     fig_name = str(lamin) + "to" + str(lamax)
-    fig.savefig( fig_name +  ".png", bbox_inches = "tight")    
+    fig.savefig( str(info) + fig_name +  ".png", bbox_inches = "tight")    
  
 
 if __name__ == '__main__':
