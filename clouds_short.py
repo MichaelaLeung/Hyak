@@ -18,6 +18,36 @@ def plotting():
     except OSError:
         pass
 
+    sim = smart.interface.Smart(tag = "earth")
+    sim.smartin.alb_file = "composite1_txt.txt"
+    infile = "earth_avg.pt"
+
+    HERE = os.path.dirname(os.path.abspath(__file__))
+    place = os.path.join(HERE, "clouds")
+
+    try:
+        os.mkdir(place)
+    except OSError:
+        pass
+
+        
+    sim.set_run_in_place(place) 
+    sim.set_executables_automatically()
+    
+
+
+    sim.load_atmosphere_from_pt(infile, addn2 = False)
+
+
+    sim.smartin.FWHM = res
+    sim.smartin.sample_res = res
+
+    sim.smartin.minwn = 1e4/lamax
+    sim.smartin.maxwn = 1e4/lamin 
+
+    sim.lblin.minwn = 1e4/lamax
+    sim.lblin.maxwn = 1e4/lamin
+    sim.set_planet_proxima_b()
         
 
     import platform
@@ -37,7 +67,7 @@ def plotting():
     cirrus_wl = cirrus.lam
     cirrus_flux = cirrus.pflux
     cirrus_sflux = cirrus.sflux
-    adj_flux = flux/sflux * ((sim.smartin.radius / sim.smartin.r_AU) **2 )
+    cirrus_flux = cirrus_flux/cirrus_sflux * ((sim.smartin.radius / sim.smartin.r_AU) **2 )
     strato = smart.readsmart.Rad("clouds/_strato_hitran2012_5000_20000cm_toa.rad")
     strato_wl = strato.lam
     strato_flux = strato.pflux
