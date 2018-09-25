@@ -69,7 +69,7 @@ def plotting():
     ax.plot(avg_wl, avg_flux)
     ax.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength ($\mu$ m)")
-    ax.set_title("Earth Atmosphere")
+    ax.set_title("Earth")
     fig.savefig("avg_clougs.png", bbox_inches = 'tight')
     
 if __name__ == '__main__':
