@@ -156,7 +156,7 @@ def outputs(lamin, lamax):
     high = interval(wl, (high_pass(flux, flux_low)))
     label = str(lamin) + "to" + str(lamax)
     out = label, "fpfs", np.median(adj_flux), "line cutoff", high, "integral", adds, "together", (np.median(adj_flux)*high*adds)
-    f = open("outputs_small4.txt", "a")
+    f = open("outputs_small5.txt", "a")
     f.write(str(out) + "\n")
 
     n_phase = 1000
@@ -192,7 +192,7 @@ def outputs(lamin, lamax):
         mpl.rc('text', usetex=False)
         plt.switch_backend('agg')
     # Create figure
-    fig, ax = plt.subplots(figsize=(13,10))
+    fig, ax = plt.subplots(figsize=(20,10))
     ax.set_ylabel("Phase Angle")
 
     # Create a continuous norm to map from flux to colors
@@ -223,7 +223,7 @@ def outputs(lamin, lamax):
     
 
     # Create colorbar
-    cbar = fig.colorbar(line, pad = 0.5)
+    cbar = fig.colorbar(line, pad = 0.05)
     cbar.set_label(r"Reflectance", rotation = 270, labelpad = 25)
 
     ax2 = ax.twinx()
