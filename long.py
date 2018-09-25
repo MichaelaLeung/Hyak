@@ -97,7 +97,7 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
     ax.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength ($\mu$ m)")
     ax.set_title(label)
-    fig.savefig(name + ".png", bbox_inches = 'tight')
+    fig.savefig(str(atmos) + ".png", bbox_inches = 'tight')
 
 
 
