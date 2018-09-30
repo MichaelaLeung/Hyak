@@ -69,6 +69,9 @@ def plotting():
     ax.plot(avg_wl, avg_flux)
     from matplotlib import rcParams
     matplotlib.rcParams.update({'font.size': 30})
+    matplotlib.rc('xtick', labelsize=25) 
+    matplotlib.rc('ytick', labelsize=25)
+    matplotlib.rc('label', labelsize=25) 
     ax.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength ($\mu$ m)")
     ax.set_title("Earth")
