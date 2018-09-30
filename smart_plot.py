@@ -118,15 +118,15 @@ if __name__ == '__main__':
 
     else:
         # Presumably, on a regular computer: ready to run
-        smart_basic(0.01, 1.5, 1.7, "1.6 $\mu$ m Carbon Dioxide")
-        smart_basic(0.01, 0.7, 0.74, "0.72 $\mu$ m Methane")
-        smart_basic(0.01, 0.86, 0.90, "0.88 $\mu$ m Methane")
-        smart_basic(0.01, 2.2, 2.4, "2.3 $\mu$ m Carbon Monoxide")
-        smart_basic(0.01, 4.5, 4.7, "4.6 $\mu$ m Carbon Monoxide")
-        smart_basic(0.01, 1.4, 1.8, "1.6 $\mu$ m Carbon Dioxide")
-        smart_basic(0.01, 0.74, 0.78, "0.76 $\mu$ m  Oxygen")
-        smart_basic(0.01, 0.61, 0.65, "0.63$\mu$ m Oxygen")
-        smart_basic(0.01, 0.66, 0.7, "0.68 $\mu$ m Oxygen")
+ #       smart_basic(0.01, 1.5, 1.7, "1.6 $\mu$ m Carbon Dioxide")
+ #       smart_basic(0.01, 0.7, 0.74, "0.72 $\mu$ m Methane")
+ #       smart_basic(0.01, 0.86, 0.90, "0.88 $\mu$ m Methane")
+ #       smart_basic(0.01, 2.2, 2.4, "2.3 $\mu$ m Carbon Monoxide")
+ #       smart_basic(0.01, 4.5, 4.7, "4.6 $\mu$ m Carbon Monoxide")
+ #       smart_basic(0.01, 1.4, 1.8, "1.6 $\mu$ m Carbon Dioxide")
+ #       smart_basic(0.01, 0.74, 0.78, "0.76 $\mu$ m  Oxygen")
+ #       smart_basic(0.01, 0.61, 0.65, "0.63$\mu$ m Oxygen")
+        smart_basic(1, 1.25, 1.29, "1.27 $\mu$ m Oxygen")
 
 
 
