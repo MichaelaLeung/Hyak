@@ -67,7 +67,8 @@ def plotting():
     avg_flux = (cirrus_flux[:len(strato_flux)] + strato_flux)/2
     fig, ax = plt.subplots(figsize = (30, 10))
     ax.plot(avg_wl, avg_flux)
-    rcParams['font.size'] = 25.0
+    from matplotlib import rcParams
+    rcParams["font.size"] = 25
     ax.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength ($\mu$ m)")
     ax.set_title("Earth")
