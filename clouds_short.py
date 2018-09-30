@@ -68,7 +68,7 @@ def plotting():
     fig, ax = plt.subplots(figsize = (30, 10))
     ax.plot(avg_wl, avg_flux)
     from matplotlib import rcParams
-    rcParams["font.size"] = 25
+    rcParams["font.size"] = 35
     ax.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength ($\mu$ m)")
     ax.set_title("Earth")
