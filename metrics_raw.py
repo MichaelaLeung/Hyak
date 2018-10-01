@@ -156,7 +156,7 @@ def outputs(lamin, lamax):
     high = interval(wl, (high_pass(flux, flux_low)))
     label = str(lamin) + "to" + str(lamax)
     out = label, "fpfs", np.median(adj_flux), "line cutoff", high, "integral", adds, "together", (np.median(adj_flux)*high*adds)
-    f = open("outputs_small5.txt", "a")
+    f = open("outputs_small6.txt", "a")
     f.write(str(out) + "\n")
 
     n_phase = 1000
@@ -192,7 +192,7 @@ def outputs(lamin, lamax):
         mpl.rc('text', usetex=False)
         plt.switch_backend('agg')
     # Create figure
-    fig, ax = plt.subplots(2,1, figsize=(20,15))
+    fig, ax = plt.subplots(2,1, figsize=(30,15))
     ax[0].set_ylabel("Phase Angle")
 
     # Create a continuous norm to map from flux to colors
@@ -211,11 +211,11 @@ def outputs(lamin, lamax):
         segments = np.concatenate([points[:-1], points[1:]], axis=1)
 
         # Use linecollections to make color lines
-        cmap = mpl.colors.ListedColormap(['cyan',
-                                  'royalblue', "rebeccapurple"])
+        cmap = mpl.colors.ListedColormap(['white','white',
+                                  'black', 'black', "yellow",])
         cmap.set_over('red')
         cmap.set_under('blue')
-        bounds = [-0.5, -0.25, 0.0, 0.25, 0.5]
+
         lc = LineCollection(segments, cmap=cmap, norm=norm)
     
         # Set the values used for colormapping
@@ -266,7 +266,7 @@ if __name__ == '__main__':
             outputs(i, i+0.02)
     else:
         # Presumably, on a regular computer: ready to run
-       number = range(50,250, 10)
+       number = range(7,250, 10)
        for i in number:
             i = float(i)
             i = i/100
