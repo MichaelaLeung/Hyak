@@ -68,10 +68,9 @@ def plotting():
     fig, ax = plt.subplots(figsize = (30, 10))
     ax.plot(avg_wl, avg_flux)
     from matplotlib import rcParams
-    matplotlib.rcParams.update({'font.size': 30})
-    matplotlib.rc('xtick', labelsize=30) 
-    matplotlib.rc('ytick', labelsize=30)
- #   matplotlib.rc('label', labelsize=25) 
+    for item in ([ax.title, ax.xaxis.label, ax.yaxis.label] +
+              ax.get_xticklabels() + ax.get_yticklabels()):
+        item.set_fontsize(20)
     ax.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength ($\mu$ m)")
     ax.set_title("Earth")
