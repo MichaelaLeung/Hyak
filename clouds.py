@@ -87,8 +87,8 @@ def clouds(res, cirrus, strato):
 
 
 def plotting():
-    cirrus_wl, cirrus_flux = clouds(0.01, 1, 0)
-    strato_wl, strato_flux = clouds(0.01, 0, 1)
+    cirrus_wl, cirrus_flux = clouds(100, 1, 0)
+    strato_wl, strato_flux = clouds(100, 0, 1)
     avg_wl = (cirrus_wl + strato_wl)/2
     avg_flux = (cirrus_flux + strato_flux)/2
     fig, ax = plt.subplots(figsize = (30, 10))
@@ -118,14 +118,7 @@ if __name__ == '__main__':
         plotting()
     else:
         # Presumably, on a regular computer: ready to run
-        cirrus_wl, cirrus_flux = clouds(10, 1, 0)
-        strato_wl, strato_flux = clouds(10, 0, 1)
-        avg_wl = (cirrus_wl + strato_wl)/2
-        avg_flux = (cirrus_flux + strato_flux)/2
-        fig, ax = plt.subplots(figsize = (30, 10))
-        ax.plot(avg_wl, avg_flux)
-        fig.savefig("avg_clouds_low.png", bbox_inches = 'tight')
-        
+        plotting()        
 
 
 
