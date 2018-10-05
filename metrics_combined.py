@@ -116,6 +116,34 @@ def interval(wl, flux):
             final_dict[st_wl] = fin_wl
     return(len(final_dict))
 
+def high_pass(flux, flux_low):
+    k = 0
+    x = 0
+    z = 0
+    mixed = []
+    out = []
+    flattened = []
+    long_flux = []
+    for i in flux_low:
+        j = 0
+        while j < 100: 
+            long_flux.append(i)
+            j = j+1
+            
+    while k < len(flux):
+        temp = (flux[k] + long_flux[k]) / 2
+        mixed.append(temp)
+        k = k+1
+    
+    print(len(mixed))
+       
+    while z < len(mixed): 
+        diff = abs(mixed[z] - long_flux[z])
+        out.append(diff)
+        z = z+1
+        
+    return(out)
+
 def integration(wl, flux, adj_flux, wl_low, flux_low, earth_wl, earth_flux):
     long_flux = []
     for i in flux_low:
@@ -154,7 +182,7 @@ def outputs(lamin, lamax):
     high = interval(wl, (high_pass(flux, flux_low)))
     label = str(lamin) + "to" + str(lamax)
     out = label, "fpfs", np.median(adj_flux), "line cutoff", high, "integral", adds, "together", (np.median(adj_flux)*high*adds)
-    f = open("outputs_new.txt", "a")
+    f = open("outputs_new2.txt", "a")
     f.write(str(out) + "\n")
 
     n_phase = 1000
