@@ -19,13 +19,10 @@ def run_smart(lamin, lamax):
     except OSError:
         pass
 
-        
-
     sim = smart.interface.Smart(tag = "prox")
     infile = "profile_Earth_proxb_.pt_filtered"
-    res = 1/(15*lamin)
+    res = 1/(100*lamin)
     low_res = 1*lamin
-    print(res, low_res)
     sim.set_run_in_place(place) 
     sim.set_executables_automatically()
     sim.set_planet_proxima_b()
@@ -99,7 +96,6 @@ def run_smart(lamin, lamax):
     earth_flux = earth_flux/sflux_earth
 
     return (wl, flux, adj_flux, wl_low, flux_low, earth_wl, earth_flux)
- 
     
 def interval(wl, flux):
     lis = []
@@ -120,43 +116,45 @@ def interval(wl, flux):
             final_dict[st_wl] = fin_wl
     return(len(final_dict))
 
-def high_pass(flux, flux_low):
-    k = 0
-    x = 0
-    z = 0
-    mixed = []
-    out = []
-    flattened = []
+def integration(wl, flux, adj_flux, wl_low, flux_low, earth_wl, earth_flux):
     long_flux = []
     for i in flux_low:
         j = 0
-        while j < 100: 
+        while j < int(len(flux)/len(flux_low)): 
             long_flux.append(i)
             j = j+1
-            
-    while k < len(flux):
-        temp = (flux[k] + long_flux[k]) / 2
+    mixed = []
+    i = 0
+    while i < len(long_flux):
+        temp = (flux[i] + long_flux[i]) / 2
         mixed.append(temp)
-        k = k+1
-    
-    print(len(mixed))
-       
-    while z < len(mixed): 
-        diff = abs(mixed[z] - long_flux[z])
+        i = i+1
+    i = 0
+    flattened = []
+    while i < len(flux)- 25: 
+        avg = np.mean(flux[i:i+25])
+        j = 0
+        while j < 25:
+            flattened.append(avg)
+            j = j+1
+        i = i+25
+    out = []
+    i = 0
+    while i < len(mixed[:-25]): 
+        diff = abs(mixed[i] - flattened[i])
         out.append(diff)
-        z = z+1
-        
-    return(out)
+        i = i+1
+    return(wl, out, abs(integrate.trapz(wl[:len(out)], out[:len(wl)])))
 
 
 
 def outputs(lamin, lamax):
     wl, flux, adj_flux, wl_low, flux_low, earth_wl, earth_flux = run_smart(lamin, lamax) #wl, flux, adj_flux, wl_low, flux_low, earth_wl, earth_flux
-    adds = max(abs(integrate.trapz((high_pass(flux, flux_low), wl))))
+    adds = integration(wl, flux, adj_flux, wl_low, flux_low, earth_wl, earth_flux)
     high = interval(wl, (high_pass(flux, flux_low)))
     label = str(lamin) + "to" + str(lamax)
     out = label, "fpfs", np.median(adj_flux), "line cutoff", high, "integral", adds, "together", (np.median(adj_flux)*high*adds)
-    f = open("outputs_small5.txt", "a")
+    f = open("outputs_new.txt", "a")
     f.write(str(out) + "\n")
 
     n_phase = 1000
