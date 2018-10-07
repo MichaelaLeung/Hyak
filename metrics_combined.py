@@ -148,12 +148,12 @@ def integration(wl, flux, adj_flux, wl_low, flux_low, earth_wl, earth_flux):
     long_flux = []
     for i in flux_low:
         j = 0
-        while j < int(len(flux)/len(flux_low)): 
+        while j < int(len(flux)/len(flux_low)+1): 
             long_flux.append(i)
             j = j+1
     mixed = []
     i = 0
-    while i < len(long_flux):
+    while i < len(flux):
         temp = (flux[i] + long_flux[i]) / 2
         mixed.append(temp)
         i = i+1
@@ -168,21 +168,22 @@ def integration(wl, flux, adj_flux, wl_low, flux_low, earth_wl, earth_flux):
         i = i+25
     out = []
     i = 0
-    while i < len(mixed[:-25]): 
+    while i < (len(mixed[:-25])): 
         diff = abs(mixed[i] - flattened[i])
         out.append(diff)
         i = i+1
-    return(wl, out, max(abs(integrate.trapz(wl[:len(out)], out[:len(wl)]))))
-
-
+    wl = wl[:len(out)]
+    return(wl, out, abs(integrate.trapz(wl, out)))
 
 def outputs(lamin, lamax):
     wl, flux, adj_flux, wl_low, flux_low, earth_wl, earth_flux = run_smart(lamin, lamax) #wl, flux, adj_flux, wl_low, flux_low, earth_wl, earth_flux
     adds = integration(wl, flux, adj_flux, wl_low, flux_low, earth_wl, earth_flux)
+    sum2 = sum(adds)
+    adds2 = sum(sum2)
     high = interval(wl, (high_pass(flux, flux_low)))
     label = str(lamin) + "to" + str(lamax)
-    out = label, "fpfs", np.median(adj_flux), "line cutoff", high, "integral", adds, "together", (np.median(adj_flux)*high*adds)
-    f = open("outputs_new2.txt", "a")
+    out = label, "fpfs", np.median(adj_flux), "line cutoff", high, "integral", adds2, "together", (np.median(adj_flux)*high*adds2)
+    f = open("test.txt", "a")
     f.write(str(out) + "\n")
 
     n_phase = 1000
@@ -192,7 +193,7 @@ def outputs(lamin, lamax):
     sma = 7500000
     c = 299792.458
     
-    fluxes = np.outer(flux, np.ones(n_phase)) 
+    fluxes = np.outer(adj_flux, np.ones(n_phase)) 
     temp = np.arccos(-np.sin(inclination)*np.cos(phases))
     phase_function = ((np.sin(temp)+(np.pi-temp)*(np.cos(temp)))/(np.pi)) 
 
@@ -218,8 +219,8 @@ def outputs(lamin, lamax):
         mpl.rc('text', usetex=False)
         plt.switch_backend('agg')
     # Create figure
-    fig, ax = plt.subplots(figsize=(20,10))
-    ax.set_ylabel("Phase Angle")
+    fig, ax = plt.subplots(2,1, figsize=(30,15))
+    ax[0].set_ylabel("Phase Angle")
 
     # Create a continuous norm to map from flux to colors
     norm = plt.Normalize(np.min(fluxes2), np.max(fluxes2))
@@ -237,27 +238,34 @@ def outputs(lamin, lamax):
         segments = np.concatenate([points[:-1], points[1:]], axis=1)
 
         # Use linecollections to make color lines
-        lc = LineCollection(segments, cmap='bone', norm=norm)
+        cmap = mpl.colors.ListedColormap(['white','white',
+                                  'black', 'black', "yellow",])
+        cmap.set_over('red')
+        cmap.set_under('blue')
+
+        lc = LineCollection(segments, cmap=cmap, norm=norm)
     
         # Set the values used for colormapping
         lc.set_array(z)
         lc.set_linewidth(2)
-        line = ax.add_collection(lc)
+        line = ax[0].add_collection(lc)
     
     # Set the axis ranges
-    ax.set_ylim(min(phases), max(phases))
+    ax[0].set_ylim(min(phases), max(phases))
+    ax[0].set_xlim(lamin, lamax)
     
 
     # Create colorbar
-    cbar = fig.colorbar(line, pad = 0.05)
+ 
+    cbar = fig.colorbar(line, pad = 0.05, ax = ax[0], extend = 'both')
     cbar.set_label(r"Reflectance", rotation = 270, labelpad = 25)
 
-    ax2 = ax.twinx()
-    ax2.plot(earth_wl, earth_flux, 'r')
-    ax2.set_xlabel(r"Wavelength [$\mu$]")
+    ax[1].plot(wl, adj_flux, 'r')
+    ax[1].set_xlabel(r"Wavelength [$\mu$]")
 
     fig_name = str(lamin) + "to" + str(lamax)
     fig.savefig("plots/" + fig_name +  ".png") 
+    
 
 if __name__ == '__main__':
 
