@@ -172,7 +172,7 @@ def integration(wl, flux, adj_flux, wl_low, flux_low, earth_wl, earth_flux):
         diff = abs(mixed[i] - flattened[i])
         out.append(diff)
         i = i+1
-    return(wl, out, abs(integrate.trapz(wl[:len(out)], out[:len(wl)])))
+    return(wl, out, max(abs(integrate.trapz(wl[:len(out)], out[:len(wl)]))))
 
 
 
