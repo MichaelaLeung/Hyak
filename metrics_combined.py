@@ -181,7 +181,7 @@ def outputs(lamin, lamax):
     adds = integration(wl, flux, adj_flux, wl_low, flux_low, earth_wl, earth_flux)
     adds2 = adds[2]
     wl2 = adds[0]
-    out = adds[1]
+    out2 = adds[1]
     high = interval(wl, (high_pass(flux, flux_low)))
     label = str(lamin) + "to" + str(lamax)
     out = label, "fpfs", np.median(adj_flux), "line cutoff", high, "integral", adds2, "together", (np.median(adj_flux)*high*adds2)
@@ -264,7 +264,7 @@ def outputs(lamin, lamax):
 
     ax[1].plot(wl, adj_flux, 'r')
     ax[1].set_xlabel(r"Wavelength [$\mu$]")
-    ax[2].plot(wl2, out, 'b')
+    ax[2].plot(wl2, out2, 'b')
     ax[2].set_xlabel(r"Wavelength [$\mu$]")
 
     fig_name = str(lamin) + "to" + str(lamax)
