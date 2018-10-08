@@ -175,7 +175,7 @@ def integration(wl, flux, adj_flux, wl_low, flux_low, earth_wl, earth_flux):
     wl = wl[:len(out)]
     return(wl, out, abs(integrate.trapz(wl, out)))
 
-def outputs(lamin, lamax, wl, out):
+def outputs(lamin, lamax):
     f = open("test.txt", "w")
     wl, flux, adj_flux, wl_low, flux_low, earth_wl, earth_flux = run_smart(lamin, lamax) #wl, flux, adj_flux, wl_low, flux_low, earth_wl, earth_flux
     adds = integration(wl, flux, adj_flux, wl_low, flux_low, earth_wl, earth_flux)
@@ -284,7 +284,7 @@ if __name__ == '__main__':
                                workdir = "",
                                nodes = 1,
                                mem = "500G",
-                               walltime = "6:00:00",
+                               walltime = "8:00:00",
                                ntasks = 28,
                                account = "vsm",
                                submit = True,
