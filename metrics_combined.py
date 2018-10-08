@@ -175,11 +175,13 @@ def integration(wl, flux, adj_flux, wl_low, flux_low, earth_wl, earth_flux):
     wl = wl[:len(out)]
     return(wl, out, abs(integrate.trapz(wl, out)))
 
-def outputs(lamin, lamax):
+def outputs(lamin, lamax, wl, out):
+    f = open("test.txt", "w")
     wl, flux, adj_flux, wl_low, flux_low, earth_wl, earth_flux = run_smart(lamin, lamax) #wl, flux, adj_flux, wl_low, flux_low, earth_wl, earth_flux
     adds = integration(wl, flux, adj_flux, wl_low, flux_low, earth_wl, earth_flux)
-    sum2 = sum(adds)
-    adds2 = sum(sum2)
+    adds2 = adds[2]
+    wl2 = adds[0]
+    out = adds[1]
     high = interval(wl, (high_pass(flux, flux_low)))
     label = str(lamin) + "to" + str(lamax)
     out = label, "fpfs", np.median(adj_flux), "line cutoff", high, "integral", adds2, "together", (np.median(adj_flux)*high*adds2)
@@ -219,7 +221,7 @@ def outputs(lamin, lamax):
         mpl.rc('text', usetex=False)
         plt.switch_backend('agg')
     # Create figure
-    fig, ax = plt.subplots(2,1, figsize=(30,15))
+    fig, ax = plt.subplots(3,1, figsize=(30,24))
     ax[0].set_ylabel("Phase Angle")
 
     # Create a continuous norm to map from flux to colors
@@ -262,6 +264,8 @@ def outputs(lamin, lamax):
 
     ax[1].plot(wl, adj_flux, 'r')
     ax[1].set_xlabel(r"Wavelength [$\mu$]")
+    ax[2].plot(wl2, out, 'b')
+    ax[2].set_xlabel(r"Wavelength [$\mu$]")
 
     fig_name = str(lamin) + "to" + str(lamax)
     fig.savefig("plots/" + fig_name +  ".png") 
