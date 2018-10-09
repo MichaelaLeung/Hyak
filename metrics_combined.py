@@ -10,6 +10,7 @@ import datetime
 matplotlib.rcParams['text.usetex'] = False
 import scipy.integrate as integrate
 
+
 def run_smart(lamin, lamax):
     HERE = os.path.dirname(os.path.abspath(__file__))
     place = os.path.join(HERE, "metrics")
@@ -176,7 +177,6 @@ def integration(wl, flux, adj_flux, wl_low, flux_low, earth_wl, earth_flux):
     return(wl, out, abs(integrate.trapz(wl, out)))
 
 def outputs(lamin, lamax):
-    f = open("test.txt", "w")
     wl, flux, adj_flux, wl_low, flux_low, earth_wl, earth_flux = run_smart(lamin, lamax) #wl, flux, adj_flux, wl_low, flux_low, earth_wl, earth_flux
     adds = integration(wl, flux, adj_flux, wl_low, flux_low, earth_wl, earth_flux)
     adds2 = adds[2]
@@ -291,6 +291,7 @@ if __name__ == '__main__':
                                rm_after_submit = True)
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
+        f = open("test.txt", "w")
         number = range(50,200, 2)
         for i in number:
             i = float(i)
