@@ -185,6 +185,18 @@ def outputs(lamin, lamax, on):
     out = label, "fpfs", np.median(adj_flux), "line cutoff", high, "integral", adds2, "together", (np.median(adj_flux)*high*adds2)
     f = open("test.txt", "a")
     f.write(str(out) + "\n")
+    import platform
+    if platform.system() == 'Jarvis':
+        # On a Mac: usetex ok
+        mpl.rc('font',**{'family':'serif','serif':['Computer Modern']})
+        mpl.rcParams['font.size'] = 25.0
+        mpl.rc('text', usetex=True)
+    elif platform.node().startswith("n"):
+        # On hyak: usetex not ok, must change backend to 'agg'
+        mpl.rc('font',**{'family':'serif','serif':['Computer Modern']})
+        mpl.rcParams['font.size'] = 25.0
+        mpl.rc('text', usetex=False)
+        plt.switch_backend('agg')
     if on > 0: 
         n_phase = 1000
         phases = np.linspace(0,2*np.pi,n_phase)
@@ -206,18 +218,6 @@ def outputs(lamin, lamax, on):
 
         obs_wl = np.outer(wl,(1+rv/c))
 
-        import platform
-        if platform.system() == 'Jarvis':
-            # On a Mac: usetex ok
-            mpl.rc('font',**{'family':'serif','serif':['Computer Modern']})
-            mpl.rcParams['font.size'] = 25.0
-            mpl.rc('text', usetex=True)
-        elif platform.node().startswith("n"):
-            # On hyak: usetex not ok, must change backend to 'agg'
-            mpl.rc('font',**{'family':'serif','serif':['Computer Modern']})
-            mpl.rcParams['font.size'] = 25.0
-            mpl.rc('text', usetex=False)
-            plt.switch_backend('agg')
         # Create figure
         fig, ax = plt.subplots(3,1, figsize=(30,24))
         ax[0].set_ylabel("Phase Angle")
@@ -300,13 +300,12 @@ if __name__ == '__main__':
         for i in number:
             i = float(i)
             i = i/100
-            outputs(i, i+0.02, 0)
+            outputs(i, i+0.02, 1)
     else:
-        f = open("test.txt", "w")
+ #       f = open("test.txt", "w")
         # Presumably, on a regular computer: ready to run
- #      number = range(50,250, 10)
- #      for i in number:
- #           i = float(i)
- #           i = i/100
- #           outputs(i, i+0.01)
-        outputs(1.02,1.04, 0)
+        number = range(82,200, 2)
+        for i in number:
+             i = float(i)
+             i = i/100
+             outputs(i, i+0.02,0)
