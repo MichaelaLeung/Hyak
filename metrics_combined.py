@@ -219,7 +219,7 @@ def outputs(lamin, lamax, on):
         obs_wl = np.outer(wl,(1+rv/c))
 
         # Create figure
-        fig, ax = plt.subplots(3,1, figsize=(30,24))
+        fig, ax = plt.subplots(2,1, figsize=(25,15))
         ax[0].set_ylabel("Phase Angle")
 
         # Create a continuous norm to map from flux to colors
@@ -260,10 +260,11 @@ def outputs(lamin, lamax, on):
         cbar = fig.colorbar(line, pad = 0.05, ax = ax[0], extend = 'both')
         cbar.set_label(r"Reflectance", rotation = 270, labelpad = 25)
 
-        ax[1].plot(wl, adj_flux, 'r')
+        ax2 = ax[0].twinx()
+        ax2.plot(earth_wl, earth_flux, 'r')
+        ax2.set_xlabel(r"Wavelength [$\mu$]")
+        ax[1].plot(wl2, out2, 'b')
         ax[1].set_xlabel(r"Wavelength [$\mu$]")
-        ax[2].plot(wl2, out2, 'b')
-        ax[2].set_xlabel(r"Wavelength [$\mu$]")
 
         fig_name = str(lamin) + "to" + str(lamax)
         fig.savefig("plots/" + fig_name +  ".png")
@@ -273,6 +274,8 @@ def outputs(lamin, lamax, on):
         ax[0].set_xlabel(r"Wavelength [$\mu$]")
         ax[1].plot(wl2, out2, 'b')
         ax[1].set_xlabel(r"Wavelength [$\mu$]")
+        fig_name = str(lamin) + "to" + str(lamax)
+        fig.savefig("plots/" + fig_name +  ".png")
 
 
 if __name__ == '__main__':
@@ -288,7 +291,7 @@ if __name__ == '__main__':
                                workdir = "",
                                nodes = 1,
                                mem = "500G",
-                               walltime = "8:00:00",
+                               walltime = "48:00:00",
                                ntasks = 28,
                                account = "vsm",
                                submit = True,
@@ -308,4 +311,4 @@ if __name__ == '__main__':
         for i in number:
              i = float(i)
              i = i/100
-             outputs(i, i+0.02,0)
+             outputs(i, i+0.02,1)
