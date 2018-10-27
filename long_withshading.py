@@ -71,7 +71,7 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
 
     import platform
     
-    if platform.system() == 'Darwin':
+    if platform.system() == 'Jarvis':
         # On a Mac: usetex ok
         mpl.rc('font',**{'family':'serif','serif':['Computer Modern']})
         mpl.rcParams['font.size'] = 25.0
@@ -92,6 +92,8 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
     sflux = sim.output.rad.sflux
 
     adj_flux = flux/sflux * ((sim.smartin.radius / sim.smartin.r_AU) **2 )
+
+    flux = adj_flux
     a = [1.25,1.25,1.27,1.27]
     b = [0, max(flux), max(flux), 0]
     c = [0.74,0.74,0.76,0.76]
@@ -102,15 +104,18 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
     h = [0, max(flux), max(flux), 0]
     
     fig, ax = plt.subplots(figsize = (30, 10))
-    ax.plot(wl, adj_flux)
-    a.fill(a,b, '0.75')
-    a.fill(c,d, '0.75')
-    a.fill(e,f, '0.75')
-    a.fill(g,h, '0.75')
+    ax.fill(a,b, '0.75')
+    ax.fill(c,d, '0.75')
+    ax.fill(e,f, '0.75')
+    ax.fill(g,h, '0.75')
+    ax2 = ax.twiny()
+    ax2.plot(wl, flux)
     ax.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength ($\mu$ m)")
     ax.set_title(label)
+    ax.set_xlim(0.5,2)
     fig.savefig(str(atmos) + ".png", bbox_inches = 'tight')
+
 
 
 
@@ -143,13 +148,13 @@ if __name__ == '__main__':
  #       longplot("arch_prox", 0.01, 0.5, 2, False, False)
     else:
         # Presumably, on a regular computer: ready to run
-        longplot("earth", 1, 0.5, 0.501, True, False)
-        longplot("earth", 1, 0.5, 0.501, False, True)
-        longplot("prox", 1, 0.5, 0.501, False, False)
-        longplot("highd", 1, 0.5, 0.501, False, False)
-        longplot("highw", 1, 0.5, 0.501, False, False)
-        longplot("arch_prox", 1, 0.5, 0.501, False, False)
-
+ #       longplot("earth", 1, 0.5, 0.501, True, False)
+ #       longplot("earth", 1, 0.5, 0.501, False, True)
+        longplot("prox", 10, 0.6, 0.7, False, False)
+        longplot("highd", 10, 0.6, 0.7, False, False)
+ #       longplot("highw", 1, 0.5, 0.501, False, False)
+ #       longplot("arch_prox", 1, 0.5, 0.501, False, False)
+#
 
 
 
