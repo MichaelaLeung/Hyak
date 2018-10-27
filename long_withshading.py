@@ -68,6 +68,10 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
 
     else:
         pass
+    if res < 1:
+        info = "vlow"
+    else:
+        info = ""
 
     import platform
     
@@ -92,7 +96,7 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
     sflux = sim.output.rad.sflux
 
     adj_flux = flux/sflux * ((sim.smartin.radius / sim.smartin.r_AU) **2 )
-
+    refl = flux/sflux
     flux = adj_flux
     a = [1.25,1.25,1.27,1.27]
     b = [0, max(flux), max(flux), 0]
@@ -104,17 +108,21 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
     h = [0, max(flux), max(flux), 0]
     
     fig, ax = plt.subplots(figsize = (30, 10))
-    ax.fill(a,b, '0.75')
-    ax.fill(c,d, '0.75')
-    ax.fill(e,f, '0.75')
-    ax.fill(g,h, '0.75')
     ax2 = ax.twiny()
-    ax2.plot(wl, flux)
+    ax2.fill(a,b, '0.75')
+    ax2.fill(c,d, '0.75')
+    ax2.fill(e,f, '0.75')
+    ax2.fill(g,h, '0.75')
+    ax.plot(wl, flux)
+    ax2.xaxis.set_visible(False)
+    ax3 = ax.twinx()
+    ax3.plot(wl, refl, 'r')
+    ax2.xaxis.set_visible(False)
     ax.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength ($\mu$ m)")
     ax.set_title(label)
     ax.set_xlim(0.5,2)
-    fig.savefig(str(atmos) + ".png", bbox_inches = 'tight')
+    fig.savefig(str(atmos) + info + ".png", bbox_inches = 'tight')
 
 
 
@@ -150,8 +158,8 @@ if __name__ == '__main__':
         # Presumably, on a regular computer: ready to run
  #       longplot("earth", 1, 0.5, 0.501, True, False)
  #       longplot("earth", 1, 0.5, 0.501, False, True)
-        longplot("prox", 10, 0.6, 0.7, False, False)
-        longplot("highd", 10, 0.6, 0.7, False, False)
+        longplot("prox", 10, 0.6, 1.3, False, False)
+        longplot("highd", 10, 0.6, 1.3, False, False)
  #       longplot("highw", 1, 0.5, 0.501, False, False)
  #       longplot("arch_prox", 1, 0.5, 0.501, False, False)
 #
