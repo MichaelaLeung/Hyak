@@ -18,19 +18,39 @@ def longplot(atmos):
     elif atmos == "highd":
         data = smart.readsmart.Rad("longplot/highd_hitran2012_5000_20000cm_toa.rad")
         label = "10 bar O2 PCb"
-    sim.open_outputs()
     wl = data.lam
     flux = data.pflux
     sflux = data.sflux
 
     adj_flux = flux/sflux * ((sim.smartin.radius / sim.smartin.r_AU) **2 )
 
+   refl = flux/sflux
+    flux = adj_flux
+    a = [1.25,1.25,1.27,1.27]
+    b = [0, max(flux), max(flux), 0]
+    c = [0.74,0.74,0.76,0.76]
+    d = [0, max(flux), max(flux), 0]
+    e = [0.61,0.61,0.65,0.65]
+    f = [0, max(flux), max(flux), 0]
+    g = [0.66,0.66,0.70,0.70]
+    h = [0, max(flux), max(flux), 0]
+    
     fig, ax = plt.subplots(figsize = (30, 10))
-    ax.plot(wl, adj_flux)
+    ax2 = ax.twiny()
+    ax2.fill(a,b, '0.75')
+    ax2.fill(c,d, '0.75')
+    ax2.fill(e,f, '0.75')
+    ax2.fill(g,h, '0.75')
+    ax.plot(wl, flux)
+    ax2.xaxis.set_visible(False)
+    ax3 = ax.twinx()
+    ax3.plot(wl, refl, 'r')
+    ax2.xaxis.set_visible(False)
     ax.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength ($\mu$ m)")
     ax.set_title(label)
-    fig.savefig(str(atmos) + ".png", bbox_inches = 'tight')
+    ax.set_xlim(0.5,2)
+    fig.savefig(str(atmos) + info + ".png", bbox_inches = 'tight')
 
 if __name__ == '__main__':
 
