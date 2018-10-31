@@ -11,7 +11,7 @@ matplotlib.rcParams['text.usetex'] = False
 
 def longplot(atmos, res, lamin, lamax, cirrus, strato):
     
-    sim = smart.interface.Smart(tag = atmos)
+    sim = smart.interface.Smart(tag = atmos+"low")
     sim.smartin.alb_file = "composite1_txt.txt"
     if atmos == "earth":
         infile = "earth_avg.pt"

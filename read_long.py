@@ -13,10 +13,10 @@ def longplot(atmos):
     if atmos == "earth":
         infile = "earth_avg.pt"
     elif atmos == "prox":
-        data = smart.readsmart.Rad("prox_hitran2012_5000_20000cm_toa.rad")
+        data = smart.readsmart.Rad("longplot/prox_hitran2012_5000_20000cm_toa.rad")
         label = "Self Consistent PCb"
     elif atmos == "highd":
-        data = smart.readsmart.Rad("highd_hitran2012_5000_20000cm_toa.rad")
+        data = smart.readsmart.Rad("longplot/highd_hitran2012_5000_20000cm_toa.rad")
         label = "10 bar O2 PCb"
     sim.open_outputs()
     wl = data.lam
