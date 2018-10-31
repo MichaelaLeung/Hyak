@@ -63,7 +63,7 @@ def longplot(atmos):
     ax.set_xlabel("Wavelength ($\mu$ m)")
     ax.set_title(label)
     ax.set_xlim(0.5,2)
-    fig.savefig(str(atmos) + info + ".png", bbox_inches = 'tight')
+    fig.savefig(str(atmos) + ".png", bbox_inches = 'tight')
 
 if __name__ == '__main__':
     import platform
