@@ -10,6 +10,19 @@ import datetime
 matplotlib.rcParams['text.usetex'] = False
 
 def longplot(atmos):
+
+     if platform.system() == 'Darwin':
+        # On a Mac: usetex ok
+        mpl.rc('font',**{'family':'serif','serif':['Computer Modern']})
+        mpl.rcParams['font.size'] = 25.0
+        mpl.rc('text', usetex=True)
+    elif platform.node().startswith("n"):
+        # On hyak: usetex not ok, must change backend to 'agg'
+        mpl.rc('font',**{'family':'serif','serif':['Computer Modern']})
+        mpl.rcParams['font.size'] = 25.0
+        mpl.rc('text', usetex=False)
+        plt.switch_backend('agg')
+        
     if atmos == "earth":
         infile = "earth_avg.pt"
     elif atmos == "prox":
