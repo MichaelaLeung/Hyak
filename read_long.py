@@ -24,7 +24,7 @@ def longplot(atmos):
 
     adj_flux = flux/sflux * ((sim.smartin.radius / sim.smartin.r_AU) **2 )
 
-   refl = flux/sflux
+    refl = flux/sflux
     flux = adj_flux
     a = [1.25,1.25,1.27,1.27]
     b = [0, max(flux), max(flux), 0]
