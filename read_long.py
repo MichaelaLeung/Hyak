@@ -32,7 +32,7 @@ def longplot(atmos):
     ax.set_title(label)
     fig.savefig(str(atmos) + ".png", bbox_inches = 'tight')
 
-    if __name__ == '__main__':
+if __name__ == '__main__':
 
     import platform
 
@@ -56,6 +56,7 @@ def longplot(atmos):
         longplot("highd")
     else:
         # Presumably, on a regular computer: ready to run
+        pass
 
 
 
