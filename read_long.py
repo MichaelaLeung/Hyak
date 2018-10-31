@@ -10,8 +10,7 @@ import datetime
 matplotlib.rcParams['text.usetex'] = False
 
 def longplot(atmos):
-
-     if platform.system() == 'Darwin':
+    if platform.system() == 'Darwin':
         # On a Mac: usetex ok
         mpl.rc('font',**{'family':'serif','serif':['Computer Modern']})
         mpl.rcParams['font.size'] = 25.0
