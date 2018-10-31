@@ -67,9 +67,7 @@ def longplot(atmos):
     fig.savefig(str(atmos) + info + ".png", bbox_inches = 'tight')
 
 if __name__ == '__main__':
-
     import platform
-
     if platform.node().startswith("mox"):
         # On the mox login node: submit job
         runfile = __file__
