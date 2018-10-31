@@ -9,67 +9,7 @@ import sys, os
 import datetime
 matplotlib.rcParams['text.usetex'] = False
 
-def longplot(atmos, res, lamin, lamax, cirrus, strato, counter):
-    sim = smart.interface.Smart(tag = str(atmos)+"sensi")
-    sim.smartin.alb_file = "composite1_txt.txt"
-    if atmos == "earth":
-        infile = "earth_avg.pt"
-    elif atmos == "prox":
-        infile = "profile_Earth_proxb_.pt_filtered"
-        label = "Self Consistent PCb"
-        sim.set_planet_proxima_b()
-    elif atmos == "highd":
-        infile = "10bar_O2_dry.pt_filtered.pt"
-        label = "10 bar O2 PCb"
-        sim.set_planet_proxima_b()
-    elif atmos == "highw":
-        infile = "10bar_O2_wet.pt_filtered.pt"
-        sim.set_planet_proxima_b()
-    elif atmos == "arch_prox":
-        infile = "clearsky_archean.pt"
-        sim.set_planet_proxima_b()
-    HERE = os.path.dirname(os.path.abspath(__file__))
-    place = os.path.join(HERE, "longplot")
-
-    try:
-        os.mkdir(place)
-    except OSError:
-        pass
-
-        
-    sim.set_run_in_place(place) 
-    sim.set_executables_automatically()
-
-
-    sim.load_atmosphere_from_pt(infile, addn2 = False)
-
-
-    sim.smartin.FWHM = res
-    sim.smartin.sample_res = res
-
-    sim.smartin.minwn = 1e4/lamax
-    sim.smartin.maxwn = 1e4/lamin 
-
-    sim.lblin.minwn = 1e4/lamax
-    sim.lblin.maxwn = 1e4/lamin
-    sim.run_gas_sensitivity_test(run=True)
-
-    sim.gen_lblscripts()
-    sim.run_lblabc()
-
-    if cirrus == True:
-        sim.aerosols = smart.interface.Aerosols(cirrus=True, stratocum=False)
-        sim.tag = atmos + "_cirrus"
-
-    elif strato == True:
-        sim.aerosols = smart.interface.Aerosols(cirrus=False, stratocum=True)
-        sim.tag = atmos + "_strato"
-
-    else:
-        pass
-
-    import platform
-    
+def longplot(atmos, res, lamin, lamax, cirrus, strato, counter):  
     if platform.system() == 'Jarvis':
         # On a Mac: usetex ok
         mpl.rc('font',**{'family':'serif','serif':['Computer Modern']})
@@ -82,23 +22,32 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato, counter):
         mpl.rc('text', usetex=False)
         plt.switch_backend('agg')
 
-    sim.write_smart(write_file = True)
-    sim.run_smart()
+    data = smart.readsmart.Rad("longplot/highdsensi_no_co2_hitran2012_11111_11764cm_toa.rad")
+    info = "co2", "o2","o3","co","so2","ocs","n2"
+    data1 = smart.readsmart.Rad("longplot/highdsensi_no_o2_hitran2012_11111_11764cm_toa.rad")
+    data2 = smart.readsmart.Rad("longplot/highdsensi_no_o3_hitran2012_11111_11764cm_toa.rad")
+    data3 = smart.readsmart.Rad("longplot/highdsensi_no_co_hitran2012_11111_11764cm_toa.rad")
+    data4 = smart.readsmart.Rad("longplot/highdsensi_no_so2_hitran2012_11111_11764cm_toa.rad")
+    data5 = smart.readsmart.Rad("longplot/highdsensi_no_ocs_hitran2012_11111_11764cm_toa.rad")
+    data6 = smart.readsmart.Rad("longplot/highdsensi_no_n2_hitran2012_11111_11764cm_toa.rad")
 
-    sim.open_outputs()
-    wl = sim.output.rad.lam
-    flux = sim.output.rad.pflux
-    sflux = sim.output.rad.sflux
+    radius = 6850.0
+    r_AU = 0.0485
 
-    adj_flux = flux/sflux * ((sim.smartin.radius / sim.smartin.r_AU) **2 )
-
-    fig, ax = plt.subplots(figsize = (30, 10))
-    ax.plot(wl, adj_flux)
-    ax.set_ylabel("Reflectance")
-    ax.set_xlabel("Wavelength ($\mu$ m)")
-    ax.set_title(label)
-    fig.savefig(str(atmos) + str(counter) + "sensi.png", bbox_inches = 'tight')
-    counter = counter+1
+    counter = 0
+    for sample in (data, data1, data2, data3, data4, data5, data6):
+        wl = sample.lam
+        flux = sample.pflux
+        sflux = sample.sflux
+        adj_flux = flux/sflux * ((radius / r_AU) **2 )
+        fig, ax = plt.subplots(figsize = (30, 10))
+        ax.plot(wl, adj_flux)
+        ax.set_ylabel("Reflectance")
+        ax.set_xlabel("Wavelength ($\mu$ m)")
+        ax.set_title(label)
+        atmos = info[counter]
+        fig.savefig("no" + str(atmos) + "highd.png", bbox_inches = 'tight')
+        counter = counter+1
 
 
 

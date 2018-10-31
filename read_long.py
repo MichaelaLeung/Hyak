@@ -21,8 +21,9 @@ def longplot(atmos):
     wl = data.lam
     flux = data.pflux
     sflux = data.sflux
-
-    adj_flux = flux/sflux * ((sim.smartin.radius / sim.smartin.r_AU) **2 )
+    radius = 6850.0
+    r_AU = 0.0485
+    adj_flux = flux/sflux * ((radius / r_AU) **2 )
 
     refl = flux/sflux
     flux = adj_flux
