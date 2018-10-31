@@ -124,7 +124,7 @@ def smart_basic(res, lamin, lamax):
         segments = np.concatenate([points[:-1], points[1:]], axis=1)
 
         # Use linecollections to make color lines
-        lc = LineCollection(segments, cmap='bone', norm=norm)
+        lc = LineCollection(segments, cmap='Pastel1', norm=norm)
     
         # Set the values used for colormapping
         lc.set_array(z)
@@ -142,12 +142,12 @@ def smart_basic(res, lamin, lamax):
     cbar = fig.colorbar(line, pad = .15)
     cbar.set_label(r"Reflectance", rotation = 270, labelpad = 35)
 
-    ax2 = ax.twinx()
-    ax2.plot(earth_wl, earth_flux, 'r')
-    ax2.set_xlabel(r"Wavelength [$\mu$]")
+ #   ax2 = ax.twinx()
+ #   ax2.plot(earth_wl, earth_flux, 'r')
+ #   ax2.set_xlabel(r"Wavelength [$\mu$]")
 
     fig_name = str(lamax) + "to" + str(lamin)
-    fig.savefig("o2test" + fig_name +  ".png")    
+    fig.savefig("o2test_pastel_" + fig_name +  ".png")    
  
 
 if __name__ == '__main__':
