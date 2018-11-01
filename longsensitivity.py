@@ -100,7 +100,7 @@ if __name__ == '__main__':
         # On the mox login node: submit job
         runfile = __file__
         smart.utils.write_slurm_script_python(runfile,
-                               name="longplt",
+                               name="sensi",
                                subname="submit.csh",
                                workdir = "",
                                nodes = 1,
@@ -115,7 +115,7 @@ if __name__ == '__main__':
         longplot("highd", 0.01, 0.5, 2, False, False, 0)
         counter = 0
     else:
-        longplot("highd", 1, 0.85, 0.9, False, False, 0)
+        longplot("highd", 10, 0.6, 1.3, False, False, 0)
         counter = 0
 
 

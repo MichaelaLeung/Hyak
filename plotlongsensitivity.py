@@ -22,14 +22,14 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato, counter):
         mpl.rc('text', usetex=False)
         plt.switch_backend('agg')
 
-    data = smart.readsmart.Rad("longplot/highdsensi_no_co2_hitran2012_5000_20000cm_toa.rad")
+    data = smart.readsmart.Rad("longplot/highdsensi_no_co2_hitran2012_7692_16666cm_toa.rad")
     info = "co2", "o2","o3","co","so2","ocs","n2"
-    data1 = smart.readsmart.Rad("longplot/highdsensi_no_o2_hitran2012_5000_20000cm_toa.rad")
-    data2 = smart.readsmart.Rad("longplot/highdsensi_no_o3_hitran2012_5000_20000cm_toa.rad")
-    data3 = smart.readsmart.Rad("longplot/highdsensi_no_co_hitran2012_5000_20000cm_toa.rad")
-    data4 = smart.readsmart.Rad("longplot/highdsensi_no_so2_hitran2012_5000_20000cm_toa.rad")
-    data5 = smart.readsmart.Rad("longplot/highdsensi_no_ocs_hitran2012_5000_20000cm_toa.rad")
-    data6 = smart.readsmart.Rad("longplot/highdsensi_no_n2_hitran2012_5000_20000cm_toa.rad")
+    data1 = smart.readsmart.Rad("longplot/highdsensi_no_o2_hitran2012_7692_16666cm_toa.rad")
+    data2 = smart.readsmart.Rad("longplot/highdsensi_no_o3_hitran2012_7692_16666cm_toa.rad")
+    data3 = smart.readsmart.Rad("longplot/highdsensi_no_co_hitran2012_7692_16666cm_toa.rad")
+    data4 = smart.readsmart.Rad("longplot/highdsensi_no_so2_hitran2012_7692_16666cm_toa.rad")
+    data5 = smart.readsmart.Rad("longplot/highdsensi_no_ocs_hitran2012_7692_16666cm_toa.rad")
+    data6 = smart.readsmart.Rad("longplot/highdsensi_no_n2_hitran2012_7692_16666cm_toa.rad")
 
     radius = 6850.0
     r_AU = 0.0485
@@ -46,7 +46,7 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato, counter):
         ax.set_xlabel("Wavelength ($\mu$ m)")
         ax.set_title(info[counter])
         atmos = info[counter]
-        fig.savefig("no" + str(atmos) + "highd.png", bbox_inches = 'tight')
+        fig.savefig("no" + str(atmos) + "highd_low.png", bbox_inches = 'tight')
         counter = counter+1
 
 
@@ -60,7 +60,7 @@ if __name__ == '__main__':
         # On the mox login node: submit job
         runfile = __file__
         smart.utils.write_slurm_script_python(runfile,
-                               name="longplt",
+                               name="sensiplt",
                                subname="submit.csh",
                                workdir = "",
                                nodes = 1,
