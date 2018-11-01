@@ -92,17 +92,6 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato, counter):
 
     adj_flux = flux/sflux * ((sim.smartin.radius / sim.smartin.r_AU) **2 )
 
-    fig, ax = plt.subplots(figsize = (30, 10))
-    ax.plot(wl, adj_flux)
-    ax.set_ylabel("Reflectance")
-    ax.set_xlabel("Wavelength ($\mu$ m)")
-    ax.set_title(label)
-    fig.savefig(str(atmos) + str(counter) + "sensi.png", bbox_inches = 'tight')
-    counter = counter+1
-
-
-
-
 if __name__ == '__main__':
 
     import platform
