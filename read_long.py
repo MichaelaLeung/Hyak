@@ -10,7 +10,7 @@ import datetime
 matplotlib.rcParams['text.usetex'] = False
 
 def longplot(atmos):
-    if platform.system() == 'Darwin':
+    if platform.system() == 'Jarvis':
         # On a Mac: usetex ok
         mpl.rc('font',**{'family':'serif','serif':['Computer Modern']})
         mpl.rcParams['font.size'] = 25.0
@@ -26,10 +26,13 @@ def longplot(atmos):
         infile = "earth_avg.pt"
     elif atmos == "prox":
         data = smart.readsmart.Rad("longplot/prox_hitran2012_5000_20000cm_toa.rad")
-        label = "Self Consistent PCb"
+        label = "Self Consistent PCb (Earth like)"
     elif atmos == "highd":
         data = smart.readsmart.Rad("longplot/highd_hitran2012_5000_20000cm_toa.rad")
         label = "10 bar O2 PCb"
+    elif atmos == "low":
+        data = smart.readsmart.Rad("high_o2_noO4_hitran2012_11111_11627cm_toa.rad")
+        label = "10 Bar O2 PCb"
     wl = data.lam
     flux = data.pflux
     sflux = data.sflux
@@ -49,25 +52,23 @@ def longplot(atmos):
     h = [0, max(flux), max(flux), 0]
     
     fig, ax = plt.subplots(figsize = (40, 10))
-    ax2 = ax.twiny()
-    ax2.fill(a,b, '0.75')
-    ax2.fill(c,d, '0.75')
-    ax2.fill(e,f, '0.75')
-    ax2.fill(g,h, '0.75')
+    ax.fill(a,b, '0.75')
+    ax.fill(c,d, '0.75')
+    ax.fill(e,f, '0.75')
+    ax.fill(g,h, '0.75')
     ax.plot(wl, flux)
-    ax.xaxis.set_visible(False)
-    ax3 = ax.twinx()
-    ax3.plot(wl, refl, 'b')
+    ax2 = ax.twinx()
+    ax2.plot(wl, refl, 'b')
     ax2.xaxis.set_visible(False)
     ax.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength ($\mu$ m)")
     ax.set_title(label)
-    ax.xticks(np.arange(min(wl), max(wl)+.1, 0.1))
-    ax2.xticks(np.arange(min(wl), max(wl)+.1, 0.1))
-    ax3.xticks(np.arange(min(wl), max(wl)+.1, 0.1))
+    plt.xticks(np.arange(min(wl), max(wl)+.1, 0.1))
+ #   ax2.xticks(np.arange(min(wl), max(wl)+.1, 0.1))
+ #   ax3.xticks(np.arange(min(wl), max(wl)+.1, 0.1))
     ax.set_xlim(0.5,2)
     ax2.set_xlim(0.5,2)
-    ax3.set_xlim(0.5,2)
+ #   ax3.set_xlim(0.5,2)
 
     fig.savefig(str(atmos) + ".png", bbox_inches = 'tight')
 
@@ -93,8 +94,7 @@ if __name__ == '__main__':
         longplot("highd")
     else:
         # Presumably, on a regular computer: ready to run
-        pass
-
+        longplot("low")
 
 
 
