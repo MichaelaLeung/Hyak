@@ -116,7 +116,7 @@ if __name__ == '__main__':
         longplot("highw", 0.01, 0.5, 2.0, False, False, 0)
         counter = 0
     else:
-        longplot("highd", 0.01, 0.86, 0.90, False, False, 0)
+        longplot("highw", 0.01, 0.86, 0.90, False, False, 0)
         counter = 0
 
 

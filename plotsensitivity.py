@@ -9,7 +9,7 @@ import sys, os
 import datetime
 matplotlib.rcParams['text.usetex'] = False
 
-def longplot(atmos, res, lamin, lamax, cirrus, strato, counter):  
+def longplot(choice):  
     if platform.system() == 'Jarvis':
         # On a Mac: usetex ok
         mpl.rc('font',**{'family':'serif','serif':['Computer Modern']})
@@ -21,15 +21,24 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato, counter):
         mpl.rcParams['font.size'] = 25.0
         mpl.rc('text', usetex=False)
         plt.switch_backend('agg')
-
-    data = smart.readsmart.Rad("longplot/highwsensi_hitran2012_5000_20000cm_toa.rad")
-    info = "co2", "o2","o3","co","so2","ocs","n2"
-    data1 = smart.readsmart.Rad("longplot/highwsensi_no_o2_hitran2012_5000_20000cm_toa.rad")
-    data2 = smart.readsmart.Rad("longplot/highwsensi_no_o3_hitran2012_5000_20000cm_toa.rad")
-    data3 = smart.readsmart.Rad("longplot/highwsensi_no_co_hitran2012_5000_20000cm_toa.rad")
-    data4 = smart.readsmart.Rad("longplot/highwsensi_no_so2_hitran2012_5000_20000cm_toa.rad")
-    data5 = smart.readsmart.Rad("longplot/highwsensi_no_ocs_hitran2012_5000_20000cm_toa.rad")
-    data6 = smart.readsmart.Rad("longplot/highwsensi_no_n2_hitran2012_5000_20000cm_toa.rad")
+    if choice == 'h':
+        data = smart.readsmart.Rad("longplot/highwsensi_hitran2012_5000_20000cm_toa.rad")
+        info = "co2", "o2","o3","co","so2","ocs","n2"
+        data1 = smart.readsmart.Rad("longplot/highwsensi_no_o2_hitran2012_5000_20000cm_toa.rad")
+        data2 = smart.readsmart.Rad("longplot/highwsensi_no_o3_hitran2012_5000_20000cm_toa.rad")
+        data3 = smart.readsmart.Rad("longplot/highwsensi_no_co_hitran2012_5000_20000cm_toa.rad")
+        data4 = smart.readsmart.Rad("longplot/highwsensi_no_so2_hitran2012_5000_20000cm_toa.rad")
+        data5 = smart.readsmart.Rad("longplot/highwsensi_no_ocs_hitran2012_5000_20000cm_toa.rad")
+        data6 = smart.readsmart.Rad("longplot/highwsensi_no_n2_hitran2012_5000_20000cm_toa.rad")
+    else:
+        data = smart.readsmart.Rad("longplot/highwsensi_hitran2012_11111_11627cm_toa.rad")
+        info = "co2", "o2","o3","co","so2","ocs","n2"
+        data1 = smart.readsmart.Rad("longplot/highwsensi_no_o2_hitran2012_11111_11627cm_toa.rad")
+        data2 = smart.readsmart.Rad("longplot/highwsensi_no_o3_hitran2012_11111_11627cm_toa.rad")
+        data3 = smart.readsmart.Rad("longplot/highwsensi_no_co_hitran2012_11111_11627cm_toa.rad")
+        data4 = smart.readsmart.Rad("longplot/highwsensi_no_so2_hitran2012_11111_11627cm_toa.rad")
+        data5 = smart.readsmart.Rad("longplot/highwsensi_no_ocs_hitran2012_11111_11627cm_toa.rad")
+        data6 = smart.readsmart.Rad("longplot/highwsensi_no_n2_hitran2012_11111_11627cm_toa.rad")
 
     radius = 6850.0
     r_AU = 0.0485
@@ -72,10 +81,10 @@ if __name__ == '__main__':
                                rm_after_submit = True)
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
-        longplot("highd", 0.01, 0.5, 2, False, False, 0)
+        longplot('h')
         counter = 0
     else:
-        longplot("highd", 1, 0.85, 0.9, False, False, 0)
+        longplot('m')
         counter = 0
 
 
