@@ -25,6 +25,7 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
         sim.set_planet_proxima_b()
     elif atmos == "highw":
         infile = "10bar_O2_wet.pt_filtered.pt"
+        label = "10 bar O2 PCb with water vapor"
         sim.set_planet_proxima_b()
     elif atmos == "arch_prox":
         infile = "clearsky_archean.pt"
