@@ -69,7 +69,7 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
 
     else:
         pass
-    if res < 1:
+    if res > 1:
         info = "vlow"
     else:
         info = ""
@@ -110,10 +110,10 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
     
     fig, ax = plt.subplots(figsize = (30, 10))
     ax2 = ax.twiny()
- #   ax2.fill(a,b, '0.75')
+    ax2.fill(a,b, '0.75')
     ax2.fill(c,d, '0.75')
- #   ax2.fill(e,f, '0.75')
- #   ax2.fill(g,h, '0.75')
+    ax2.fill(e,f, '0.75')
+    ax2.fill(g,h, '0.75')
     ax.plot(wl, flux)
     ax2.xaxis.set_visible(False)
     ax3 = ax.twinx()
@@ -122,8 +122,8 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
     ax.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength ($\mu$ m)")
     ax.set_title(label)
- #   ax.set_xlim(0.5,2)
-    ax.set_xlim(0.73,0.79)
+    ax.set_xlim(0.5,2)
+#    ax.set_xlim(0.73,0.79)
     fig.savefig(str(atmos) + info + ".png", bbox_inches = 'tight')
 
 
