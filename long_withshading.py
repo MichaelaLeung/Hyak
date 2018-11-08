@@ -99,31 +99,19 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
     adj_flux = flux/sflux * ((sim.smartin.radius / sim.smartin.r_AU) **2 )
     refl = flux/sflux
     flux = adj_flux
-    a = [1.25,1.25,1.27,1.27]
-    b = [0, max(flux), max(flux), 0]
-    c = [0.74,0.74,0.78,0.78]
-    d = [0, max(flux), max(flux), 0]
-    e = [0.61,0.61,0.65,0.65]
-    f = [0, max(flux), max(flux), 0]
-    g = [0.66,0.66,0.70,0.70]
-    h = [0, max(flux), max(flux), 0]
     
     fig, ax = plt.subplots(figsize = (30, 10))
-    ax2 = ax.twiny()
-    ax2.fill(a,b, '0.75')
-    ax2.fill(c,d, '0.75')
-    ax2.fill(e,f, '0.75')
-    ax2.fill(g,h, '0.75')
-    ax.plot(wl, flux)
-    ax2.xaxis.set_visible(False)
     ax3 = ax.twinx()
     ax3.plot(wl, refl)
-    ax2.xaxis.set_visible(False)
     ax.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength ($\mu$ m)")
     ax.set_title(label)
     ax.set_xlim(0.5,2)
-#    ax.set_xlim(0.73,0.79)
+    ax.axvspan(0.61, 0.65, alpha=0.5, color='grey')
+    ax.axvspan(0.66, 0.70, alpha=0.5, color='grey')
+    ax.axvspan(0.74, 0.78, alpha=0.5, color='grey')
+    ax.axvspan(1.25, 1.29, alpha=0.5, color='grey')
+    
     fig.savefig(str(atmos) + info + ".png", bbox_inches = 'tight')
 
 
@@ -160,7 +148,7 @@ if __name__ == '__main__':
         # Presumably, on a regular computer: ready to run
  #       longplot("earth", 1, 0.5, 0.501, True, False)
  #       longplot("earth", 1, 0.5, 0.501, False, True)
-        longplot("prox", 10, 0.73, 0.79, False, False)
+        longplot("prox", 100, 0.6, 0.9, False, False)
  #       longplot("highd", 10, 0.6, 1.3, False, False)
  #       longplot("highw", 1, 0.5, 0.501, False, False)
  #       longplot("arch_prox", 1, 0.5, 0.501, False, False)

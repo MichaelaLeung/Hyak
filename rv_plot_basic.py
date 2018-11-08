@@ -124,7 +124,7 @@ def smart_basic(res, lamin, lamax):
         segments = np.concatenate([points[:-1], points[1:]], axis=1)
 
         # Use linecollections to make color lines
-        lc = LineCollection(segments, cmap='bone', norm=norm)
+        lc = LineCollection(segments, cmap='gray', norm=norm)
     
         # Set the values used for colormapping
         lc.set_array(z)
@@ -147,7 +147,7 @@ def smart_basic(res, lamin, lamax):
  #   ax2.set_xlabel(r"Wavelength [$\mu$]")
 
     fig_name = str(lamax) + "to" + str(lamin)
-    fig.savefig("o2test_bone_" + fig_name +  ".png")    
+    fig.savefig("rv_plots/o2test_bw_" + fig_name +  ".png")    
  
 
 if __name__ == '__main__':

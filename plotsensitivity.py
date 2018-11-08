@@ -34,17 +34,17 @@ def longplot(choice):
         data = smart.readsmart.Rad("longplot/highwsensi_hitran2012_11111_11627cm_toa.rad")
         info = "co2", "o2","o3","co","so2","ocs","n2"
         data1 = smart.readsmart.Rad("longplot/highwsensi_no_o2_hitran2012_11111_11627cm_toa.rad")
-        data2 = smart.readsmart.Rad("longplot/highwsensi_no_o3_hitran2012_11111_11627cm_toa.rad")
-        data3 = smart.readsmart.Rad("longplot/highwsensi_no_co_hitran2012_11111_11627cm_toa.rad")
-        data4 = smart.readsmart.Rad("longplot/highwsensi_no_so2_hitran2012_11111_11627cm_toa.rad")
-        data5 = smart.readsmart.Rad("longplot/highwsensi_no_ocs_hitran2012_11111_11627cm_toa.rad")
-        data6 = smart.readsmart.Rad("longplot/highwsensi_no_n2_hitran2012_11111_11627cm_toa.rad")
+ #       data2 = smart.readsmart.Rad("longplot/highwsensi_no_o3_hitran2012_11111_11627cm_toa.rad")
+ #       data3 = smart.readsmart.Rad("longplot/highwsensi_no_co_hitran2012_11111_11627cm_toa.rad")
+ #       data4 = smart.readsmart.Rad("longplot/highwsensi_no_so2_hitran2012_11111_11627cm_toa.rad")
+#        data5 = smart.readsmart.Rad("longplot/highwsensi_no_ocs_hitran2012_11111_11627cm_toa.rad")
+ #       data6 = smart.readsmart.Rad("longplot/highwsensi_no_n2_hitran2012_11111_11627cm_toa.rad")
 
     radius = 6850.0
     r_AU = 0.0485
 
     counter = 0
-    for sample in (data, data1, data2, data3, data4, data5, data6):
+    for sample in (data, data1, data4, data5, data6):
         wl = sample.lam
         flux = sample.pflux
         sflux = sample.sflux
