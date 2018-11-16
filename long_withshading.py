@@ -103,7 +103,7 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
     fig, ax = plt.subplots(figsize = (30, 10))
     ax3 = ax.twinx()
     ax3.plot(wl, refl)
-    ax.set_ylabel("Reflectance")
+    ax3.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength ($\mu$ m)")
     ax.set_title(label)
     ax.set_xlim(0.5,2)

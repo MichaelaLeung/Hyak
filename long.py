@@ -12,20 +12,23 @@ matplotlib.rcParams['text.usetex'] = False
 def longplot(atmos, res, lamin, lamax, cirrus, strato):
     
     sim = smart.interface.Smart(tag = atmos)
-    sim.smartin.alb_file = "composite1_txt.txt"
     if atmos == "earth":
         infile = "earth_avg.pt"
+        sim.smartin.alb_file = "composite1_txt.txt"
     elif atmos == "prox":
         infile = "profile_Earth_proxb_.pt_filtered"
         label = "Self Consistent PCb (Earth like)"
+        sim.smartin.alb_file = "composite1_txt.txt"
         sim.set_planet_proxima_b()
     elif atmos == "highd":
         infile = "10bar_O2_dry.pt_filtered.pt"
         label = "10 bar O2 PCb"
+        sim.smartin.alb_file = "desert_highd.alb"
         sim.set_planet_proxima_b()
     elif atmos == "highw":
         infile = "10bar_O2_wet.pt_filtered.pt"
         label = "10 bar O2 PCb with water vapor"
+        sim.smartin.alb_file = "earth_noveg_highw.alb"
         sim.set_planet_proxima_b()
     elif atmos == "arch_prox":
         infile = "clearsky_archean.pt"
