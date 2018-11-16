@@ -113,7 +113,7 @@ if __name__ == '__main__':
                                rm_after_submit = True)
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
-        longplot("highw", 0.01, 0.5, 2.0, False, False, 0)
+        longplot("highd", 0.01, 0.5, 2.0, False, False, 0)
         counter = 0
     else:
         longplot("highw", 100, 0.6,1.3, False, False, 0)
