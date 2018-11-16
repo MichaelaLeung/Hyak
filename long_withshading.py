@@ -34,7 +34,7 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
         infile = "clearsky_archean.pt"
         sim.set_planet_proxima_b()
     HERE = os.path.dirname(os.path.abspath(__file__))
-    place = os.path.join(HERE, "longplot")
+    place = os.path.join(HERE, "test")
 
     try:
         os.mkdir(place)
@@ -143,8 +143,8 @@ if __name__ == '__main__':
         # On a mox compute node: ready to run
  #       longplot("earth", 0.01, 0.5, 2, True, False)
  #       longplot("earth", 0.01, 0.5, 2, False, True)
-        longplot("prox", 0.01, 0.5, 2, False, False)
-        longplot("highd", 0.01, 0.5, 2, False, False)
+ #       longplot("prox", 0.01, 0.5, 2, False, False)
+ #       longplot("highd", 0.01, 0.5, 2, False, False)
         longplot("highw", 0.01, 0.5, 2, False, False)
  #       longplot("arch_prox", 0.01, 0.5, 2, False, False)
     else:
