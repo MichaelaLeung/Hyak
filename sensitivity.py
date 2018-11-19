@@ -41,7 +41,7 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato, counter):
     sim.set_run_in_place(place) 
     sim.set_executables_automatically()
 
-
+    sim.smartin.sza = 57
     sim.load_atmosphere_from_pt(infile, addn2 = False)
 
 

@@ -12,6 +12,7 @@ matplotlib.rcParams['text.usetex'] = False
 def longplot(atmos, res, lamin, lamax, cirrus, strato):
     
     sim = smart.interface.Smart(tag = atmos)
+    sim.smartin.sza = 57
     if atmos == "earth":
         infile = "earth_avg.pt"
         sim.smartin.alb_file = "composite1_txt.txt"
@@ -48,7 +49,6 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
 
     sim.load_atmosphere_from_pt(infile, addn2 = False)
 
-
     sim.smartin.FWHM = res
     sim.smartin.sample_res = res
 
@@ -72,7 +72,7 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
 
     else:
         pass
-    if res > 1:
+    if res > 0.01:
         info = "vlow"
     else:
         info = ""
@@ -151,7 +151,7 @@ if __name__ == '__main__':
         # Presumably, on a regular computer: ready to run
  #       longplot("earth", 1, 0.5, 0.501, True, False)
  #       longplot("earth", 1, 0.5, 0.501, False, True)
-        longplot("prox", 100, 0.6, 0.9, False, False)
+        longplot("highw", 0.1, 0.9, 1.0, False, False)
  #       longplot("highd", 10, 0.6, 1.3, False, False)
  #       longplot("highw", 1, 0.5, 0.501, False, False)
  #       longplot("arch_prox", 1, 0.5, 0.501, False, False)
