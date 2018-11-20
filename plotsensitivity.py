@@ -31,20 +31,25 @@ def longplot(choice):
         data5 = smart.readsmart.Rad("longplot/highdsensi_no_ocs_hitran2012_5000_20000cm_toa.rad")
         data6 = smart.readsmart.Rad("longplot/highdsensi_no_n2_hitran2012_5000_20000cm_toa.rad")
     else:
-        data = smart.readsmart.Rad("longplot/highwsensi_hitran2012_11111_11627cm_toa.rad")
-        info = "co2", "o2","o3","co","so2","ocs","n2"
-        data1 = smart.readsmart.Rad("longplot/highwsensi_no_o2_hitran2012_11111_11627cm_toa.rad")
- #       data2 = smart.readsmart.Rad("longplot/highwsensi_no_o3_hitran2012_11111_11627cm_toa.rad")
- #       data3 = smart.readsmart.Rad("longplot/highwsensi_no_co_hitran2012_11111_11627cm_toa.rad")
- #       data4 = smart.readsmart.Rad("longplot/highwsensi_no_so2_hitran2012_11111_11627cm_toa.rad")
-#        data5 = smart.readsmart.Rad("longplot/highwsensi_no_ocs_hitran2012_11111_11627cm_toa.rad")
- #       data6 = smart.readsmart.Rad("longplot/highwsensi_no_n2_hitran2012_11111_11627cm_toa.rad")
+ #       data = smart.readsmart.Rad("longplot/highwsensi_hitran2012_11111_12500cm_toa.rad")
+        info = "h2o", "co2","o2","o3","co","hno3","no2", "so2","no", "n2"
+        data1 = smart.readsmart.Rad("longplot/highwsensi_no_h2o_hitran2012_14285_16666cm_toa.rad")
+        data2 = smart.readsmart.Rad("longplot/highwsensi_no_co2_hitran2012_14285_16666cm_toa.rad")
+        data3 = smart.readsmart.Rad("longplot/highwsensi_no_o2_hitran2012_14285_16666cm_toa.rad")
+        data4 = smart.readsmart.Rad("longplot/highwsensi_no_o3_hitran2012_14285_16666cm_toa.rad")
+        data5 = smart.readsmart.Rad("longplot/highwsensi_no_co_hitran2012_14285_16666cm_toa.rad")
+        data6 = smart.readsmart.Rad("longplot/highwsensi_no_hno3_hitran2012_14285_16666cm_toa.rad")
+        data7 = smart.readsmart.Rad("longplot/highwsensi_no_no2_hitran2012_14285_16666cm_toa.rad")
+        data8 = smart.readsmart.Rad("longplot/highwsensi_no_so2_hitran2012_14285_16666cm_toa.rad")
+ #       data9 = smart.readsmart.Rad("longplot/highwsensi_no_no_hitran2012_14285_16666cm_toa.rad")
+        data0 = smart.readsmart.Rad("longplot/highwsensi_no_n2_hitran2012_14285_16666cm_toa.rad")
+
 
     radius = 6850.0
     r_AU = 0.0485
 
     counter = 0
-    for sample in (data, data1, data4, data5, data6):
+    for sample in (data1, data2, data3, data4, data5, data6, data7, data8,data0):
         wl = sample.lam
         flux = sample.pflux
         sflux = sample.sflux
@@ -55,8 +60,8 @@ def longplot(choice):
         ax.set_xlabel("Wavelength ($\mu$ m)")
         ax.set_title(info[counter])
         atmos = info[counter]
-    fig.savefig("no" + str(atmos) + "highd.png", bbox_inches = 'tight')
-    counter = counter+1
+        fig.savefig("no" + str(atmos) + "highd.png", bbox_inches = 'tight')
+        counter = counter+1
 
 
 

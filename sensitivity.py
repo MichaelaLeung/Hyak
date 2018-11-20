@@ -30,7 +30,7 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato, counter):
         infile = "clearsky_archean.pt"
         sim.set_planet_proxima_b()
     HERE = os.path.dirname(os.path.abspath(__file__))
-    place = os.path.join(HERE, "longplot")
+    place = os.path.join(HERE, "sensi")
 
     try:
         os.mkdir(place)
@@ -54,9 +54,6 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato, counter):
     sim.lblin.minwn = 1e4/lamax
     sim.lblin.maxwn = 1e4/lamin
     sim.run_gas_sensitivity_test(run=True)
-
-    sim.gen_lblscripts()
-    sim.run_lblabc()
 
     if cirrus == True:
         sim.aerosols = smart.interface.Aerosols(cirrus=True, stratocum=False)
@@ -82,17 +79,7 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato, counter):
         mpl.rcParams['font.size'] = 25.0
         mpl.rc('text', usetex=False)
         plt.switch_backend('agg')
-
-    sim.write_smart(write_file = True)
-    sim.run_smart()
-
-    sim.open_outputs()
-    wl = sim.output.rad.lam
-    flux = sim.output.rad.pflux
-    sflux = sim.output.rad.sflux
-
-    adj_flux = flux/sflux * ((sim.smartin.radius / sim.smartin.r_AU) **2 )
-
+        
 if __name__ == '__main__':
 
     import platform
@@ -113,10 +100,30 @@ if __name__ == '__main__':
                                rm_after_submit = True)
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
-        longplot("highd", 0.01, 0.5, 2.0, False, False, 0)
+        longplot("highw", 0.01, 0.5,0.6, False, False, 0)
+        longplot("highw", 0.01, 0.6,0.7, False, False, 0)
+        longplot("highw", 0.01, 0.7,0.8, False, False, 0)
+        longplot("highw", 0.01, 0.8,0.9, False, False, 0)
+        longplot("highw", 0.01, 0.9,1.0, False, False, 0)
+        longplot("highw", 0.01, 1.0,1.1, False, False, 0)
+        longplot("highw", 0.01, 1.1,1.2, False, False, 0)
+        longplot("highw", 0.01, 1.2,1.3, False, False, 0)
+        longplot("highw", 0.01, 1.3,1.4, False, False, 0)
+        longplot("highw", 0.01, 1.4,1.5, False, False, 0)
+        longplot("highw", 0.01, 1.5,1.6, False, False, 0)
+        longplot("highw", 0.01, 1.6,1.7, False, False, 0)
+        longplot("highw", 0.01, 1.7,1.8, False, False, 0)
+        longplot("highw", 0.01, 1.8,1.9, False, False, 0)
+        longplot("highw", 0.01, 1.9,2.0, False, False, 0)
         counter = 0
     else:
-        longplot("highw", 100, 0.6,1.3, False, False, 0)
+        longplot("highw", 0.01, 0.8,0.9, False, False, 0)
+        longplot("highw", 0.01, 0.9,1.0, False, False, 0)
+        longplot("highw", 0.01, 1.0,1.1, False, False, 0)
+        longplot("highw", 0.01, 1.1,1.2, False, False, 0)
+        longplot("highw", 0.01, 1.2,1.3, False, False, 0)
+        longplot("highw", 0.01, 1.3,1.4, False, False, 0)
+
         counter = 0
 
 
