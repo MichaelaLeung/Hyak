@@ -100,21 +100,7 @@ if __name__ == '__main__':
                                rm_after_submit = True)
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
-        longplot("highw", 0.01, 0.5,0.6, False, False, 0)
-        longplot("highw", 0.01, 0.6,0.7, False, False, 0)
-        longplot("highw", 0.01, 0.7,0.8, False, False, 0)
-        longplot("highw", 0.01, 0.8,0.9, False, False, 0)
-        longplot("highw", 0.01, 0.9,1.0, False, False, 0)
-        longplot("highw", 0.01, 1.0,1.1, False, False, 0)
-        longplot("highw", 0.01, 1.1,1.2, False, False, 0)
-        longplot("highw", 0.01, 1.2,1.3, False, False, 0)
-        longplot("highw", 0.01, 1.3,1.4, False, False, 0)
-        longplot("highw", 0.01, 1.4,1.5, False, False, 0)
-        longplot("highw", 0.01, 1.5,1.6, False, False, 0)
-        longplot("highw", 0.01, 1.6,1.7, False, False, 0)
-        longplot("highw", 0.01, 1.7,1.8, False, False, 0)
-        longplot("highw", 0.01, 1.8,1.9, False, False, 0)
-        longplot("highw", 0.01, 1.9,2.0, False, False, 0)
+        longplot("highd", 0.01, 0.5,2.0, False, False, 0)
         counter = 0
     else:
         longplot("highw", 0.01, 0.8,0.9, False, False, 0)

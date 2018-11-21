@@ -115,7 +115,7 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
     ax.axvspan(0.74, 0.78, alpha=0.5, color='grey')
     ax.axvspan(1.25, 1.29, alpha=0.5, color='grey')
     
-    fig.savefig(str(atmos) + info + ".png", bbox_inches = 'tight')
+    fig.savefig(str(atmos) + info + "test.png", bbox_inches = 'tight')
 
 
 
@@ -151,7 +151,7 @@ if __name__ == '__main__':
         # Presumably, on a regular computer: ready to run
  #       longplot("earth", 1, 0.5, 0.501, True, False)
  #       longplot("earth", 1, 0.5, 0.501, False, True)
-        longplot("highw", 0.1, 0.9, 1.0, False, False)
+        longplot("highw", 0.01, 0.9, 1.0, False, False)
  #       longplot("highd", 10, 0.6, 1.3, False, False)
  #       longplot("highw", 1, 0.5, 0.501, False, False)
  #       longplot("arch_prox", 1, 0.5, 0.501, False, False)
