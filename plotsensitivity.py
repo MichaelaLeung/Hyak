@@ -48,7 +48,7 @@ def longplot(choice):
     r_AU = 0.0485
 
     counter = 0
-    for sample in (data1, data2, data3, data4, data5, data6, data7, data8,data0):
+    for sample in (data1, data2, data3, data4, data5, data6):
         wl = sample.lam
         flux = sample.pflux
         sflux = sample.sflux
