@@ -47,7 +47,7 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
     sim.set_executables_automatically()
 
 
-    sim.load_atmosphere_from_pt(infile, addn2 = False)
+    sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
 
     sim.smartin.FWHM = res
     sim.smartin.sample_res = res

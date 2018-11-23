@@ -29,6 +29,14 @@ def longplot(choice):
         data4 = smart.readsmart.Rad("sensi/highdsensi_no_so2_hitran2012_5000_20000cm_toa.rad")
         data5 = smart.readsmart.Rad("sensi/highdsensi_no_ocs_hitran2012_5000_20000cm_toa.rad")
         data6 = smart.readsmart.Rad("sensi/highdsensi_no_n2_hitran2012_5000_20000cm_toa.rad")
+    elif choice == 'd':
+        info = "co2", "o2","o3","co","so2","ocs","n2"
+        data1 = smart.readsmart.Rad("sensi/highdsensi_no_o2_hitran2012_5000_20000cm_toa.rad")
+        data2 = smart.readsmart.Rad("sensi/highdsensi_no_o3_hitran2012_5000_20000cm_toa.rad")
+        data3 = smart.readsmart.Rad("sensi/highdsensi_no_co_hitran2012_5000_20000cm_toa.rad")
+        data4 = smart.readsmart.Rad("sensi/highdsensi_no_so2_hitran2012_5000_20000cm_toa.rad")
+        data5 = smart.readsmart.Rad("sensi/highdsensi_no_ocs_hitran2012_5000_20000cm_toa.rad")
+        data6 = smart.readsmart.Rad("sensi/highdsensi_no_n2_hitran2012_5000_20000cm_toa.rad")
     else:
  #       data = smart.readsmart.Rad("longplot/highwsensi_hitran2012_11111_12500cm_toa.rad")
         info = "h2o", "co2","o2","o3","co","hno3","no2", "so2","no", "n2"
@@ -88,7 +96,7 @@ if __name__ == '__main__':
         longplot('h')
         counter = 0
     else:
-        longplot('m')
+        longplot('h')
         counter = 0
 
 

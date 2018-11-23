@@ -42,7 +42,7 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato, counter):
     sim.set_executables_automatically()
 
     sim.smartin.sza = 57
-    sim.load_atmosphere_from_pt(infile, addn2 = False)
+    sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 0.01)
 
 
     sim.smartin.FWHM = res
@@ -103,13 +103,7 @@ if __name__ == '__main__':
         longplot("highd", 0.01, 0.5,2.0, False, False, 0)
         counter = 0
     else:
-        longplot("highw", 0.01, 0.8,0.9, False, False, 0)
-        longplot("highw", 0.01, 0.9,1.0, False, False, 0)
-        longplot("highw", 0.01, 1.0,1.1, False, False, 0)
-        longplot("highw", 0.01, 1.1,1.2, False, False, 0)
-        longplot("highw", 0.01, 1.2,1.3, False, False, 0)
-        longplot("highw", 0.01, 1.3,1.4, False, False, 0)
-
+        longplot("highd", 0.01, 0.5,2.0, False, False, 0)
         counter = 0
 
 
