@@ -9,15 +9,31 @@ import sys, os
 import datetime
 matplotlib.rcParams['text.usetex'] = False
 
-def smart_basic(mode, lamin, lamax, title):
-    if mode == 0: 
-        infile = "profile_Earth_proxb_.pt_filtered"
-        info = "prox"
-    else:
-        infile = "10bar_O2_dry.pt_filtered.pt"
-        info = "high_o2"
+def smart_basic(lamin, lamax, title):
+    infile1 = "profile_Earth_proxb_.pt_filtered"
+    info1 = "prox"
+    infile2 = "10bar_O2_dry.pt_filtered.pt"
+    info2 = "highd"
+    res = 1/(10*lamin)
     res = 1/(10*lamin)
     sim = smart.interface.Smart(tag = info)
+    sim1 = smart.interface.Smart(tag = info1)
+    sim1.load_atmosphere_from_pt(infile1, addn2 = False)
+    sim2 = smart.interface.Smart(tag = info2)
+    sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
+
+    for sim in (sim1, sim2):
+    sim.set_run_in_place()    
+ #   sim.load_atmosphere_from_pt(infile2, addn2 = False)
+    sim.set_executables_automatically()
+    sim.set_planet_proxima_b()
+    sim.set_star_proxima()
+    sim.smartin.FWHM = res
+    sim.smartin.sample_res = res
+    sim.smartin.minwn = 1e4/lamax
+    sim.smartin.maxwn = 1e4/lamin 
+    sim.lblin.minwn = 1e4/lamax
+    sim.lblin.maxwn = 1e4/lamin 
 
     
     HERE = os.path.dirname(os.path.abspath(__file__))
@@ -31,7 +47,6 @@ def smart_basic(mode, lamin, lamax, title):
     sim.set_run_in_place(place)
         
     sim.set_executables_automatically()
-    sim.load_atmosphere_from_pt(infile, addn2 = False)
     sim.set_planet_proxima_b()
     sim.set_star_proxima()
     sim.smartin.FWHM = res
@@ -97,24 +112,10 @@ if __name__ == '__main__':
                                rm_after_submit = True)
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
-        smart_basic(0, 1.5, 1.7, "1.6 $\mu$ m Carbon Dioxide")
-        smart_basic(0, 0.7, 0.74, "0.72 $\mu$ m Methane")
-        smart_basic(0, 0.86, 0.90, "0.88 $\mu$ m Methane")
-        smart_basic(0, 2.2, 2.4, "2.3 $\mu$ m Carbon Monoxide")
-        smart_basic(0, 4.5, 4.7, "4.6 $\mu$ m Carbon Monoxide")
-        smart_basic(0, 1.4, 1.8, "1.6 $\mu$ m Carbon Dioxide")
-        smart_basic(0, 0.74, 0.78, "0.76 $\mu$ m  Oxygen")
-        smart_basic(0, 0.61, 0.65, "0.63$\mu$ m Oxygen")
-        smart_basic(0, 0.66, 0.7, "0.68 $\mu$ m Oxygen")
-        smart_basic(1, 1.5, 1.7, "10 bar O2 1.6 $\mu$ m Carbon Dioxide")
-        smart_basic(1, 0.7, 0.74, "10 bar O2 0.72 $\mu$ m Methane")
-        smart_basic(1, 0.86, 0.90, "10 bar O2 0.88 $\mu$ m Methane")
-        smart_basic(1, 2.2, 2.4, "10 bar O2 2.3 $\mu$ m Carbon Monoxide")
-        smart_basic(1, 4.5, 4.7, "10 bar O2 4.6 $\mu$ m Carbon Monoxide")
-        smart_basic(1, 1.4, 1.8, "10 bar O2 1.6 $\mu$ m Carbon Dioxide")
-        smart_basic(1, 0.74, 0.78, "10 bar O2 0.76 $\mu$ m  Oxygen")
-        smart_basic(1, 0.61, 0.65, "10 bar O2 0.63$\mu$ m Oxygen")
-        smart_basic(1, 0.66, 0.7, "10 bar O2 0.68 $\mu$ m Oxygen")
+        smart_basic(0.61, 0.65, "0.63 Atmosphere comparison")
+        smart_basic(0.66, 0.70, "0.68 Atmosphere comparison")
+        smart_basic(0.74, 0.78, "0.76 Atmosphere comparison")
+        smart_basic(1.25,1.29, "1.27 Atmosphere comparison")
 
     else:
         # Presumably, on a regular computer: ready to run
