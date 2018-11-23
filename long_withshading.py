@@ -25,11 +25,13 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
         infile = "10bar_O2_dry.pt_filtered.pt"
         label = "10 bar O2 PCb"
         sim.smartin.alb_file = "desert_highd.alb"
+        sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
         sim.set_planet_proxima_b()
     elif atmos == "highw":
         infile = "10bar_O2_wet.pt_filtered.pt"
         label = "10 bar O2 PCb with water vapor"
         sim.smartin.alb_file = "earth_noveg_highw.alb"
+        sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
         sim.set_planet_proxima_b()
     elif atmos == "arch_prox":
         infile = "clearsky_archean.pt"
@@ -45,9 +47,8 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
         
     sim.set_run_in_place(place) 
     sim.set_executables_automatically()
+    sim.load_atmosphere_from_pt(infile, addn2 = False)
 
-
-    sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
 
     sim.smartin.FWHM = res
     sim.smartin.sample_res = res
@@ -115,7 +116,7 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
     ax.axvspan(0.74, 0.78, alpha=0.5, color='grey')
     ax.axvspan(1.25, 1.29, alpha=0.5, color='grey')
     
-    fig.savefig(str(atmos) + info + "test.png", bbox_inches = 'tight')
+    fig.savefig(str(atmos) + info + ".png", bbox_inches = 'tight')
 
 
 
@@ -143,8 +144,8 @@ if __name__ == '__main__':
         # On a mox compute node: ready to run
  #       longplot("earth", 0.01, 0.5, 2, True, False)
  #       longplot("earth", 0.01, 0.5, 2, False, True)
- #       longplot("prox", 0.01, 0.5, 2, False, False)
- #       longplot("highd", 0.01, 0.5, 2, False, False)
+        longplot("prox", 0.01, 0.5, 2, False, False)
+        longplot("highd", 0.01, 0.5, 2, False, False)
         longplot("highw", 0.01, 0.5, 2, False, False)
  #       longplot("arch_prox", 0.01, 0.5, 2, False, False)
     else:
