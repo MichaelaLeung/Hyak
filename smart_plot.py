@@ -23,17 +23,16 @@ def smart_basic(lamin, lamax, title):
     sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
 
     for sim in (sim1, sim2):
-    sim.set_run_in_place()    
- #   sim.load_atmosphere_from_pt(infile2, addn2 = False)
-    sim.set_executables_automatically()
-    sim.set_planet_proxima_b()
-    sim.set_star_proxima()
-    sim.smartin.FWHM = res
-    sim.smartin.sample_res = res
-    sim.smartin.minwn = 1e4/lamax
-    sim.smartin.maxwn = 1e4/lamin 
-    sim.lblin.minwn = 1e4/lamax
-    sim.lblin.maxwn = 1e4/lamin 
+        sim.set_run_in_place()    
+        sim.set_executables_automatically()
+        sim.set_planet_proxima_b()
+        sim.set_star_proxima()
+        sim.smartin.FWHM = res
+        sim.smartin.sample_res = res
+        sim.smartin.minwn = 1e4/lamax
+        sim.smartin.maxwn = 1e4/lamin 
+        sim.lblin.minwn = 1e4/lamax
+        sim.lblin.maxwn = 1e4/lamin 
 
     
     HERE = os.path.dirname(os.path.abspath(__file__))
