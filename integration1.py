@@ -17,9 +17,13 @@ def integration_metric(lamin, lamax, mode):
     if mode == 0: 
         infile = "profile_Earth_proxb_.pt_filtered"
         info = "reg"
+        sim.load_atmosphere_from_pt(infile, addn2 = False)
+
     else:
         infile = "10bar_O2_dry.pt_filtered.pt"
         info = "high_o2"
+        sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
+        
     HERE = os.path.dirname(os.path.abspath(__file__))
     place = os.path.join(HERE, "integration")
     try:
@@ -31,7 +35,6 @@ def integration_metric(lamin, lamax, mode):
     sim.set_executables_automatically()
     sim.set_planet_proxima_b()
     sim.set_star_proxima()
-    sim.load_atmosphere_from_pt(infile, addn2 = False)
     sim.smartin.FWHM = res
     sim.smartin.sample_res = res
     sim.smartin.minwn = 1e4/lamax
@@ -114,7 +117,7 @@ def integration_metric(lamin, lamax, mode):
     import scipy.integrate as integrate
     adds = integrate.trapz(out, wl[:-25])
     name = str(lamin) + "to" + str(lamax), str(info), str(abs(adds))
-    f = open("integrations2.txt", "a")
+    f = open("integrations_new.txt", "a")
     f.write(str(name) + "\n")
 
 
