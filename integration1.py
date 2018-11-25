@@ -119,12 +119,16 @@ def integration_metric(lamin, lamax, mode):
     name = str(lamin) + "to" + str(lamax), str(info), str(abs(adds))
     f = open("integrations_new.txt", "a")
     f.write(str(name) + "\n")
-
-
+    fig, ax = plt.subplots(2,1, figsize = (20, 20))
+    ax[0].plot(wl,flux)
+    ax[1].plot(wl[:-25], out)
+    ax[1].set_xlabel("Wavelength ($\mu$ m)")
+    fig_name = int(100*(float(lamin) + float(lamax))/2)
+    fig.savefig(str(fig_name)+"integrate.png", bbox_inches = 'tight')
+    
 if __name__ == '__main__':
 
     import platform
-
     if platform.node().startswith("mox"):
         # On the mox login node: submit job
         runfile = __file__
@@ -141,18 +145,26 @@ if __name__ == '__main__':
                                rm_after_submit = True)
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
-        integration_metric(0.61,0.65,0)
-        integration_metric(0.66,0.7,0)
-        integration_metric(0.74, 0.78,0)
-        integration_metric(1.25, 1.29,0)
+        integration_metric(0.62,0.64,0)
+        integration_metric(0.67,0.69,0)
+        integration_metric(0.75, 0.77,0)
+        integration_metric(1.26, 1.28,0)
 
-        integration_metric(0.61,0.65,1)
-        integration_metric(0.66,0.7,1)
-        integration_metric(0.74, 0.78,1)
-        integration_metric(1.25, 1.29,1)
+        integration_metric(0.62,0.64,1)
+        integration_metric(0.67,0.69,1)
+        integration_metric(0.75, 0.77,1)
+        integration_metric(1.26, 1.28,1)
 
     else:
         # Presumably, on a regular computer: ready to run
         integration_metric(0.62,0.64,0)
+        integration_metric(0.67,0.69,0)
+        integration_metric(0.75, 0.77,0)
+        integration_metric(1.26, 1.28,0)
+
+        integration_metric(0.62,0.64,1)
+        integration_metric(0.67,0.69,1)
+        integration_metric(0.75, 0.77,1)
+        integration_metric(1.26, 1.28,1)
 
  
