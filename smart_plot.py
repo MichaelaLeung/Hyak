@@ -122,9 +122,9 @@ if __name__ == '__main__':
  #       smart_basic(0.01, 0.61, 0.65, "0.63$\mu$ m Oxygen")
  #        smart_basic(1, 0.62, 0.64, "10 bar O2 0.63$\mu$ m Oxygen")
  #       smart_basic(1, 1.25, 1.275, "1.27 $\mu$ m Oxygen")
-        smart_basic(0.61, 0.65, "0.63 Atmosphere comparison")
-        smart_basic(0.66, 0.70, "0.68 Atmosphere comparison")
-        smart_basic(0.74, 0.78, "0.76 Atmosphere comparison")
+ #       smart_basic(0.61, 0.65, "0.63 Atmosphere comparison")
+ #       smart_basic(0.66, 0.70, "0.68 Atmosphere comparison")
+ #       smart_basic(0.74, 0.78, "0.76 Atmosphere comparison")
         smart_basic(1.25,1.29, "1.27 Atmosphere comparison")
 
 
