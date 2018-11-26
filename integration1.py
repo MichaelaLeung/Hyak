@@ -19,6 +19,8 @@ def integration_metric(lamin, lamax, mode):
         info = "reg"
         sim.load_atmosphere_from_pt(infile, addn2 = False)
         sim2.load_atmosphere_from_pt(infile, addn2 = False)
+        sim.smartin.alb_file = "composite1_txt.txt"
+        sim2.smartin.alb_file = "composite1_txt.txt"
     else:
         tag = "highd_hipass"
         tag2 ="highd_" + tag + "_low"
@@ -28,6 +30,9 @@ def integration_metric(lamin, lamax, mode):
         info = "highd"
         sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
         sim2.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
+        sim.smartin.alb_file = "desert_highd.alb"
+        sim.smartin.alb_file = "desert_highd.alb"
+
     HERE = os.path.dirname(os.path.abspath(__file__))
     place = os.path.join(HERE, "integration")
     try:
