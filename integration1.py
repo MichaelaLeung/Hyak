@@ -120,12 +120,6 @@ def integration_metric(lamin, lamax, mode):
     name = str(lamin) + "to" + str(lamax), str(info), str(abs(adds))
     f = open("integrations_new.txt", "a")
     f.write(str(name) + "\n")
-    fig, ax = plt.subplots(2,1, figsize = (20, 20))
-    ax[0].plot(wl,flux)
-    ax[1].plot(wl[:-25], out)
-    ax[1].set_xlabel("Wavelength ($\mu$ m)")
-    fig_name = int(100*(float(lamin) + float(lamax))/2)
-    fig.savefig(str(fig_name)+"integrate.png", bbox_inches = 'tight')
     
 if __name__ == '__main__':
 
