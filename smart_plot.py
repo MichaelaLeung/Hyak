@@ -23,12 +23,18 @@ def smart_basic(lamin, lamax, title):
     info1 = "prox"
     infile2 = "10bar_O2_wet.pt_filtered.pt"
     info2 = "highw"
+    
     res = 1/(10*lamin)
     res = 1/(10*lamin)
+    
     sim1 = smart.interface.Smart(tag = info1)
     sim1.load_atmosphere_from_pt(infile1, addn2 = False)
+    sim1.smartin.alb_file = "composite1_txt.txt"
+
     sim2 = smart.interface.Smart(tag = info2)
     sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
+    sim2.smartin.alb_file = "earth_noveg_highw.alb"
+
 
     for sim in (sim1, sim2):
         sim.set_run_in_place()    
