@@ -54,7 +54,7 @@ def integration_metric(lamin, lamax, mode):
     sim3.set_executables_automatically()
     sim.set_planet_proxima_b()
     sim.set_star_proxima()
-    sim3.load_atmosphere_from_pt(infile, addn2 = False)
+    sim3.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
     sim3.smartin.FWHM = res2
     sim3.smartin.sample_res = res2
     sim3.smartin.minwn = 1e4/lamax
@@ -89,7 +89,7 @@ def integration_metric(lamin, lamax, mode):
 
     mixed = []
     i = 0
-    while i < len(flux):
+    while i < len(long_flux):
         temp = (flux[i] + long_flux[i]) / 2
         mixed.append(temp)
         i = i+1
@@ -97,7 +97,7 @@ def integration_metric(lamin, lamax, mode):
 
     i = 0
     flattened = []
-    while i < len(flux)- 25: 
+    while i < len(long_flux)- 25: 
         avg = np.mean(flux[i:i+25])
         j = 0
         while j < 25:
