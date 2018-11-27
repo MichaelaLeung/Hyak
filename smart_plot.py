@@ -21,8 +21,8 @@ def smart_basic(lamin, lamax, title):
 
     infile1 = "profile_Earth_proxb_.pt_filtered"
     info1 = "prox"
-    infile2 = "10bar_O2_wet.pt_filtered.pt"
-    info2 = "highw"
+    infile2 = "10bar_O2_dry.pt_filtered.pt"
+    info2 = "highd"
     
     res = 1/(10*lamin)
     res = 1/(10*lamin)
@@ -33,7 +33,7 @@ def smart_basic(lamin, lamax, title):
 
     sim2 = smart.interface.Smart(tag = info2)
     sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
-    sim2.smartin.alb_file = "earth_noveg_highw.alb"
+    sim2.smartin.alb_file = "desert_highd.alb"
 
 
     for sim in (sim1, sim2):
@@ -82,13 +82,13 @@ def smart_basic(lamin, lamax, title):
 
     fig, ax = plt.subplots(figsize = (10,10))
     ax.plot(wl, flux, label = "Earth-like")
-    ax.plot(wl2, flux2, label = "10 bar oxygen with water vapor")
+    ax.plot(wl2, flux2, label = "10 bar oxygen")
     ax.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength ($\mu$ m)")
     ax.set_title(title)
     fig_name = int(100*(float(lamin) + float(lamax))/2)
     ax.legend()
-    fig.savefig(str(fig_name) +  "ocean.png", bbox_inches = "tight")    
+    fig.savefig(str(fig_name) +  ".png", bbox_inches = "tight")    
  
 
 if __name__ == '__main__':
