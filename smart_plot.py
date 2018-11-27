@@ -23,8 +23,9 @@ def smart_basic(lamin, lamax, title):
     info1 = "prox"
     infile2 = "10bar_O2_dry.pt_filtered.pt"
     info2 = "highd"
+    infile3 = "10bar_O2_wet.pt_filtered.pt"
+    info3 = "highw"
     
-    res = 1/(10*lamin)
     res = 1/(10*lamin)
     
     sim1 = smart.interface.Smart(tag = info1)
@@ -35,8 +36,12 @@ def smart_basic(lamin, lamax, title):
     sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
     sim2.smartin.alb_file = "desert_highd.alb"
 
+    sim3 = smart.interface.Smart(tag = info3)
+    sim3.load_atmosphere_from_pt(infile3, addn2 = False, scaleP = 1.0)
+    sim3.smartin.alb_file = "earth_noveg_highw.alb"
 
-    for sim in (sim1, sim2):
+
+    for sim in (sim1, sim2, sim3):
         sim.set_run_in_place()    
         sim.set_executables_automatically()
         sim.set_planet_proxima_b()
@@ -65,6 +70,12 @@ def smart_basic(lamin, lamax, title):
     sflux2 = sim2.output.rad.sflux
     flux2 = flux2/sflux2
 
+    sim3.open_outputs()
+    wl3 = sim3.output.rad.lam
+    flux3 = sim3.output.rad.pflux
+    sflux3 = sim3.output.rad.sflux
+    flux3 = flux3/sflux3
+
 
     import platform
     if platform.system() == 'Jarvis':
@@ -81,14 +92,16 @@ def smart_basic(lamin, lamax, title):
 
 
     fig, ax = plt.subplots(figsize = (10,10))
+    ax.plot(wl3, flux3, label = "10 bar oxygen (ocean planet)")
+    ax.plot(wl2, flux2, label = "10 bar oxygen (desert planet)")
     ax.plot(wl, flux, label = "Earth-like")
-    ax.plot(wl2, flux2, label = "10 bar oxygen")
+
     ax.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength ($\mu$ m)")
     ax.set_title(title)
     fig_name = int(100*(float(lamin) + float(lamax))/2)
     ax.legend()
-    fig.savefig(str(fig_name) +  ".png", bbox_inches = "tight")    
+    fig.savefig(str(fig_name) +  "tri.png", bbox_inches = "tight")    
  
 
 if __name__ == '__main__':
