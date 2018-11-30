@@ -111,7 +111,7 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
     ax.set_title(label)
     ax.set_xlim(0.5,2)
     ax.axvspan(0.61, 0.65, alpha=0.5, color='grey')
-    ax.axvspan(0.66, 0.70, alpha=0.5, color='grey')
+    ax.axvspan(0.67, 0.71, alpha=0.5, color='grey')
     ax.axvspan(0.74, 0.78, alpha=0.5, color='grey')
     ax.axvspan(1.25, 1.29, alpha=0.5, color='grey')
     

@@ -146,12 +146,12 @@ if __name__ == '__main__':
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
         integration_metric(0.61,0.65,0)
-        integration_metric(0.66,0.70,0)
+        integration_metric(0.67,0.71,0)
         integration_metric(0.74, 0.78,0)
         integration_metric(1.25, 1.29,0)
 
         integration_metric(0.63,0.65,1)
-        integration_metric(0.66,0.70,1)
+        integration_metric(0.61,0.71,1)
         integration_metric(0.74, 0.78,1)
         integration_metric(1.25, 1.29,1)
 
