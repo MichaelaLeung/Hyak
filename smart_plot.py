@@ -9,7 +9,7 @@ import sys, os
 import datetime
 matplotlib.rcParams['text.usetex'] = False
 
-def smart_basic(lamin, lamax, title):
+def smart_basic(lamin, lamax, title, atmos):
         
     HERE = os.path.dirname(os.path.abspath(__file__))
     place = os.path.join(HERE, "oxygen_outplot")
@@ -21,27 +21,27 @@ def smart_basic(lamin, lamax, title):
 
     infile1 = "profile_Earth_proxb_.pt_filtered"
     info1 = "prox"
-    infile2 = "10bar_O2_dry.pt_filtered.pt"
-    info2 = "highd"
-    infile3 = "10bar_O2_wet.pt_filtered.pt"
-    info3 = "highw"
-    
-    res = 1/(10*lamin)
-    
     sim1 = smart.interface.Smart(tag = info1)
     sim1.load_atmosphere_from_pt(infile1, addn2 = False)
     sim1.smartin.alb_file = "composite1_txt.txt"
+    if atmos == 'dry':
+        infile2 = "10bar_O2_dry.pt_filtered.pt"
+        info2 = "highw"
+        sim2 = smart.interface.Smart(tag = info2)
+        sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
+        sim2.smartin.alb_file = "desert_highd.alb"
+    else:
+        infile2 = "10bar_O2_wet.pt_filtered.pt"
+        info2 = "highw"
+        sim2 = smart.interface.Smart(tag = info2)
+        sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
+        sim2.smartin.alb_file = "earth_noveg_highw.alb"
 
-    sim2 = smart.interface.Smart(tag = info2)
-    sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
-    sim2.smartin.alb_file = "desert_highd.alb"
 
-    sim3 = smart.interface.Smart(tag = info3)
-    sim3.load_atmosphere_from_pt(infile3, addn2 = False, scaleP = 1.0)
-    sim3.smartin.alb_file = "earth_noveg_highw.alb"
+    res = 1/(10*lamin)
 
 
-    for sim in (sim1, sim2, sim3):
+    for sim in (sim1, sim2):
         sim.set_run_in_place()    
         sim.set_executables_automatically()
         sim.set_planet_proxima_b()
@@ -70,12 +70,6 @@ def smart_basic(lamin, lamax, title):
     sflux2 = sim2.output.rad.sflux
     flux2 = flux2/sflux2
 
-    sim3.open_outputs()
-    wl3 = sim3.output.rad.lam
-    flux3 = sim3.output.rad.pflux
-    sflux3 = sim3.output.rad.sflux
-    flux3 = flux3/sflux3
-
 
     import platform
     if platform.system() == 'Jarvis':
@@ -92,8 +86,7 @@ def smart_basic(lamin, lamax, title):
 
 
     fig, ax = plt.subplots(figsize = (10,10))
-    ax.plot(wl3, flux3, label = "10 bar oxygen (ocean planet)")
-    ax.plot(wl2, flux2, label = "10 bar oxygen (desert planet)")
+    ax.plot(wl2, flux2, label = "10 bar oxygen")
     ax.plot(wl, flux, label = "Earth-like")
 
     ax.set_ylabel("Reflectance")
@@ -101,7 +94,11 @@ def smart_basic(lamin, lamax, title):
     ax.set_title(title)
     fig_name = int(100*(float(lamin) + float(lamax))/2)
     ax.legend()
-    fig.savefig(str(fig_name) +  "tri.png", bbox_inches = "tight")    
+    if atmos == 'dry':
+        fig.savefig(str(fig_name) +  ".png", bbox_inches = "tight")
+    else:
+        fig.savefig(str(fig_name) +  "ocean.png", bbox_inches = "tight")
+
  
 
 if __name__ == '__main__':
@@ -124,10 +121,14 @@ if __name__ == '__main__':
                                rm_after_submit = True)
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
-        smart_basic(0.61, 0.65, "0.63 Atmosphere comparison")
-        smart_basic(0.67, 0.71, "0.68 Atmosphere comparison")
-        smart_basic(0.74, 0.78, "0.76 Atmosphere comparison")
-        smart_basic(1.25,1.29, "1.27 Atmosphere comparison")
+        smart_basic(0.61, 0.65, "0.63 Atmosphere comparison", 'dry')
+        smart_basic(0.67, 0.71, "0.68 Atmosphere comparison", 'dry')
+        smart_basic(0.74, 0.78, "0.76 Atmosphere comparison", 'dry')
+        smart_basic(1.25,1.29, "1.27 Atmosphere comparison", 'dry')
+        smart_basic(0.61, 0.65, "0.63 Atmosphere comparison", 'wet')
+        smart_basic(0.67, 0.71, "0.68 Atmosphere comparison", 'wet')
+        smart_basic(0.74, 0.78, "0.76 Atmosphere comparison", 'wet')
+        smart_basic(1.25,1.29, "1.27 Atmosphere comparison", 'wet')
 
     else:
         # Presumably, on a regular computer: ready to run
@@ -142,7 +143,7 @@ if __name__ == '__main__':
  #        smart_basic(1, 0.62, 0.64, "10 bar O2 0.63$\mu$ m Oxygen")
  #       smart_basic(1, 1.25, 1.275, "1.27 $\mu$ m Oxygen")
  #       smart_basic(0.61, 0.65, "0.63 Atmosphere comparison")
-        smart_basic(0.67, 0.71, "0.68 Atmosphere comparison")
+        smart_basic(0.67, 0.71, "0.69 Atmosphere comparison", 'wet')
  #       smart_basic(0.74, 0.78, "0.76 Atmosphere comparison")
  #       smart_basic(1.25,1.29, "1.27 Atmosphere comparison")
 
