@@ -151,7 +151,7 @@ if __name__ == '__main__':
         integration_metric(1.25, 1.29,0)
 
         integration_metric(0.63,0.65,1)
-        integration_metric(0.61,0.71,1)
+        integration_metric(0.67,0.71,1)
         integration_metric(0.74, 0.78,1)
         integration_metric(1.25, 1.29,1)
 
