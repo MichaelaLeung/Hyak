@@ -12,7 +12,7 @@ import sys, os
 def integration_metric(lamin, lamax, mode):
     if mode == 0:
         tag = "prox_hipass"
-        tag2 ="prox_" + tag + "_low"
+        tag2 = tag + "_low"
         sim = smart.interface.Smart(tag = tag)
         sim2 = smart.interface.Smart(tag = tag2)
         infile = "profile_Earth_proxb_.pt_filtered"
@@ -23,7 +23,7 @@ def integration_metric(lamin, lamax, mode):
         sim2.smartin.alb_file = "composite1_txt.txt"
     elif mode == 1:
         tag = "highd_hipass"
-        tag2 ="highd_" + tag + "_low"
+        tag2 = tag + "_low"
         sim = smart.interface.Smart(tag = tag)
         sim2 = smart.interface.Smart(tag = tag2)
         infile = "10bar_O2_dry.pt_filtered.pt"
@@ -34,7 +34,7 @@ def integration_metric(lamin, lamax, mode):
         sim2.smartin.alb_file = "desert_highd.alb"
     else:
         tag = "highw_hipass"
-        tag2 ="highw_" + tag + "_low"
+        tag2 = tag + "_low"
         sim = smart.interface.Smart(tag = tag)
         sim2 = smart.interface.Smart(tag = tag2)
         infile = "10bar_O2_wet.pt_filtered.pt"
@@ -45,7 +45,7 @@ def integration_metric(lamin, lamax, mode):
         sim2.smartin.alb_file = "earth_noveg_highw.alb"
 
     HERE = os.path.dirname(os.path.abspath(__file__))
-    place = os.path.join(HERE, "integration")
+    place = os.path.join(HERE, "highpass/integration")
     try:
         os.mkdir(place)
     except OSError:
@@ -161,25 +161,28 @@ if __name__ == '__main__':
         integration_metric(0.74, 0.78,0)
         integration_metric(1.25, 1.29,0)
 
-        integration_metric(0.63,0.65,1)
+        integration_metric(0.61,0.65,1)
         integration_metric(0.67,0.71,1)
         integration_metric(0.74, 0.78,1)
         integration_metric(1.25, 1.29,1)
 
-        integration_metric(0.63,0.65,2)
+        integration_metric(0.61,0.65,2)
         integration_metric(0.67,0.71,2)
         integration_metric(0.74, 0.78,2)
         integration_metric(1.25, 1.29,2)
     else:
         # Presumably, on a regular computer: ready to run
-        integration_metric(0.62,0.64,0)
-        integration_metric(0.67,0.69,0)
-        integration_metric(0.75, 0.77,0)
-        integration_metric(1.26, 1.28,0)
+        integration_metric(0.61,0.65,0)
+        integration_metric(0.67,0.71,0)
+        integration_metric(0.74, 0.78,0)
+        integration_metric(1.25, 1.29,0)
 
-        integration_metric(0.62,0.64,1)
-        integration_metric(0.67,0.69,1)
-        integration_metric(0.75, 0.77,1)
-        integration_metric(1.26, 1.28,1)
+        integration_metric(0.61,0.65,1)
+        integration_metric(0.67,0.71,1)
+        integration_metric(0.74, 0.78,1)
+        integration_metric(1.25, 1.29,1)
 
- 
+        integration_metric(0.61,0.65,2)
+        integration_metric(0.67,0.71,2)
+        integration_metric(0.74, 0.78,2)
+        integration_metric(1.25, 1.29,2)
