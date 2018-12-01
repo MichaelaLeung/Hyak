@@ -86,8 +86,9 @@ def smart_basic(lamin, lamax, title, atmos):
 
 
     fig, ax = plt.subplots(figsize = (10,10))
-    ax.plot(wl2, flux2, label = "10 bar oxygen")
     ax.plot(wl, flux, label = "Earth-like")
+    ax.plot(wl2, flux2, label = "10 bar oxygen")
+
 
     ax.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength ($\mu$ m)")
