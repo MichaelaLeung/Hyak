@@ -20,6 +20,7 @@ def smart_basic(lamin, lamax, title, atmos):
         pass
     
     if atmos == 'dry':
+        info2 = "highd"
         infile1 = "10bar_O2_dry.pt_filtered.pt"
         sim1 = smart.interface.Smart(tag = info2)
         sim1.load_atmosphere_from_pt(infile1, addn2 = False)
@@ -27,11 +28,11 @@ def smart_basic(lamin, lamax, title, atmos):
         o2 = sim1.atmosphere.gases[1]
         o2.cia_file = None
         infile2 = "10bar_O2_dry.pt_filtered.pt"
-        info2 = "highd"
         sim2 = smart.interface.Smart(tag = info2)
         sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
         sim2.smartin.alb_file = "desert_highd.alb"
     else:
+        info2 = "highw"
         infile1 = "10bar_O2_wet.pt_filtered.pt"
         sim1 = smart.interface.Smart(tag = info2)
         sim1.load_atmosphere_from_pt(infile1, addn2 = False)
@@ -39,7 +40,6 @@ def smart_basic(lamin, lamax, title, atmos):
         o2 = sim1.atmosphere.gases[1]
         o2.cia_file = None
         infile2 = "10bar_O2_wet.pt_filtered.pt"
-        info2 = "highw"
         sim2 = smart.interface.Smart(tag = info2)
         sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
         sim2.smartin.alb_file = "earth_noveg_highw.alb"
