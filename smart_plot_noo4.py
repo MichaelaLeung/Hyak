@@ -12,7 +12,7 @@ matplotlib.rcParams['text.usetex'] = False
 def smart_basic(lamin, lamax, title, atmos):
         
     HERE = os.path.dirname(os.path.abspath(__file__))
-    place = os.path.join(HERE, "oxygen_outplot")
+    place = os.path.join(HERE, "smart_output")
 
     try:
         os.mkdir(place)

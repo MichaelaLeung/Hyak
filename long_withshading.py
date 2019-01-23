@@ -38,7 +38,7 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
         infile = "clearsky_archean.pt"
         sim.set_planet_proxima_b()
     HERE = os.path.dirname(os.path.abspath(__file__))
-    place = os.path.join(HERE, "test")
+    place = os.path.join(HERE, "smart_output")
 
     try:
         os.mkdir(place)
