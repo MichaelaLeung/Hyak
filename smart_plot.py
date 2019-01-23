@@ -87,7 +87,7 @@ def smart_basic(lamin, lamax, title, atmos):
 
     fig, ax = plt.subplots(figsize = (10,10))
     ax.plot(wl, flux, label = "Earth-like")
-    ax.plot(wl2, flux2, label = "10 bar oxygen")
+    ax.plot(wl2, flux2, label = "Ocean Loss")
 
 
     ax.set_ylabel("Reflectance")
@@ -95,6 +95,8 @@ def smart_basic(lamin, lamax, title, atmos):
     ax.set_title(title)
     fig_name = int(100*(float(lamin) + float(lamax))/2)
     ax.legend()
+    if lamax > 1.29:
+        ax.set_xlim(1.25,1.29)
     if atmos == 'dry':
         fig.savefig(str(fig_name) +  ".png", bbox_inches = "tight")
     else:
@@ -144,9 +146,10 @@ if __name__ == '__main__':
  #        smart_basic(1, 0.62, 0.64, "10 bar O2 0.63$\mu$ m Oxygen")
  #       smart_basic(1, 1.25, 1.275, "1.27 $\mu$ m Oxygen")
  #       smart_basic(0.61, 0.65, "0.63 Atmosphere comparison")
-        smart_basic(0.67, 0.71, "0.69 Atmosphere comparison", 'wet')
+ #       smart_basic(0.67, 0.71, "0.69 Atmosphere comparison", 'wet')
  #       smart_basic(0.74, 0.78, "0.76 Atmosphere comparison")
- #       smart_basic(1.25,1.29, "1.27 Atmosphere comparison")
+        smart_basic(1.25,1.30, "1.27 band", 'dry')
+        smart_basic(1.25,1.30, "1.27 band", 'wet')
 
 
 

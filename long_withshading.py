@@ -110,10 +110,10 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
     ax.set_xlabel("Wavelength ($\mu$ m)")
     ax.set_title(label)
     ax.set_xlim(0.5,2)
-    ax.axvspan(0.61, 0.65, alpha=0.5, color='grey')
-    ax.axvspan(0.67, 0.71, alpha=0.5, color='grey')
-    ax.axvspan(0.74, 0.78, alpha=0.5, color='grey')
-    ax.axvspan(1.25, 1.29, alpha=0.5, color='grey')
+    ax.axvspan(0.61, 0.65, alpha=0.5, color='0.3')
+    ax.axvspan(0.67, 0.71, alpha=0.5, color='0.3')
+    ax.axvspan(0.74, 0.78, alpha=0.5, color='0.3')
+    ax.axvspan(1.25, 1.29, alpha=0.5, color='0.3')
     
     fig.savefig(str(atmos) + info + ".png", bbox_inches = 'tight')
 
@@ -151,7 +151,7 @@ if __name__ == '__main__':
         # Presumably, on a regular computer: ready to run
  #       longplot("earth", 1, 0.5, 0.501, True, False)
  #       longplot("earth", 1, 0.5, 0.501, False, True)
-        longplot("highw", 0.01, 0.9, 1.0, False, False)
+        longplot("highw", 0.6, 0.7, 1.0, False, False)
  #       longplot("highd", 10, 0.6, 1.3, False, False)
  #       longplot("highw", 1, 0.5, 0.501, False, False)
  #       longplot("arch_prox", 1, 0.5, 0.501, False, False)
