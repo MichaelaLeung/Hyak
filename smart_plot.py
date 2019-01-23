@@ -124,14 +124,20 @@ if __name__ == '__main__':
                                rm_after_submit = True)
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
-        smart_basic(0.61, 0.65, "Gamma band (0.63)", 'dry')
-        smart_basic(0.67, 0.71, "Oxygen B band (0.69)", 'dry')
-        smart_basic(0.74, 0.78, "Oxygen A band (0.76)", 'dry')
-        smart_basic(1.25,1.29, "1.27 band", 'dry')
-        smart_basic(0.61, 0.65, "Gamma band (0.63)", 'wet')
-        smart_basic(0.67, 0.71, "Oxygen B band (0.69)", 'wet')
-        smart_basic(0.74, 0.78, "Oxygen A band (0.76)", 'wet')
-        smart_basic(1.25,1.29, "1.27 band", 'wet')
+ #       smart_basic(0.61, 0.65, "Gamma band (0.63)", 'dry')
+ #       smart_basic(0.67, 0.71, "Oxygen B band (0.69)", 'dry')
+ #       smart_basic(0.74, 0.78, "Oxygen A band (0.76)", 'dry')
+ #       smart_basic(1.25,1.29, "1.27 band", 'dry')
+ #       smart_basic(0.61, 0.65, "Gamma band (0.63)", 'wet')
+ #       smart_basic(0.67, 0.71, "Oxygen B band (0.69)", 'wet')
+ #       smart_basic(0.74, 0.78, "Oxygen A band (0.76)", 'wet')
+ #       smart_basic(1.25,1.29, "1.27 band", 'wet')
+        smart_basic(1.63, 1.67, "Methane 1.65", 'dry')
+        smart_basic(2.28, 2.32, "Methane 2.3", 'dry')
+        smart_basic(3.28,3.32, "Methane 3.3", 'dry')
+        smart_basic(1.63, 1.67, "Methane 1.65", 'wet')
+        smart_basic(2.28, 2.32, "Methane 2.3", 'wet')
+        smart_basic(3.28,3.32, "Methane 3.3", 'wet')
 
     else:
         # Presumably, on a regular computer: ready to run
