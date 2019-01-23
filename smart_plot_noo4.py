@@ -20,25 +20,27 @@ def smart_basic(lamin, lamax, title, atmos):
         pass
     
     if atmos == 'dry':
-        info2 = "highd"
+        info1 = "highd"
         infile1 = "10bar_O2_dry.pt_filtered.pt"
-        sim1 = smart.interface.Smart(tag = info2)
+        sim1 = smart.interface.Smart(tag = info1)
         sim1.load_atmosphere_from_pt(infile1, addn2 = False)
         sim1.smartin.alb_file = "desert_highd.alb"
         o2 = sim1.atmosphere.gases[1]
         o2.cia_file = None
+        info2 = 'highd2'
         infile2 = "10bar_O2_dry.pt_filtered.pt"
         sim2 = smart.interface.Smart(tag = info2)
         sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
         sim2.smartin.alb_file = "desert_highd.alb"
     else:
-        info2 = "highw"
+        info1 = "highw"
         infile1 = "10bar_O2_wet.pt_filtered.pt"
-        sim1 = smart.interface.Smart(tag = info2)
+        sim1 = smart.interface.Smart(tag = info1)
         sim1.load_atmosphere_from_pt(infile1, addn2 = False)
         sim1.smartin.alb_file = "earth_noveg_highw.alb"
         o2 = sim1.atmosphere.gases[1]
         o2.cia_file = None
+        info2 = 'highw2'
         infile2 = "10bar_O2_wet.pt_filtered.pt"
         sim2 = smart.interface.Smart(tag = info2)
         sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
@@ -101,7 +103,7 @@ def smart_basic(lamin, lamax, title, atmos):
     ax.set_title(title)
     fig_name = int(100*(float(lamin) + float(lamax))/2)
     ax.legend()
-    if lamax > 1.29:
+    if lamax > 1.29 and lamax < 1.32:
         ax.set_xlim(1.25,1.29)
     if atmos == 'dry':
         fig.savefig(str(fig_name) +  "_noO4.png", bbox_inches = "tight")
@@ -133,18 +135,18 @@ if __name__ == '__main__':
         smart_basic(0.61, 0.65, "Gamma band O2-O2 CIA", 'dry')
         smart_basic(0.67, 0.71, "Oxygen B band O2-O2 CIA", 'dry')
         smart_basic(0.74, 0.78, "Oxygen A band O2-O2 CIA", 'dry')
-        smart_basic(1.25,1.29, "1.27 band O2-O2 CIA", 'dry')
+        smart_basic(1.25,1.30, "1.27 band O2-O2 CIA", 'dry')
         smart_basic(0.61, 0.65, "Gamma band O2-O2 CIA", 'wet')
         smart_basic(0.67, 0.71, "Oxygen B band O2-O2 CIA", 'wet')
         smart_basic(0.74, 0.78, "Oxygen A band O2-O2 CIA", 'wet')
-        smart_basic(1.25,1.29, "1.27 band O2-O2 CIA", 'wet')
+        smart_basic(1.25,1.30, "1.27 band O2-O2 CIA", 'wet')
 
     else:
         # Presumably, on a regular computer: ready to run
         smart_basic(0.61, 0.65, "Gamma band O2-O2 CIA", 'dry')
-        smart_basic(0.67, 0.71, "Oxygen B band O2-O2 CIA", 'dry')
-        smart_basic(0.74, 0.78, "Oxygen A band O2-O2 CIA", 'dry')
-        smart_basic(1.25,1.29, "1.27 band O2-O2 CIA", 'dry')
+ #       smart_basic(0.67, 0.71, "Oxygen B band O2-O2 CIA", 'dry')
+ #       smart_basic(0.74, 0.78, "Oxygen A band O2-O2 CIA", 'dry')
+ #       smart_basic(1.25,1.29, "1.27 band O2-O2 CIA", 'dry')
 
 
 
