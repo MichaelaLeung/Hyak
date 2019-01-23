@@ -18,19 +18,19 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
         sim.smartin.alb_file = "composite1_txt.txt"
     elif atmos == "prox":
         infile = "profile_Earth_proxb_.pt_filtered"
-        label = "Self Consistent PCb (Earth like)"
+        label = "Earth Like"
         sim.smartin.alb_file = "composite1_txt.txt"
         sim.set_planet_proxima_b()
         sim.load_atmosphere_from_pt(infile, addn2 = False)
     elif atmos == "highd":
         infile = "10bar_O2_dry.pt_filtered.pt"
-        label = "10 bar O2 PCb"
+        label = "Ocean Loss"
         sim.smartin.alb_file = "desert_highd.alb"
         sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
         sim.set_planet_proxima_b()
     elif atmos == "highw":
         infile = "10bar_O2_wet.pt_filtered.pt"
-        label = "10 bar O2 PCb with water vapor"
+        label = "Ocean Outgassing"
         sim.smartin.alb_file = "earth_noveg_highw.alb"
         sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
         sim.set_planet_proxima_b()
