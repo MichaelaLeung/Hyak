@@ -110,10 +110,10 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
     ax.set_xlabel("Wavelength ($\mu$ m)")
     ax.set_title(label)
     ax.set_xlim(0.5,2)
-    ax.axvspan(0.61, 0.65, alpha=0.5, color='0.3')
-    ax.axvspan(0.67, 0.71, alpha=0.5, color='0.3')
-    ax.axvspan(0.74, 0.78, alpha=0.5, color='0.3')
-    ax.axvspan(1.25, 1.29, alpha=0.5, color='0.3')
+    ax.axvspan(0.61, 0.65, alpha=0.5, color='0.85')
+    ax.axvspan(0.67, 0.71, alpha=0.5, color='0.85')
+    ax.axvspan(0.74, 0.78, alpha=0.5, color='0.85')
+    ax.axvspan(1.25, 1.29, alpha=0.5, color='0.85')
     
     fig.savefig(str(atmos) + info + ".png", bbox_inches = 'tight')
 
