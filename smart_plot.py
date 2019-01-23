@@ -95,7 +95,7 @@ def smart_basic(lamin, lamax, title, atmos):
     ax.set_title(title)
     fig_name = int(100*(float(lamin) + float(lamax))/2)
     ax.legend()
-    if lamax > 1.29:
+    if lamax > 1.29 and lamax < 1.32:
         ax.set_xlim(1.25,1.29)
     if atmos == 'dry':
         fig.savefig(str(fig_name) +  ".png", bbox_inches = "tight")
