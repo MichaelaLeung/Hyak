@@ -26,7 +26,7 @@ def smart_basic(lamin, lamax, title, atmos):
     sim1.smartin.alb_file = "composite1_txt.txt"
     if atmos == 'dry':
         infile2 = "10bar_O2_dry.pt_filtered.pt"
-        info2 = "highw"
+        info2 = "highd"
         sim2 = smart.interface.Smart(tag = info2)
         sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
         sim2.smartin.alb_file = "desert_highd.alb"
