@@ -89,7 +89,7 @@ def smart_basic(lamin, lamax, title, atmos):
 
     fig, ax = plt.subplots(figsize = (10,10))
     ax.plot(wl, flux, label = "Earth-like")
-    ax.plot(wl2, flux2, label2)
+    ax.plot(wl2, flux2, label = label2)
 
 
     ax.set_ylabel("Reflectance")
