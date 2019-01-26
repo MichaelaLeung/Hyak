@@ -30,12 +30,14 @@ def smart_basic(lamin, lamax, title, atmos):
         sim2 = smart.interface.Smart(tag = info2)
         sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
         sim2.smartin.alb_file = "desert_highd.alb"
+        label2 = "Ocean Loss"
     else:
         infile2 = "10bar_O2_wet.pt_filtered.pt"
         info2 = "highw"
         sim2 = smart.interface.Smart(tag = info2)
         sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
         sim2.smartin.alb_file = "earth_noveg_highw.alb"
+        label2 = "Ocean Outgassing" 
 
 
     res = 1/(10*lamin)
@@ -87,7 +89,7 @@ def smart_basic(lamin, lamax, title, atmos):
 
     fig, ax = plt.subplots(figsize = (10,10))
     ax.plot(wl, flux, label = "Earth-like")
-    ax.plot(wl2, flux2, label = "Ocean Loss")
+    ax.plot(wl2, flux2, label2)
 
 
     ax.set_ylabel("Reflectance")
