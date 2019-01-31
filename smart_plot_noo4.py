@@ -144,9 +144,6 @@ if __name__ == '__main__':
     else:
         # Presumably, on a regular computer: ready to run
         smart_basic(0.61, 0.65, "Gamma band O2-O2 CIA", 'dry')
- #       smart_basic(0.67, 0.71, "Oxygen B band O2-O2 CIA", 'dry')
- #       smart_basic(0.74, 0.78, "Oxygen A band O2-O2 CIA", 'dry')
- #       smart_basic(1.25,1.29, "1.27 band O2-O2 CIA", 'dry')
 
 
 
