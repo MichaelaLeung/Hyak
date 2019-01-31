@@ -45,7 +45,7 @@ def integration_metric(lamin, lamax, mode):
         sim2.smartin.alb_file = "earth_noveg_highw.alb"
 
     HERE = os.path.dirname(os.path.abspath(__file__))
-    place = os.path.join(HERE, "highpass/integration")
+    place = os.path.join(HERE, "integration")
     try:
         os.mkdir(place)
     except OSError:
