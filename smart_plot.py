@@ -141,9 +141,9 @@ if __name__ == '__main__':
  #       smart_basic(2.28, 2.32, "Methane 2.3", 'wet')
  #       smart_basic(3.28,3.32, "Methane 3.3", 'wet')
  #        smart_basic(1.6,1.75, "1.6-1.75 context", 'dry')
-         smart_basic(2.2,2.5, "2-2.5 context", 'dry')
-         smart_basic(3.2,3.5, "3-3.5 context", 'dry')
-
+ #        smart_basic(2.2,2.5, "2-2.5 context", 'dry')
+ #        smart_basic(3.2,3.5, "3-3.5 context", 'dry')
+#
 
     else:
         # Presumably, on a regular computer: ready to run
