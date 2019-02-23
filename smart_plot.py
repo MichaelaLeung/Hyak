@@ -8,11 +8,14 @@ import matplotlib
 import sys, os
 import datetime
 matplotlib.rcParams['text.usetex'] = False
+import random
 
 def smart_basic(lamin, lamax, title, atmos):
-        
+    currentDT = datetime.datetime.now()
+    name = "smart_output_"+str(currentDT.month)+"/"+str(currentDT.day)+"-"+str(currentDT.hour)+":"+str(currentDT.minute)
+
     HERE = os.path.dirname(os.path.abspath(__file__))
-    place = os.path.join(HERE, "smart_output")
+    place = os.path.join(HERE, name)
 
     try:
         os.mkdir(place)
@@ -45,8 +48,10 @@ def smart_basic(lamin, lamax, title, atmos):
 
     if atmos == 'dry':
         simlist = sim1,sim3
+        label_list = 'Earth-like', 'Ocean Loss'
     else:
         simlist = sim1,sim2
+        label_list = 'Earth-like', 'Ocean Outgassing'
 
 
     res = 1/(10*lamin)
@@ -68,20 +73,6 @@ def smart_basic(lamin, lamax, title, atmos):
         sim.write_smart(write_file = True)
         sim.run_smart()
 
-
-    sim1.open_outputs()
-    wl = sim1.output.rad.lam
-    flux = sim1.output.rad.pflux
-    sflux = sim1.output.rad.sflux
-    flux = flux/sflux
-
-    sim2.open_outputs()
-    wl2 = sim2.output.rad.lam
-    flux2 = sim2.output.rad.pflux
-    sflux2 = sim2.output.rad.sflux
-    flux2 = flux2/sflux2
-
-
     import platform
     if platform.system() == 'Jarvis':
         # On a Mac: usetex ok
@@ -97,17 +88,25 @@ def smart_basic(lamin, lamax, title, atmos):
 
 
     fig, ax = plt.subplots(figsize = (10,10))
-    ax.plot(wl, flux, label = "Earth-like")
-    ax.plot(wl2, flux2, label = label2)
-
-
+    counter = int(0)
+    for a in (simlist):
+        a.open_outputs()
+        wl = a.output.rad.lam
+        flux = a.output.rad.pflux
+        sflux = a.output.rad.sflux
+        flux = flux/sflux
+        ax.plot(wl, flux, label = str(label_list[counter]))
+        counter = counter + 1
     ax.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength ($\mu$ m)")
     ax.set_title(title)
     fig_name = int(100*(float(lamin) + float(lamax))/2)
     ax.legend()
+
+    
     if lamax > 1.29 and lamax < 1.32:
         ax.set_xlim(1.25,1.29)
+        
     if atmos == 'dry':
         fig.savefig(str(fig_name) +  ".png", bbox_inches = "tight")
     else:
