@@ -20,31 +20,39 @@ def smart_basic(lamin, lamax, title, atmos):
         pass
 
     infile1 = "profile_Earth_proxb_.pt_filtered"
+    infile2 = "10bar_O2_wet.pt_filtered.pt"
+    infile3 = "10bar_O2_dry.pt_filtered.pt"
+
     info1 = "prox"
+    info2 = "highw"
+    info3 = "highd"
+
     sim1 = smart.interface.Smart(tag = info1)
+    sim2 = smart.interface.Smart(tag = info2)
+    sim3 = smart.interface.Smart(tag = info3)
+
     sim1.load_atmosphere_from_pt(infile1, addn2 = False)
+    sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
+    sim3.load_atmosphere_from_pt(infile3, addn2 = False, scaleP = 1.0)
+
     sim1.smartin.alb_file = "composite1_txt.txt"
-    
+    sim2.smartin.alb_file = "earth_noveg_highw.alb"
+    sim3.smartin.alb_file = "desert_highd.alb"
+
+    label1 = "Earth-like"
+    label2 = "Ocean Outgassing" 
+    label3 = "Ocean Loss"
+
     if atmos == 'dry':
-        infile2 = "10bar_O2_dry.pt_filtered.pt"
-        info2 = "highd"
-        sim2 = smart.interface.Smart(tag = info2)
-        sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
-        sim2.smartin.alb_file = "desert_highd.alb"
-        label2 = "Ocean Loss"
+        simlist = sim1,sim3
     else:
-        infile2 = "10bar_O2_wet.pt_filtered.pt"
-        info2 = "highw"
-        sim2 = smart.interface.Smart(tag = info2)
-        sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
-        sim2.smartin.alb_file = "earth_noveg_highw.alb"
-        label2 = "Ocean Outgassing" 
+        simlist = sim1,sim2
 
 
     res = 1/(10*lamin)
 
 
-    for sim in (sim1, sim2):
+    for sim in (simlist):
         sim.set_run_in_place()    
         sim.set_executables_automatically()
         sim.set_planet_proxima_b()
@@ -127,14 +135,14 @@ if __name__ == '__main__':
                                rm_after_submit = True)
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
- #       smart_basic(0.61, 0.65, "Gamma band (0.63)", 'dry')
- #       smart_basic(0.67, 0.71, "Oxygen B band (0.69)", 'dry')
- #       smart_basic(0.74, 0.78, "Oxygen A band (0.76)", 'dry')
- #       smart_basic(1.25,1.29, "1.27 band", 'dry')
- #       smart_basic(0.61, 0.65, "Gamma band (0.63)", 'wet')
- #       smart_basic(0.67, 0.71, "Oxygen B band (0.69)", 'wet')
- #       smart_basic(0.74, 0.78, "Oxygen A band (0.76)", 'wet')
- #       smart_basic(1.25,1.29, "1.27 band", 'wet')
+        smart_basic(0.61, 0.65, "Gamma band (0.63)", 'dry')
+        smart_basic(0.67, 0.71, "Oxygen B band (0.69)", 'dry')
+        smart_basic(0.74, 0.78, "Oxygen A band (0.76)", 'dry')
+        smart_basic(1.25,1.29, "1.27 band", 'dry')
+        smart_basic(0.61, 0.65, "Gamma band (0.63)", 'wet')
+        smart_basic(0.67, 0.71, "Oxygen B band (0.69)", 'wet')
+        smart_basic(0.74, 0.78, "Oxygen A band (0.76)", 'wet')
+        smart_basic(1.25,1.29, "1.27 band", 'wet')
  #       smart_basic(1.63, 1.67, "Methane 1.65", 'dry')
  #       smart_basic(2.28, 2.32, "Methane 2.3", 'dry')
  #       smart_basic(3.28,3.32, "Methane 3.3", 'dry')
@@ -144,8 +152,8 @@ if __name__ == '__main__':
  #        smart_basic(1.6,1.75, "1.6-1.75 context", 'dry')
  #        smart_basic(2.2,2.5, "2-2.5 context", 'dry')
  #        smart_basic(3.2,3.5, "3-3.5 context", 'dry')
-         smart_basic(0.6, 0.8, "context to find root of rlux magnitude error (ocean loss)", 'dry')
-         smart_basic(0.6,0.8, "context to find root of rlux magnitude error (ocean outgassing)", 'wet')
+ #        smart_basic(0.6, 0.8, "context to find root of rlux magnitude error (ocean loss)", 'dry')
+ #        smart_basic(0.6,0.8, "context to find root of rlux magnitude error (ocean outgassing)", 'wet')
 
     else:
         # Presumably, on a regular computer: ready to run
@@ -162,8 +170,8 @@ if __name__ == '__main__':
  #       smart_basic(0.61, 0.65, "0.63 Atmosphere comparison")
  #       smart_basic(0.67, 0.71, "0.69 Atmosphere comparison", 'wet')
  #       smart_basic(0.74, 0.78, "0.76 Atmosphere comparison")
-        smart_basic(1.25,1.30, "1.27 band", 'dry')
-        smart_basic(1.25,1.30, "1.27 band", 'wet')
+        smart_basic(0.74, 0.78, "Oxygen A band (0.76)", 'dry')
+        smart_basic(0.74, 0.78, "Oxygen A band (0.76)", 'wet')
 
 
 
