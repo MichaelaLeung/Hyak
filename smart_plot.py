@@ -58,7 +58,7 @@ def smart_basic(lamin, lamax, title, atmos):
 
 
     for sim in (simlist):
-        sim.set_run_in_place()    
+        sim.set_run_in_place(place)    
         sim.set_executables_automatically()
         sim.set_planet_proxima_b()
         sim.set_star_proxima()
