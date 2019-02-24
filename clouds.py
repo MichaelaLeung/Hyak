@@ -142,8 +142,6 @@ def plotting():
     avg_flux = (cirrus_flux + strato_flux)/2
     fig, ax = plt.subplots(figsize = (30, 10))
     ax.plot(avg_wl, avg_flux, label = "avg")
-    ax.plot(cirrus_wl, cirrus_flux, label = "cirrus")
-    ax.plot(strato_wl, strato_flux, label = "strato")
     ax.plot(wl, flux, label = "no clouds")
     fig.savefig("avg_clougs.png", bbox_inches = 'tight')
     
@@ -160,7 +158,7 @@ if __name__ == '__main__':
                                workdir = "",
                                nodes = 1,
                                mem = "500G",
-                               walltime = "24:00:00",
+                               walltime = "48:00:00",
                                ntasks = 28,
                                account = "vsm",
                                submit = True,
