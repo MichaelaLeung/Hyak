@@ -28,8 +28,6 @@ def clouds(res, cirrus, strato):
         
     sim.set_run_in_place(place) 
     sim.set_executables_automatically()
-    
-
 
     sim.load_atmosphere_from_pt(infile, addn2 = False)
 
@@ -87,8 +85,8 @@ def clouds(res, cirrus, strato):
 
 
 def plotting():
-    cirrus_wl, cirrus_flux = clouds(100, 1, 0)
-    strato_wl, strato_flux = clouds(100, 0, 1)
+    cirrus_wl, cirrus_flux = clouds(0.01, 1, 0)
+    strato_wl, strato_flux = clouds(0.01, 0, 1)
     avg_wl = (cirrus_wl + strato_wl)/2
     avg_flux = (cirrus_flux + strato_flux)/2
     fig, ax = plt.subplots(figsize = (30, 10))
