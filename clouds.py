@@ -123,6 +123,8 @@ def longplot():
 
     sim.gen_lblscripts()
     sim.run_lblabc()
+    sim.write_smart(write_file = True)
+    sim.run_smart()
 
     sim.open_outputs()
     wl = sim.output.rad.lam
