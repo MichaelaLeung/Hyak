@@ -138,8 +138,9 @@ def plotting():
     cirrus_wl, cirrus_flux = clouds(0.01, 1, 0)
     strato_wl, strato_flux = clouds(0.01, 0, 1)
     wl, flux = longplot()
-    avg_wl = (cirrus_wl + strato_wl + wl)/3
-    avg_flux = (cirrus_flux + strato_flux + flux)/3
+    length_wl = min(len(cirrus_wl), len(strato_wl), len(wl))-1
+    avg_wl = (cirrus_wl[:length_wl] + strato_wl[:length_wl] + wl[:length_wl])/3
+    avg_flux = (cirrus_flux[:length_wl] + strato_flux[:length_wl] +flux[:length_wl])/3
     fig, ax = plt.subplots(figsize = (30, 10))
     ax.plot(avg_wl, avg_flux, label = "avg")
     fig.savefig("avg_clougs.png", bbox_inches = 'tight')
