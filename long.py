@@ -95,7 +95,7 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
     flux = sim.output.rad.pflux
     sflux = sim.output.rad.sflux
 
-    adj_flux = flux/sflux * ((sim.smartin.radius / sim.smartin.r_AU) **2 )
+    adj_flux = flux/sflux
 
     fig, ax = plt.subplots(figsize = (30, 10))
     ax.plot(wl, adj_flux)

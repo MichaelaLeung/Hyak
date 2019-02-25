@@ -13,9 +13,10 @@ def clouds(res, cirrus, strato):
     lamin = 0.5
     lamax = 2.0
     
-    sim = smart.interface.Smart(tag = "earth")
+    sim = smart.interface.Smart(tag = "prox")
     sim.smartin.alb_file = "composite1_txt.txt"
     infile = "profile_Earth_proxb_.pt_filtered"
+    sim.set_planet_proxima_b()
 
     HERE = os.path.dirname(os.path.abspath(__file__))
     place = os.path.join(HERE, "clouds")
@@ -78,7 +79,7 @@ def clouds(res, cirrus, strato):
     flux = sim.output.rad.pflux
     sflux = sim.output.rad.sflux
 
-    adj_flux = flux/sflux * ((sim.smartin.radius / sim.smartin.r_AU) **2 )
+    adj_flux = flux/sflux
 
     return(wl, adj_flux)
 
@@ -101,9 +102,6 @@ def longplot():
     label = "Self Consistent PCb (Earth like)"
     sim.smartin.alb_file = "composite1_txt.txt"
     sim.set_planet_proxima_b()
-     
-
-        
     sim.set_run_in_place(place) 
     sim.set_executables_automatically()
 
@@ -131,7 +129,7 @@ def longplot():
     flux = sim.output.rad.pflux
     sflux = sim.output.rad.sflux
 
-    adj_flux = flux/sflux * ((sim.smartin.radius / sim.smartin.r_AU) **2 )
+    adj_flux = flux/sflux
     
     return(wl, adj_flux)
 
@@ -145,6 +143,8 @@ def plotting():
     avg_flux = (cirrus_flux[:length_wl] + strato_flux[:length_wl] +flux[:length_wl])/3
     fig, ax = plt.subplots(figsize = (30, 10))
     ax.plot(avg_wl, avg_flux, label = "avg")
+    ax.set_ylabel("Reflectance")
+    ax.set_xlabel("Wavelength ($\mu$ m)")
     fig.savefig("avg_clougs.png", bbox_inches = 'tight')
     
 if __name__ == '__main__':
