@@ -145,7 +145,7 @@ def plotting():
     ax3 = ax.twinx()
     ax3.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength ($\mu$ m)")
-    ax.set_title(label)
+    ax.set_title("Earth-Like")
     ax.set_xlim(0.5,2)
     ax.axvspan(0.61, 0.65, alpha=0.5, color='0.85')
     ax.axvspan(0.67, 0.71, alpha=0.5, color='0.85')
