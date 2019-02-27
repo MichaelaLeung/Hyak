@@ -124,6 +124,18 @@ def ocean_outgassing(lamin, lamax):
     return(wl2, adj_flux2)
 
 def plotting(lamin, lamax, atmos, title):
+    import platform
+    if platform.system() == 'Jarvis':
+        # On a Mac: usetex ok
+        mpl.rc('font',**{'family':'serif','serif':['Computer Modern']})
+        mpl.rcParams['font.size'] = 25.0
+        mpl.rc('text', usetex=True)
+    elif platform.node().startswith("n"):
+        # On hyak: usetex not ok, must change backend to 'agg'
+        mpl.rc('font',**{'family':'serif','serif':['Computer Modern']})
+        mpl.rcParams['font.size'] = 25.0
+        mpl.rc('text', usetex=False)
+        plt.switch_backend('agg')
     fig_name = int(100*(float(lamin) + float(lamax))/2)
     if atmos == 0: # zero = ocean loss
         wl, flux = earth_like(lamin, lamax)
