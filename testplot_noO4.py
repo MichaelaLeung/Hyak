@@ -89,7 +89,7 @@ def ocean_outgassing(lamin, lamax):
 def ocean_loss_noO4(lamin, lamax):
     res = 1/(10*lamin)
 
-    sim2 = smart.interface.Smart(tag = "highd")
+    sim2 = smart.interface.Smart(tag = "highd_noO4")
     infile2 = "10bar_O2_dry.pt_filtered.pt"
     label = "Ocean Loss"
     sim2.smartin.alb_file = "desert_highd.alb"
@@ -130,7 +130,7 @@ def ocean_loss_noO4(lamin, lamax):
 def ocean_outgassing_noO4(lamin, lamax):
     res = 1/(10*lamin)
 
-    sim2 = smart.interface.Smart(tag = "highw")
+    sim2 = smart.interface.Smart(tag = "highw_noO4")
     infile2 = "10bar_O2_wet.pt_filtered.pt"
     label = "Ocean Outgassing"
     sim2.smartin.alb_file = "earth_noveg_highw.alb"
