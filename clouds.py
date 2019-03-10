@@ -143,6 +143,7 @@ def plotting():
     avg_flux = (cirrus_flux[:length_wl] + strato_flux[:length_wl] +flux[:length_wl])/3
     fig, ax = plt.subplots(figsize = (30, 10))
     ax3 = ax.twinx()
+    ax3.plot(avg_wl, avg_flux)
     ax3.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength ($\mu$ m)")
     ax.set_title("Earth-Like")
@@ -151,7 +152,7 @@ def plotting():
     ax.axvspan(0.67, 0.71, alpha=0.5, color='0.85')
     ax.axvspan(0.74, 0.78, alpha=0.5, color='0.85')
     ax.axvspan(1.25, 1.29, alpha=0.5, color='0.85')
-    ax.plot(avg_wl, avg_flux, label = "avg")
+    ax.plot(avg_wl, avg_flux)
     fig.savefig("avg_clougs.png", bbox_inches = 'tight')
     
 if __name__ == '__main__':
