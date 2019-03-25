@@ -10,91 +10,56 @@ import datetime
 matplotlib.rcParams['text.usetex'] = False
 import random
 
+def earth_like(lamin, lamax):
+    res = 1/(10*lamin)
+
+    sim = smart.interface.Smart(tag = "prox")
+    infile = "profile_Earth_proxb_.pt_filtered"
+    label = "Earth-Like"
+    sim.smartin.alb_file = "composite1_txt.txt"
+    sim.set_planet_proxima_b()
+    sim.set_star_proxima()
+    o2 = sim.atmosphere.gases[1]
+    o2.cia_file = 'hitran_total4.cia'
+
+    sim.set_run_in_place() 
+    sim.set_executables_automatically()
+
+    sim.smartin.sza = 57
+    sim.load_atmosphere_from_pt(infile, addn2 = False)
+
+    sim.smartin.FWHM = res
+    sim.smartin.sample_res = res
+
+    sim.smartin.minwn = 1e4/lamax
+    sim.smartin.maxwn = 1e4/lamin 
+
+    sim.lblin.minwn = 1e4/lamax
+    sim.lblin.maxwn = 1e4/lamin 
+
+    sim.gen_lblscripts()
+    sim.run_lblabc()
+    sim.write_smart(write_file = True)
+    sim.run_smart()
+
+    sim.open_outputs()
+    wl = sim.output.rad.lam
+    flux = sim.output.rad.pflux
+    sflux = sim.output.rad.sflux
+    adj_flux = flux/sflux
+    return(wl, adj_flux)
+
 def ocean_loss(lamin, lamax):
     res = 1/(10*lamin)
 
     sim2 = smart.interface.Smart(tag = "highd")
-    infile = "10bar_O2_dry.pt_filtered.pt"
-    label = "Ocean Loss"
-    sim.smartin.alb_file = "desert_highd.alb"
-    sim.set_planet_proxima_b()
-    sim.set_star_proxima()
-
-    sim.set_run_in_place() 
-    sim.set_executables_automatically()
-
-    sim.smartin.sza = 57
-    sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
-
-    sim.smartin.FWHM = res
-    sim.smartin.sample_res = res
-
-    sim.smartin.minwn = 1e4/lamax
-    sim.smartin.maxwn = 1e4/lamin 
-
-    sim.lblin.minwn = 1e4/lamax
-    sim.lblin.maxwn = 1e4/lamin 
-
-    sim.gen_lblscripts()
-    sim.run_lblabc()
-    sim.write_smart(write_file = True)
-    sim.run_smart()
-
-    sim.open_outputs()
-    wl = sim.output.rad.lam
-    flux = sim.output.rad.pflux
-    sflux = sim.output.rad.sflux
-
-    adj_flux = flux/sflux
-    return(wl, adj_flux)
-
-def ocean_outgassing(lamin, lamax):
-    res = 1/(10*lamin)
-
-    sim = smart.interface.Smart(tag = "highw")
-    infile = "10bar_O2_wet.pt_filtered.pt"
-    label = "Ocean Outgassing"
-    sim.smartin.alb_file = "earth_noveg_highw.alb"
-    sim.set_planet_proxima_b()
-    sim.set_star_proxima()
-
-    sim.set_run_in_place() 
-    sim.set_executables_automatically()
-
-    sim.smartin.sza = 57
-    sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
-
-    sim.smartin.FWHM = res
-    sim.smartin.sample_res = res
-
-    sim.smartin.minwn = 1e4/lamax
-    sim.smartin.maxwn = 1e4/lamin 
-
-    sim.lblin.minwn = 1e4/lamax
-    sim.lblin.maxwn = 1e4/lamin 
-
-    sim.gen_lblscripts()
-    sim.run_lblabc()
-    sim.write_smart(write_file = True)
-    sim.run_smart()
-
-    sim.open_outputs()
-    wl = sim.output.rad.lam
-    flux = sim.output.rad.pflux
-    sflux = sim.output.rad.sflux
-
-    adj_flux = flux/sflux
-    return(wl, adj_flux)
-
-def ocean_loss_noO4(lamin, lamax):
-    res = 1/(10*lamin)
-
-    sim2 = smart.interface.Smart(tag = "highd_noO4")
     infile2 = "10bar_O2_dry.pt_filtered.pt"
     label = "Ocean Loss"
     sim2.smartin.alb_file = "desert_highd.alb"
     sim2.set_planet_proxima_b()
     sim2.set_star_proxima()
+    o2 = sim2.atmosphere.gases[1]
+    o2.cia_file = 'hitran_total4.cia'
 
     sim2.set_run_in_place() 
     sim2.set_executables_automatically()
@@ -109,10 +74,7 @@ def ocean_loss_noO4(lamin, lamax):
     sim2.smartin.maxwn = 1e4/lamin 
 
     sim2.lblin.minwn = 1e4/lamax
-    sim2.lblin.maxwn = 1e4/lamin
-
-    o2 = sim2.atmosphere.gases[1]
-    o2.cia_file = None
+    sim2.lblin.maxwn = 1e4/lamin 
 
     sim2.gen_lblscripts()
     sim2.run_lblabc()
@@ -127,15 +89,17 @@ def ocean_loss_noO4(lamin, lamax):
     adj_flux2 = flux2/sflux2
     return(wl2, adj_flux2)
 
-def ocean_outgassing_noO4(lamin, lamax):
+def ocean_outgassing(lamin, lamax):
     res = 1/(10*lamin)
 
-    sim2 = smart.interface.Smart(tag = "highw_noO4")
+    sim2 = smart.interface.Smart(tag = "highw")
     infile2 = "10bar_O2_wet.pt_filtered.pt"
     label = "Ocean Outgassing"
     sim2.smartin.alb_file = "earth_noveg_highw.alb"
     sim2.set_planet_proxima_b()
     sim2.set_star_proxima()
+    o2 = sim2.atmosphere.gases[1]
+    o2.cia_file = 'hitran_total4.cia'
 
     sim2.set_run_in_place() 
     sim2.set_executables_automatically()
@@ -150,10 +114,7 @@ def ocean_outgassing_noO4(lamin, lamax):
     sim2.smartin.maxwn = 1e4/lamin 
 
     sim2.lblin.minwn = 1e4/lamax
-    sim2.lblin.maxwn = 1e4/lamin
-
-    o2 = sim2.atmosphere.gases[1]
-    o2.cia_file = None
+    sim2.lblin.maxwn = 1e4/lamin 
 
     sim2.gen_lblscripts()
     sim2.run_lblabc()
@@ -167,8 +128,6 @@ def ocean_outgassing_noO4(lamin, lamax):
 
     adj_flux2 = flux2/sflux2
     return(wl2, adj_flux2)
-
-
 
 def plotting(lamin, lamax, atmos, title):
     import platform
@@ -184,28 +143,28 @@ def plotting(lamin, lamax, atmos, title):
         mpl.rc('text', usetex=False)
         plt.switch_backend('agg')
     fig_name = int(100*(float(lamin) + float(lamax))/2)
-    if atmos == 0: #0 = ocean loss
-        wl, flux = ocean_loss(lamin, lamax)
-        wl2, flux2 = ocean_loss_noO4(lamin, lamax)
+    if atmos == 0: # zero = ocean loss
+        wl, flux = earth_like(lamin, lamax)
+        wl2, flux2 = ocean_loss(lamin, lamax)
         fig, ax = plt.subplots(figsize = (10,10))
-        ax.plot(wl, flux, label = "Ocean Loss")
-        ax.plot(wl2, flux2, label = "Ocean Loss, no O2O2")
+        ax.plot(wl, flux, label = "Earth-Like")
+        ax.plot(wl2, flux2, label = "Ocean Loss")
         ax.set_title(title)
         ax.set_ylabel("Reflectance")
         ax.set_xlabel("Wavelength ($\mu$ m)")
         ax.legend()
-        fig.savefig(str(fig_name) +  "noO4.png", bbox_inches = "tight")
+        fig.savefig(str(fig_name) +  "_newCIA.png", bbox_inches = "tight")
     else:
-        wl, flux = ocean_outgassing(lamin, lamax)
-        wl2, flux2 = ocean_outgassing_noO4(lamin, lamax)
+        wl, flux = earth_like(lamin, lamax)
+        wl2, flux2 = ocean_outgassing(lamin, lamax)
         fig, ax = plt.subplots(figsize = (10,10))
-        ax.plot(wl, flux, label = "Ocean Outgassing")
-        ax.plot(wl2, flux2, label = "Ocean Outgassing, no O2O2")
+        ax.plot(wl, flux, label = "Earth-Like")
+        ax.plot(wl2, flux2, label = "Ocean Outgassing")
         ax.set_title(title)
         ax.set_ylabel("Reflectance")
         ax.set_xlabel("Wavelength ($\mu$ m)")
         ax.legend()
-        fig.savefig(str(fig_name) +  "noO4_ocean.png", bbox_inches = "tight")
+        fig.savefig(str(fig_name) +  "_newCIA_ocean.png", bbox_inches = "tight")
 
    
 if __name__ == '__main__':
