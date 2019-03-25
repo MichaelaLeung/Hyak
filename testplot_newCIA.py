@@ -19,8 +19,6 @@ def earth_like(lamin, lamax):
     sim.smartin.alb_file = "composite1_txt.txt"
     sim.set_planet_proxima_b()
     sim.set_star_proxima()
-    o2 = sim.atmosphere.gases[1]
-    o2.cia_file = 'hitran_total4.cia'
 
     sim.set_run_in_place() 
     sim.set_executables_automatically()
@@ -35,7 +33,10 @@ def earth_like(lamin, lamax):
     sim.smartin.maxwn = 1e4/lamin 
 
     sim.lblin.minwn = 1e4/lamax
-    sim.lblin.maxwn = 1e4/lamin 
+    sim.lblin.maxwn = 1e4/lamin
+
+    o2 = sim.atmosphere.gases[1]
+    o2.cia_file = 'hitran_total4.cia'
 
     sim.gen_lblscripts()
     sim.run_lblabc()
@@ -58,8 +59,6 @@ def ocean_loss(lamin, lamax):
     sim2.smartin.alb_file = "desert_highd.alb"
     sim2.set_planet_proxima_b()
     sim2.set_star_proxima()
-    o2 = sim2.atmosphere.gases[1]
-    o2.cia_file = 'hitran_total4.cia'
 
     sim2.set_run_in_place() 
     sim2.set_executables_automatically()
@@ -74,7 +73,10 @@ def ocean_loss(lamin, lamax):
     sim2.smartin.maxwn = 1e4/lamin 
 
     sim2.lblin.minwn = 1e4/lamax
-    sim2.lblin.maxwn = 1e4/lamin 
+    sim2.lblin.maxwn = 1e4/lamin
+
+    o2 = sim2.atmosphere.gases[1]
+    o2.cia_file = 'hitran_total4.cia'
 
     sim2.gen_lblscripts()
     sim2.run_lblabc()
@@ -98,8 +100,6 @@ def ocean_outgassing(lamin, lamax):
     sim2.smartin.alb_file = "earth_noveg_highw.alb"
     sim2.set_planet_proxima_b()
     sim2.set_star_proxima()
-    o2 = sim2.atmosphere.gases[1]
-    o2.cia_file = 'hitran_total4.cia'
 
     sim2.set_run_in_place() 
     sim2.set_executables_automatically()
@@ -116,6 +116,9 @@ def ocean_outgassing(lamin, lamax):
     sim2.lblin.minwn = 1e4/lamax
     sim2.lblin.maxwn = 1e4/lamin 
 
+    o2 = sim2.atmosphere.gases[1]
+    o2.cia_file = 'hitran_total4.cia'
+    
     sim2.gen_lblscripts()
     sim2.run_lblabc()
     sim2.write_smart(write_file = True)
