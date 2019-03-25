@@ -19,6 +19,8 @@ def ocean_loss(lamin, lamax):
     sim.smartin.alb_file = "desert_highd.alb"
     sim.set_planet_proxima_b()
     sim.set_star_proxima()
+    o2 = sim.atmosphere.gases[1]
+    o2.cia_file = 'hitran_total4.cia'
 
     sim.set_run_in_place() 
     sim.set_executables_automatically()
@@ -57,6 +59,8 @@ def ocean_outgassing(lamin, lamax):
     sim.smartin.alb_file = "earth_noveg_highw.alb"
     sim.set_planet_proxima_b()
     sim.set_star_proxima()
+    o2 = sim.atmosphere.gases[1]
+    o2.cia_file = 'hitran_total4.cia'
 
     sim.set_run_in_place() 
     sim.set_executables_automatically()
@@ -95,6 +99,8 @@ def ocean_loss_noO4(lamin, lamax):
     sim2.smartin.alb_file = "desert_highd.alb"
     sim2.set_planet_proxima_b()
     sim2.set_star_proxima()
+    o2 = sim2.atmosphere.gases[1]
+    o2.cia_file = 'hitran_total4.cia'
 
     sim2.set_run_in_place() 
     sim2.set_executables_automatically()
