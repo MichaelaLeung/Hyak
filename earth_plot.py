@@ -72,7 +72,7 @@ def earth_noO4(lamin, lamax):
     sim.lblin.minwn = 1e4/lamax
     sim.lblin.maxwn = 1e4/lamin
 
-    o2 = sim.atmosphere.gases[1]
+    o2 = sim.atmosphere.gases[2]
     o2.cia_file = None
 
 
