@@ -76,7 +76,7 @@ def ocean_outgassing(lamin, lamax):
     sim.lblin.minwn = 1e4/lamax
     sim.lblin.maxwn = 1e4/lamin
 
-    o2 = sim.atmosphere.gases[1]
+    o2 = sim.atmosphere.gases[2]
     o2.cia_file = 'cia_adj_calc.cia'
 
     sim.gen_lblscripts()
@@ -158,7 +158,7 @@ def ocean_outgassing_noO4(lamin, lamax):
     sim2.lblin.minwn = 1e4/lamax
     sim2.lblin.maxwn = 1e4/lamin
 
-    o2 = sim2.atmosphere.gases[1]
+    o2 = sim2.atmosphere.gases[2]
     o2.cia_file = None
 
     sim2.gen_lblscripts()
