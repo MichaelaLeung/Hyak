@@ -78,10 +78,10 @@ def ocean_loss(lamin, lamax, res, cia):
     sim2.lblin.minwn = 1e4/lamax
     sim2.lblin.maxwn = 1e4/lamin
 
-    if cia = "new":
+    if cia == "new":
         o2 = sim.atmosphere.gases[1]
         o2.cia_file = "cia_adj_calc.cia"
-    elif cia = "none":
+    elif cia == "none":
         o2 = sim.atmosphere.gases[1]
         o2.cia_file = None
     else:
@@ -123,10 +123,10 @@ def ocean_outgassing(lamin, lamax, res, cia):
     sim2.lblin.minwn = 1e4/lamax
     sim2.lblin.maxwn = 1e4/lamin
 
-    if cia = "new":
+    if cia == "new":
         o2 = sim2.atmosphere.gases[2]
         o2.cia_file = "cia_adj_calc.cia"
-    elif cia = "none":
+    elif cia == "none":
         o2 = sim2.atmosphere.gases[2]
         o2.cia_file = None
     else:
