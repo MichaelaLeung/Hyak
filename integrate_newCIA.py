@@ -145,18 +145,18 @@ def ocean_outgassing(lamin, lamax, res, cia):
     adj_flux2 = flux2/sflux2
     return(wl2, adj_flux2)
 
-def integrate(lamin, lamax, atmos):
+def integrate(lamin, lamax, atmos, cia):
     if atmos == 0:
-        wl, flux = earth_like(lamin, lamax, 0.01)
-        wl_low, flux_low = earth_like(lamin, lamax,1)
+        wl, flux = earth_like(lamin, lamax, 0.01, cia)
+        wl_low, flux_low = earth_like(lamin, lamax,1, cia)
         tag = "earth-like"
     elif atmos == 1:
-        wl, flux = ocean_loss(lamin, lamax, 0.01)
-        wl_low, flux_low = ocean_loss(lamin, lamax,1)
+        wl, flux = ocean_loss(lamin, lamax, 0.01, cia)
+        wl_low, flux_low = ocean_loss(lamin, lamax,1, cia)
         tag = "ocean loss"
     else:
-        wl, flux = ocean_outgassing(lamin, lamax, 0.01)
-        wl_low, flux_low = ocean_outgassing(lamin, lamax,1)
+        wl, flux = ocean_outgassing(lamin, lamax, 0.01, cia)
+        wl_low, flux_low = ocean_outgassing(lamin, lamax,1, cia)
         tag = "ocean outgassing"
         
     long_flux = []
