@@ -34,10 +34,10 @@ def earth_like(lamin, lamax, res, cia):
     sim.lblin.minwn = 1e4/lamax
     sim.lblin.maxwn = 1e4/lamin
     
-    if cia = "new":
+    if cia == "new":
         o2 = sim.atmosphere.gases[3]
         o2.cia_file = "cia_adj_calc.cia"
-    elif cia = "none":
+    elif cia == "none":
         o2 = sim.atmosphere.gases[3]
         o2.cia_file = None
     else:
