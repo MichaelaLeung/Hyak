@@ -194,7 +194,7 @@ def integrate(lamin, lamax, atmos, cia):
 
     import scipy.integrate as integrate
     adds = integrate.trapz(out, wl[:-25])
-    name = str(lamin) + "to" + str(lamax), str(cia), str(tag), str(abs(adds))
+    name = str(abs(adds), str(lamin) + "to" + str(lamax), str(cia), str(tag))
     f = open("integrations_new.txt", "a")
     f.write(str(name) + "\n")
 
