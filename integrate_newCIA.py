@@ -79,10 +79,10 @@ def ocean_loss(lamin, lamax, res, cia):
     sim2.lblin.maxwn = 1e4/lamin
 
     if cia == "new":
-        o2 = sim.atmosphere.gases[1]
+        o2 = sim2.atmosphere.gases[1]
         o2.cia_file = "cia_adj_calc.cia"
     elif cia == "none":
-        o2 = sim.atmosphere.gases[1]
+        o2 = sim2.atmosphere.gases[1]
         o2.cia_file = None
     else:
         pass 
@@ -149,15 +149,15 @@ def integrate(lamin, lamax, atmos, cia):
     if atmos == 0:
         wl, flux = earth_like(lamin, lamax, 0.01, cia)
         wl_low, flux_low = earth_like(lamin, lamax,1, cia)
-        tag = "earth-like"
+        tag = "el" #earth-like
     elif atmos == 1:
         wl, flux = ocean_loss(lamin, lamax, 0.01, cia)
         wl_low, flux_low = ocean_loss(lamin, lamax,1, cia)
-        tag = "ocean loss"
+        tag = "ol" # ocean loss
     else:
         wl, flux = ocean_outgassing(lamin, lamax, 0.01, cia)
         wl_low, flux_low = ocean_outgassing(lamin, lamax,1, cia)
-        tag = "ocean outgassing"
+        tag = "oo" # ocean outgassing
         
     long_flux = []
     for i in flux_low:
@@ -238,4 +238,4 @@ if __name__ == '__main__':
         output(1.24, 1.28)
 
     else:
-        output()
+        output(0.61, 0.65)
