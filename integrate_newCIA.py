@@ -10,7 +10,7 @@ import datetime
 matplotlib.rcParams['text.usetex'] = False
 import random
 
-def earth_like(lamin, lamax, res):
+def earth_like(lamin, lamax, res, cia):
 
     sim = smart.interface.Smart(tag = "prox")
     infile = "profile_Earth_proxb_.pt_filtered"
@@ -33,9 +33,15 @@ def earth_like(lamin, lamax, res):
 
     sim.lblin.minwn = 1e4/lamax
     sim.lblin.maxwn = 1e4/lamin
-
-    o2 = sim.atmosphere.gases[3]
-    o2.cia_file = "cia_adj_calc.cia"
+    
+    if cia = "new":
+        o2 = sim.atmosphere.gases[3]
+        o2.cia_file = "cia_adj_calc.cia"
+    elif cia = "none":
+        o2 = sim.atmosphere.gases[3]
+        o2.cia_file = None
+    else:
+        pass 
 
     sim.gen_lblscripts()
     sim.run_lblabc()
@@ -49,7 +55,7 @@ def earth_like(lamin, lamax, res):
     adj_flux = flux/sflux
     return(wl, adj_flux)
 
-def ocean_loss(lamin, lamax, res):
+def ocean_loss(lamin, lamax, res, cia):
     sim2 = smart.interface.Smart(tag = "highd")
     infile2 = "10bar_O2_dry.pt_filtered.pt"
     label = "Ocean Loss"
@@ -72,8 +78,14 @@ def ocean_loss(lamin, lamax, res):
     sim2.lblin.minwn = 1e4/lamax
     sim2.lblin.maxwn = 1e4/lamin
 
-    o2 = sim2.atmosphere.gases[1]
-    o2.cia_file = "cia_adj_calc.cia"
+    if cia = "new":
+        o2 = sim.atmosphere.gases[1]
+        o2.cia_file = "cia_adj_calc.cia"
+    elif cia = "none":
+        o2 = sim.atmosphere.gases[1]
+        o2.cia_file = None
+    else:
+        pass 
 
     sim2.gen_lblscripts()
     sim2.run_lblabc()
@@ -88,7 +100,7 @@ def ocean_loss(lamin, lamax, res):
     adj_flux2 = flux2/sflux2
     return(wl2, adj_flux2)
 
-def ocean_outgassing(lamin, lamax, res):
+def ocean_outgassing(lamin, lamax, res, cia):
     sim2 = smart.interface.Smart(tag = "highw")
     infile2 = "10bar_O2_wet.pt_filtered.pt"
     label = "Ocean Outgassing"
@@ -111,8 +123,14 @@ def ocean_outgassing(lamin, lamax, res):
     sim2.lblin.minwn = 1e4/lamax
     sim2.lblin.maxwn = 1e4/lamin
 
-    o2 = sim2.atmosphere.gases[2]
-    o2.cia_file = "cia_adj_calc.cia"
+    if cia = "new":
+        o2 = sim2.atmosphere.gases[2]
+        o2.cia_file = "cia_adj_calc.cia"
+    elif cia = "none":
+        o2 = sim2.atmosphere.gases[2]
+        o2.cia_file = None
+    else:
+        pass 
 
     sim2.gen_lblscripts()
     sim2.run_lblabc()
@@ -176,26 +194,23 @@ def integrate(lamin, lamax, atmos):
 
     import scipy.integrate as integrate
     adds = integrate.trapz(out, wl[:-25])
-    name = str(lamin) + "to" + str(lamax), str(tag), str(abs(adds))
+    name = str(lamin) + "to" + str(lamax), str(cia), str(tag), str(abs(adds))
     f = open("integrations_new.txt", "a")
     f.write(str(name) + "\n")
 
-def output():
-    integrate(0.61,0.65,0)
-    integrate(0.61,0.65,1)
-    integrate(0.61,0.65,2)
+def output(lamin, lamax):
+    integrate(lamin,lamax, 0, "new")
+    integrate(lamin,lamax, 1, "new")
+    integrate(lamin,lamax, 2, "new")
 
-    integrate(0.67,0.71,0)
-    integrate(0.67,0.71,1)
-    integrate(0.67,0.71,2)
+    integrate(lamin,lamax, 0, "none")
+    integrate(lamin,lamax, 1, "none")
+    integrate(lamin,lamax, 2, "none")
 
-    integrate(0.74,0.78,0)
-    integrate(0.74,0.78,1)
-    integrate(0.74,0.78,2)
-
-    integrate(1.25,1.29,0)
-    integrate(1.25,1.29,1)
-    integrate(1.25,1.29,2)
+    integrate(lamin,lamax, 0, "original")
+    integrate(lamin,lamax, 1, "original")
+    integrate(lamin,lamax, 2, "original")
+ 
 
 if __name__ == '__main__':
 
@@ -217,6 +232,10 @@ if __name__ == '__main__':
                                rm_after_submit = True)
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
-        output()
+        output(0.61, 0.65)
+        output(0.67, 0.71)
+        output(0.74, 0.78)
+        output(1.24, 1.28)
+
     else:
         output()
