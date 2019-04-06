@@ -194,7 +194,7 @@ def plotting(lamin, lamax, atmos, title):
         ax.set_ylabel("Reflectance")
         ax.set_xlabel("Wavelength ($\mu$ m)")
         ax.legend()
-        fig.savefig(str(fig_name) +  "new_CIA_noO4.png", bbox_inches = "tight")
+        fig.savefig(str(fig_name) +  "_noO4.png", bbox_inches = "tight")
     else:
         wl, flux = ocean_outgassing(lamin, lamax)
         wl2, flux2 = ocean_outgassing_noO4(lamin, lamax)
@@ -205,7 +205,7 @@ def plotting(lamin, lamax, atmos, title):
         ax.set_ylabel("Reflectance")
         ax.set_xlabel("Wavelength ($\mu$ m)")
         ax.legend()
-        fig.savefig(str(fig_name) +  "new_CIA_noO4_ocean.png", bbox_inches = "tight")
+        fig.savefig(str(fig_name) +  "_noO4_ocean.png", bbox_inches = "tight")
 
    
 if __name__ == '__main__':
