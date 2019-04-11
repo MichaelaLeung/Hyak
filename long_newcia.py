@@ -20,16 +20,22 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
         label = "Self Consistent PCb (Earth like)"
         sim.smartin.alb_file = "composite1_txt.txt"
         sim.set_planet_proxima_b()
+        o2 = sim.atmosphere.gases[3]
+        o2.cia_file = "cia_adj_calc.cia"
     elif atmos == "highd":
         infile = "10bar_O2_dry.pt_filtered.pt"
         label = "10 bar O2 PCb"
         sim.smartin.alb_file = "desert_highd.alb"
         sim.set_planet_proxima_b()
+        o2 = sim.atmosphere.gases[1]
+        o2.cia_file = "cia_adj_calc.cia"
     elif atmos == "highw":
         infile = "10bar_O2_wet.pt_filtered.pt"
         label = "10 bar O2 PCb with water vapor"
         sim.smartin.alb_file = "earth_noveg_highw.alb"
         sim.set_planet_proxima_b()
+        o2 = sim.atmosphere.gases[2]
+        o2.cia_file = "cia_adj_calc.cia"
     elif atmos == "arch_prox":
         infile = "clearsky_archean.pt"
         sim.set_planet_proxima_b()
@@ -102,7 +108,7 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
     ax.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength ($\mu$ m)")
     ax.set_title(label)
-    fig.savefig(str(atmos) + ".png", bbox_inches = 'tight')
+    fig.savefig(str(atmos) + "_newCIA.png", bbox_inches = 'tight')
 
 
 
@@ -127,11 +133,11 @@ if __name__ == '__main__':
                                rm_after_submit = True)
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
-        longplot("earth", 0.01, 0.5, 2, True, False)
+ #       longplot("earth", 0.01, 0.5, 2, True, False)
  #       longplot("earth", 0.01, 0.5, 2, False, True)
- #       longplot("prox", 0.01, 0.5, 2, False, False)
- #       longplot("highd", 0.01, 0.5, 2, False, False)
- #       longplot("highw", 0.01, 0.5, 2, False, False)
+        longplot("prox", 0.01, 0.5, 2, False, False)
+        longplot("highd", 0.01, 0.5, 2, False, False)
+        longplot("highw", 0.01, 0.5, 2, False, False)
  #       longplot("arch_prox", 0.01, 0.5, 2, False, False)
     else:
         # Presumably, on a regular computer: ready to run
