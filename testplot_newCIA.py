@@ -35,8 +35,8 @@ def earth_like(lamin, lamax):
     sim.lblin.minwn = 1e4/lamax
     sim.lblin.maxwn = 1e4/lamin
 
-    o2 = sim.atmosphere.gases[1]
-    o2.cia_file = 'hitran_total4.cia'
+    o2 = sim.atmosphere.gases[3]
+    o2.cia_file = 'cia_adj_calc.cia'
 
     sim.gen_lblscripts()
     sim.run_lblabc()
@@ -76,7 +76,7 @@ def ocean_loss(lamin, lamax):
     sim2.lblin.maxwn = 1e4/lamin
 
     o2 = sim2.atmosphere.gases[1]
-    o2.cia_file = 'hitran_total4.cia'
+    o2.cia_file = 'cia_adj_calc.cia'
 
     sim2.gen_lblscripts()
     sim2.run_lblabc()
@@ -116,8 +116,8 @@ def ocean_outgassing(lamin, lamax):
     sim2.lblin.minwn = 1e4/lamax
     sim2.lblin.maxwn = 1e4/lamin 
 
-    o2 = sim2.atmosphere.gases[1]
-    o2.cia_file = 'hitran_total4.cia'
+    o2 = sim2.atmosphere.gases[2]
+    o2.cia_file = 'cia_adj_calc.cia'
     
     sim2.gen_lblscripts()
     sim2.run_lblabc()
@@ -156,7 +156,7 @@ def plotting(lamin, lamax, atmos, title):
         ax.set_ylabel("Reflectance")
         ax.set_xlabel("Wavelength ($\mu$ m)")
         ax.legend()
-        fig.savefig(str(fig_name) +  "_newCIA.png", bbox_inches = "tight")
+        fig.savefig(str(fig_name) +  "new_CIA.png", bbox_inches = "tight")
     else:
         wl, flux = earth_like(lamin, lamax)
         wl2, flux2 = ocean_outgassing(lamin, lamax)
@@ -167,7 +167,7 @@ def plotting(lamin, lamax, atmos, title):
         ax.set_ylabel("Reflectance")
         ax.set_xlabel("Wavelength ($\mu$ m)")
         ax.legend()
-        fig.savefig(str(fig_name) +  "_newCIA_ocean.png", bbox_inches = "tight")
+        fig.savefig(str(fig_name) +  "new_CIA_ocean.png", bbox_inches = "tight")
 
    
 if __name__ == '__main__':
