@@ -105,13 +105,23 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
     flux = sim.output.rad.pflux
     sflux = sim.output.rad.sflux
 
-    adj_flux = flux/sflux
-
+    adj_flux = flux/sflux * ((sim.smartin.radius / sim.smartin.r_AU) **2 )
+    refl = flux/sflux
+    flux = adj_flux
+    
     fig, ax = plt.subplots(figsize = (30, 10))
-    ax.plot(wl, adj_flux)
-    ax.set_ylabel("Reflectance")
+    ax3 = ax.twinx()
+    ax3.plot(wl, refl)
+    ax3.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength ($\mu$ m)")
     ax.set_title(label)
+    ax.set_xlim(0.5,2)
+    ax.axvspan(0.61, 0.65, alpha=0.5, color='0.85')
+    ax.axvspan(0.67, 0.71, alpha=0.5, color='0.85')
+    ax.axvspan(0.74, 0.78, alpha=0.5, color='0.85')
+    ax.axvspan(1.25, 1.29, alpha=0.5, color='0.85')
+    
+
     fig.savefig(str(atmos) + "_newCIA.png", bbox_inches = 'tight')
 
 
