@@ -15,8 +15,7 @@ def clouds(res, cirrus, strato):
     
     sim = smart.interface.Smart(tag = "prox")
     sim.smartin.alb_file = "composite1_txt.txt"
-    infile = "profile_Earth_proxb_.pt_filtered"
-    sim.set_planet_proxima_b()
+    infile = "earth_avg.pt"
 
     HERE = os.path.dirname(os.path.abspath(__file__))
     place = os.path.join(HERE, "clouds")
@@ -99,10 +98,9 @@ def longplot():
     res = 0.01
     
     sim = smart.interface.Smart(tag = "prox")
-    infile = "profile_Earth_proxb_.pt_filtered"
-    label = "Self Consistent PCb (Earth like)"
+    infile = "earth_avg.pt"
+    label = "Earth"
     sim.smartin.alb_file = "composite1_txt.txt"
-    sim.set_planet_proxima_b()
     sim.set_run_in_place(place) 
     sim.set_executables_automatically()
 
@@ -149,14 +147,14 @@ def plotting():
     ax3.plot(avg_wl, avg_flux)
     ax3.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength ($\mu$ m)")
-    ax.set_title("Earth-Like")
+    ax.set_title("Earth Context Plot")
     ax.set_xlim(0.5,2)
     ax.axvspan(0.61, 0.65, alpha=0.5, color='0.85')
     ax.axvspan(0.67, 0.71, alpha=0.5, color='0.85')
     ax.axvspan(0.74, 0.78, alpha=0.5, color='0.85')
     ax.axvspan(1.25, 1.29, alpha=0.5, color='0.85')
     ax.plot(avg_wl, avg_flux)
-    fig.savefig("avg_clougs.png", bbox_inches = 'tight')
+    fig.savefig("avg_clouds.png", bbox_inches = 'tight')
     
 if __name__ == '__main__':
 
