@@ -17,7 +17,7 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
         sim.smartin.alb_file = "composite1_txt.txt"
         sim.load_atmosphere_from_pt(infile, addn2 = False)
         o2 = sim.atmosphere.gases[6]
-        o2.cia_file = "cia_adj_calc.cia"
+        o2.cia_file = "cia_adj_mix.cia"
     elif atmos == "prox":
         infile = "profile_Earth_proxb_.pt_filtered"
         label = "Self Consistent PCb (Earth like)"
@@ -25,7 +25,7 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
         sim.set_planet_proxima_b()
         sim.load_atmosphere_from_pt(infile, addn2 = False)
         o2 = sim.atmosphere.gases[3]
-        o2.cia_file = "cia_adj_calc.cia"
+        o2.cia_file = "cia_adj_mix.cia"
     elif atmos == "highd":
         infile = "10bar_O2_dry.pt_filtered.pt"
         label = "10 bar O2 PCb"
@@ -33,7 +33,7 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
         sim.set_planet_proxima_b()
         sim.load_atmosphere_from_pt(infile, addn2 = False)
         o2 = sim.atmosphere.gases[1]
-        o2.cia_file = "cia_adj_calc.cia"
+        o2.cia_file = "cia_adj_mix.cia"
     elif atmos == "highw":
         infile = "10bar_O2_wet.pt_filtered.pt"
         label = "10 bar O2 PCb with water vapor"
@@ -41,7 +41,7 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
         sim.set_planet_proxima_b()
         sim.load_atmosphere_from_pt(infile, addn2 = False)
         o2 = sim.atmosphere.gases[2]
-        o2.cia_file = "cia_adj_calc.cia"
+        o2.cia_file = "cia_adj_mix.cia"
     elif atmos == "arch_prox":
         infile = "clearsky_archean.pt"
         sim.set_planet_proxima_b()
