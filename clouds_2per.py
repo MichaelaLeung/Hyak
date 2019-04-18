@@ -15,7 +15,7 @@ def clouds(res, cirrus, strato):
     
     sim = smart.interface.Smart(tag = "prox")
     sim.smartin.alb_file = "composite1_txt.txt"
-    infile = "earth_avg_10per.pt"
+    infile = "earth_avg_2per.pt"
 
     HERE = os.path.dirname(os.path.abspath(__file__))
     place = os.path.join(HERE, "clouds")
@@ -31,8 +31,8 @@ def clouds(res, cirrus, strato):
 
     sim.load_atmosphere_from_pt(infile, addn2 = False)
     o2 = sim.atmosphere.gases[6]
-    o2.cia_file = "cia_adj_calc_10per.cia"
-    o2.xsec_file = "dat_10per.dat"
+    o2.cia_file = "cia_adj_calc_2per.cia"
+    o2.xsec_file = "dat_2per.dat"
 
 
     sim.smartin.FWHM = res
@@ -156,7 +156,7 @@ def plotting():
     ax.axvspan(0.74, 0.78, alpha=0.5, color='0.85')
     ax.axvspan(1.25, 1.29, alpha=0.5, color='0.85')
     ax.plot(avg_wl, avg_flux)
-    fig.savefig("avg_clouds_10per.png", bbox_inches = 'tight')
+    fig.savefig("avg_clouds_2per.png", bbox_inches = 'tight')
     
 if __name__ == '__main__':
 
