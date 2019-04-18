@@ -31,7 +31,9 @@ def clouds(res, cirrus, strato):
 
     sim.load_atmosphere_from_pt(infile, addn2 = False)
     o2 = sim.atmosphere.gases[6]
-    o2.cia_file = "cia_adj_calc.cia"
+    o2.cia_file = "cia_adj_calc_10per.cia"
+    o2.xsec_file = "dat_10per.dat"
+
 
     sim.smartin.FWHM = res
     sim.smartin.sample_res = res
@@ -154,7 +156,7 @@ def plotting():
     ax.axvspan(0.74, 0.78, alpha=0.5, color='0.85')
     ax.axvspan(1.25, 1.29, alpha=0.5, color='0.85')
     ax.plot(avg_wl, avg_flux)
-    fig.savefig("avg_clouds.png", bbox_inches = 'tight')
+    fig.savefig("avg_clouds_10per_datAbsOnly.png", bbox_inches = 'tight')
     
 if __name__ == '__main__':
 
