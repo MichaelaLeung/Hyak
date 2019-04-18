@@ -13,7 +13,7 @@ def clouds(res, cirrus, strato):
     lamin = 0.5
     lamax = 2.0
     
-    sim = smart.interface.Smart(tag = "earth")
+    sim = smart.interface.Smart(tag = "earth_10per")
     sim.smartin.alb_file = "composite1_txt.txt"
     infile = "earth_avg.pt"
 
@@ -63,10 +63,10 @@ def clouds(res, cirrus, strato):
                                rm_after_submit = True)
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
-        clouds(0.01, 1, 1):
+        clouds(0.01, 1, 1)
     else:
         # Presumably, on a regular computer: ready to run
-        clouds(0.01, 1, 1):
+        clouds(0.01, 1, 1)
 
 
 
