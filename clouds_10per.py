@@ -15,7 +15,7 @@ def clouds(res, cirrus, strato):
     
     sim = smart.interface.Smart(tag = "prox")
     sim.smartin.alb_file = "composite1_txt.txt"
-    infile = "earth_avg.pt"
+    infile = "earth_avg_10per.pt"
 
     HERE = os.path.dirname(os.path.abspath(__file__))
     place = os.path.join(HERE, "clouds")
