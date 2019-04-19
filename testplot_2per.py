@@ -13,8 +13,8 @@ import random
 def earth_like(lamin, lamax):
     res = 1/(10*lamin)
 
-    sim = smart.interface.Smart(tag = "prox_10per")
-    infile = "profile_Earth_proxb_.pt_filtered_10per.pt" 
+    sim = smart.interface.Smart(tag = "prox_2per")
+    infile = "profile_Earth_proxb_.pt_filtered_2per.pt" 
     label = "Earth-Like"
     sim.smartin.alb_file = "composite1_txt.txt"
     sim.set_planet_proxima_b()
@@ -36,8 +36,8 @@ def earth_like(lamin, lamax):
     sim.lblin.maxwn = 1e4/lamin
 
     o2 = sim.atmosphere.gases[3]
-    o2.cia_file = 'cia_adj_calc_10per.cia'
-    o2.xsec_file = "dat_10per.dat"
+    o2.cia_file = 'cia_adj_calc_2per.cia'
+    o2.xsec_file = "dat_2per.dat"
 
     sim.gen_lblscripts()
     sim.run_lblabc()
@@ -54,7 +54,7 @@ def earth_like(lamin, lamax):
 def ocean_loss(lamin, lamax):
     res = 1/(10*lamin)
 
-    sim2 = smart.interface.Smart(tag = "highd_10per")
+    sim2 = smart.interface.Smart(tag = "highd")
     infile2 = "10bar_O2_dry.pt_filtered.pt"
     label = "Ocean Loss"
     sim2.smartin.alb_file = "desert_highd.alb"
@@ -95,7 +95,7 @@ def ocean_loss(lamin, lamax):
 def ocean_outgassing(lamin, lamax):
     res = 1/(10*lamin)
 
-    sim2 = smart.interface.Smart(tag = "highw_10per")
+    sim2 = smart.interface.Smart(tag = "highw")
     infile2 = "10bar_O2_wet.pt_filtered.pt"
     label = "Ocean Outgassing"
     sim2.smartin.alb_file = "earth_noveg_highw.alb"
@@ -158,7 +158,7 @@ def plotting(lamin, lamax, atmos, title):
         ax.set_ylabel("Reflectance")
         ax.set_xlabel("Wavelength ($\mu$ m)")
         ax.legend()
-        fig.savefig(str(fig_name) +  "_10per.png", bbox_inches = "tight")
+        fig.savefig(str(fig_name) +  "_2per.png", bbox_inches = "tight")
     else:
         wl, flux = earth_like(lamin, lamax)
         wl2, flux2 = ocean_outgassing(lamin, lamax)
@@ -169,7 +169,7 @@ def plotting(lamin, lamax, atmos, title):
         ax.set_ylabel("Reflectance")
         ax.set_xlabel("Wavelength ($\mu$ m)")
         ax.legend()
-        fig.savefig(str(fig_name) +  "_ocean_10per.png", bbox_inches = "tight")
+        fig.savefig(str(fig_name) +  "_2per.png", bbox_inches = "tight")
 
    
 if __name__ == '__main__':
