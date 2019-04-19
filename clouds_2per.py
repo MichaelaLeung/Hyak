@@ -9,11 +9,9 @@ import sys, os
 import datetime
 matplotlib.rcParams['text.usetex'] = False
 
-def clouds(res, cirrus, strato):
-    lamin = 0.5
-    lamax = 2.0
+def clouds(res, cirrus, strato, lamin, lamax):
     
-    sim = smart.interface.Smart(tag = "prox")
+    sim = smart.interface.Smart(tag = "earth_2per")
     sim.smartin.alb_file = "composite1_txt.txt"
     infile = "earth_avg_2per.pt"
 
@@ -85,7 +83,7 @@ def clouds(res, cirrus, strato):
 
     return(wl, adj_flux)
 
-def longplot():
+def longplot(lamin, lamax):
     HERE = os.path.dirname(os.path.abspath(__file__))
     place = os.path.join(HERE, "clouds")
 
@@ -94,13 +92,10 @@ def longplot():
     except OSError:
         pass
     
-    lamin = 0.5
-    lamax = 2.0 
-    
     res = 0.01
     
     sim = smart.interface.Smart(tag = "prox")
-    infile = "earth_avg.pt"
+    infile = "earth_avg_2per.pt"
     label = "Earth"
     sim.smartin.alb_file = "composite1_txt.txt"
     sim.set_run_in_place(place) 
@@ -108,7 +103,7 @@ def longplot():
 
     sim.load_atmosphere_from_pt(infile, addn2 = False)
     o2 = sim.atmosphere.gases[6]
-    o2.cia_file = "cia_adj_calc.cia"
+    o2.cia_file = "cia_adj_calc_2per.cia"
 
     sim.smartin.sza = 57
 
@@ -137,26 +132,24 @@ def longplot():
     return(wl, adj_flux)
 
 
-def plotting():
-    cirrus_wl, cirrus_flux = clouds(0.01, 1, 0)
-    strato_wl, strato_flux = clouds(0.01, 0, 1)
-    wl, flux = longplot()
+def plotting(lamin, lamax):
+    cirrus_wl, cirrus_flux = clouds(0.01, 1, 0, lamin, lamax)
+    strato_wl, strato_flux = clouds(0.01, 0, 1, lamin, lamax)
+    wl, flux = longplot(lamin, lamax)
     length_wl = min(len(cirrus_wl), len(strato_wl), len(wl))-1
     avg_wl = (cirrus_wl[:length_wl] + strato_wl[:length_wl] + wl[:length_wl])/3
     avg_flux = (cirrus_flux[:length_wl] + strato_flux[:length_wl] +flux[:length_wl])/3
+
+    fig_name = int(100*(float(lamin) + float(lamax))/2)
+
     fig, ax = plt.subplots(figsize = (30, 10))
     ax3 = ax.twinx()
     ax3.plot(avg_wl, avg_flux)
     ax3.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength ($\mu$ m)")
-    ax.set_title("Earth Context Plot")
-    ax.set_xlim(0.5,2)
-    ax.axvspan(0.61, 0.65, alpha=0.5, color='0.85')
-    ax.axvspan(0.67, 0.71, alpha=0.5, color='0.85')
-    ax.axvspan(0.74, 0.78, alpha=0.5, color='0.85')
-    ax.axvspan(1.25, 1.29, alpha=0.5, color='0.85')
+    ax.set_title("Earth Plot with 2% Oxygen")
     ax.plot(avg_wl, avg_flux)
-    fig.savefig("avg_clouds_2per.png", bbox_inches = 'tight')
+    fig.savefig(str(fig_name) + "_2per.png", bbox_inches = 'tight')
     
 if __name__ == '__main__':
 
@@ -166,7 +159,7 @@ if __name__ == '__main__':
         # On the mox login node: submit job
         runfile = __file__
         smart.utils.write_slurm_script_python(runfile,
-                               name="clouds",
+                               name="twoper",
                                subname="submit.csh",
                                workdir = "",
                                nodes = 1,
@@ -178,11 +171,16 @@ if __name__ == '__main__':
                                rm_after_submit = True)
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
-        plotting()
+        plotting(0.61,0.65)
+        plotting(0.67,0.71)
+        plotting(0.74,0.78)
+        plotting(1.25,1.29)
     else:
         # Presumably, on a regular computer: ready to run
-        plotting()        
-
+        plotting(0.61,0.65)
+        plotting(0.67,0.71)
+        plotting(0.74,0.78)
+        plotting(1.25,1.29)
 
 
 
