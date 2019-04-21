@@ -169,7 +169,7 @@ def plotting(lamin, lamax, atmos, title):
         ax.set_ylabel("Reflectance")
         ax.set_xlabel("Wavelength ($\mu$ m)")
         ax.legend()
-        fig.savefig(str(fig_name) +  "_2per.png", bbox_inches = "tight")
+        fig.savefig(str(fig_name) +  "_ocean_2per.png", bbox_inches = "tight")
 
    
 if __name__ == '__main__':
