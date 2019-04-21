@@ -54,7 +54,7 @@ def earth_like(lamin, lamax):
 def ocean_loss(lamin, lamax):
     res = 1/(10*lamin)
 
-    sim2 = smart.interface.Smart(tag = "highd_10per")
+    sim2 = smart.interface.Smart(tag = "highd")
     infile2 = "10bar_O2_dry.pt_filtered.pt"
     label = "Ocean Loss"
     sim2.smartin.alb_file = "desert_highd.alb"
@@ -95,7 +95,7 @@ def ocean_loss(lamin, lamax):
 def ocean_outgassing(lamin, lamax):
     res = 1/(10*lamin)
 
-    sim2 = smart.interface.Smart(tag = "highw_10per")
+    sim2 = smart.interface.Smart(tag = "highw")
     infile2 = "10bar_O2_wet.pt_filtered.pt"
     label = "Ocean Outgassing"
     sim2.smartin.alb_file = "earth_noveg_highw.alb"

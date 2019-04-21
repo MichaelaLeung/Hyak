@@ -180,7 +180,7 @@ if __name__ == '__main__':
         # On the mox login node: submit job
         runfile = __file__
         smart.utils.write_slurm_script_python(runfile,
-                               name="tenper",
+                               name="twpper",
                                subname="submit.csh",
                                workdir = "",
                                nodes = 1,
