@@ -20,7 +20,7 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
         o2.cia_file = "cia_adj_mix.cia"
     elif atmos == "prox":
         infile = "profile_Earth_proxb_.pt_filtered"
-        label = "Self Consistent PCb (Earth like)"
+        label = "Simulated Earth-like planet orbiting Proxima Centauri b"
         sim.smartin.alb_file = "composite1_txt.txt"
         sim.set_planet_proxima_b()
         sim.load_atmosphere_from_pt(infile, addn2 = False)
@@ -28,7 +28,7 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
         o2.cia_file = "cia_adj_calc.cia"
     elif atmos == "highd":
         infile = "10bar_O2_dry.pt_filtered.pt"
-        label = "10 bar O2 PCb"
+        label = "Simulated post ocean-loss planet orbiting Proxima Centauri b"
         sim.smartin.alb_file = "desert_highd.alb"
         sim.set_planet_proxima_b()
         sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
