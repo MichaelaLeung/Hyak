@@ -32,7 +32,10 @@ def earth_like(lamin, lamax, res):
     sim.smartin.maxwn = 1e4/lamin 
 
     sim.lblin.minwn = 1e4/lamax
-    sim.lblin.maxwn = 1e4/lamin 
+    sim.lblin.maxwn = 1e4/lamin
+
+    o2 = sim.atmosphere.gases[3]
+    o2.cia_file = 'cia_adj_mix.cia'
 
     sim.gen_lblscripts()
     sim.run_lblabc()
@@ -67,7 +70,11 @@ def ocean_loss(lamin, lamax, res):
     sim2.smartin.maxwn = 1e4/lamin 
 
     sim2.lblin.minwn = 1e4/lamax
-    sim2.lblin.maxwn = 1e4/lamin 
+    sim2.lblin.maxwn = 1e4/lamin
+
+    o2 = sim2.atmosphere.gases[1]
+    o2.cia_file = 'cia_adj_mix.cia'
+
 
     sim2.gen_lblscripts()
     sim2.run_lblabc()
@@ -103,7 +110,10 @@ def ocean_outgassing(lamin, lamax, res):
     sim2.smartin.maxwn = 1e4/lamin 
 
     sim2.lblin.minwn = 1e4/lamax
-    sim2.lblin.maxwn = 1e4/lamin 
+    sim2.lblin.maxwn = 1e4/lamin
+
+    o2 = sim2.atmosphere.gases[2]
+    o2.cia_file = 'cia_adj_mix.cia'
 
     sim2.gen_lblscripts()
     sim2.run_lblabc()

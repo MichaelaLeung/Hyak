@@ -36,7 +36,7 @@ def earth_like(lamin, lamax, res, cia):
     
     if cia == "new":
         o2 = sim.atmosphere.gases[3]
-        o2.cia_file = "cia_adj_calc.cia"
+        o2.cia_file = "cia_adj_mix.cia"
     elif cia == "none":
         o2 = sim.atmosphere.gases[3]
         o2.cia_file = None
@@ -80,7 +80,7 @@ def ocean_loss(lamin, lamax, res, cia):
 
     if cia == "new":
         o2 = sim2.atmosphere.gases[1]
-        o2.cia_file = "cia_adj_calc.cia"
+        o2.cia_file = "cia_adj_mix.cia"
     elif cia == "none":
         o2 = sim2.atmosphere.gases[1]
         o2.cia_file = None
@@ -125,7 +125,7 @@ def ocean_outgassing(lamin, lamax, res, cia):
 
     if cia == "new":
         o2 = sim2.atmosphere.gases[2]
-        o2.cia_file = "cia_adj_calc.cia"
+        o2.cia_file = "cia_adj_mix.cia"
     elif cia == "none":
         o2 = sim2.atmosphere.gases[2]
         o2.cia_file = None
