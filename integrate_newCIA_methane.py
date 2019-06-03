@@ -85,11 +85,11 @@ def ocean_loss(lamin, lamax, res, cia):
     sim2.lblin.maxwn = 1e4/lamin
 
     if cia == "new":
-        co2 = sim.atmosphere.gases[0]
+        co2 = sim2.atmosphere.gases[0]
         co2.cia_file = 'co2_calc.cia'
-        o2 = sim.atmosphere.gases[1]
+        o2 = sim2.atmosphere.gases[1]
         o2.cia_file = 'o4_calc.cia'
-        n2 = sim.atmosphere.gases[6]
+        n2 = sim2.atmosphere.gases[6]
         n2.cia_file = 'n4_calc.cia'
     elif cia == "none":
         o2 = sim2.atmosphere.gases[1]
@@ -136,11 +136,11 @@ def ocean_outgassing(lamin, lamax, res, cia):
     sim2.lblin.maxwn = 1e4/lamin
 
     if cia == "new":
-        co2 = sim.atmosphere.gases[1]
+        co2 = sim2.atmosphere.gases[1]
         co2.cia_file = 'co2_calc.cia'
-        o2 = sim.atmosphere.gases[2]
+        o2 = sim2.atmosphere.gases[2]
         o2.cia_file = 'o4_calc.cia'
-        n2 = sim.atmosphere.gases[8]
+        n2 = sim2.atmosphere.gases[8]
         n2.cia_file = 'n4_calc.cia'
     elif cia == "none":
         o2 = sim2.atmosphere.gases[2]
@@ -211,7 +211,7 @@ def integrate(lamin, lamax, atmos, cia):
     import scipy.integrate as integrate
     adds = integrate.trapz(out, wl[:-25])
     name = str(abs(adds)), str(lamin) + "to" + str(lamax), str(cia), str(tag)
-    f = open("integrations_new.txt", "a")
+    f = open("integrations_methane.txt", "a")
     f.write(str(name) + "\n")
 
 def output(lamin, lamax):
