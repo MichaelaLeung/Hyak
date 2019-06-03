@@ -248,10 +248,6 @@ if __name__ == '__main__':
                                rm_after_submit = True)
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
-        output(0.61, 0.65)
-        output(0.67, 0.71)
-        output(0.74, 0.78)
-        output(1.24, 1.28)
-
+        output(0.88, 0.91)
     else:
-        output(0.61, 0.65)
+        output(0.88, 0.91)

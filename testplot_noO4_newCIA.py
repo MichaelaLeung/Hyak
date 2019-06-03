@@ -26,6 +26,8 @@ def ocean_loss(lamin, lamax):
     sim.smartin.sza = 57
     sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
 
+    sim.lblin.par_file = 'HITRAN2019.par'
+
     sim.smartin.FWHM = res
     sim.smartin.sample_res = res
 
@@ -35,8 +37,14 @@ def ocean_loss(lamin, lamax):
     sim.lblin.minwn = 1e4/lamax
     sim.lblin.maxwn = 1e4/lamin
 
+    co2 = sim.atmosphere.gases[0]
+    co2.cia_file = 'co2_calc.cia'
+
     o2 = sim.atmosphere.gases[1]
-    o2.cia_file = 'cia_adj_mix.cia'
+    o2.cia_file = 'o4_calc.cia'
+
+    n2 = sim.atmosphere.gases[6]
+    n2.cia_file = 'n4_calc.cia'
 
     sim.gen_lblscripts()
     sim.run_lblabc()
@@ -67,6 +75,8 @@ def ocean_outgassing(lamin, lamax):
     sim.smartin.sza = 57
     sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
 
+    sim.lblin.par_file = 'HITRAN2019.par'
+
     sim.smartin.FWHM = res
     sim.smartin.sample_res = res
 
@@ -74,10 +84,16 @@ def ocean_outgassing(lamin, lamax):
     sim.smartin.maxwn = 1e4/lamin 
 
     sim.lblin.minwn = 1e4/lamax
-    sim.lblin.maxwn = 1e4/lamin
+    sim.lblin.maxwn = 1e4/lamin 
+
+    co2 = sim.atmosphere.gases[1]
+    co2.cia_file = 'co2_calc.cia'
 
     o2 = sim.atmosphere.gases[2]
-    o2.cia_file = 'cia_adj_mix.cia'
+    o2.cia_file = 'o4_calc.cia'
+
+    n2 = sim.atmosphere.gases[8]
+    n2.cia_file = 'n4_calc.cia'
 
     sim.gen_lblscripts()
     sim.run_lblabc()
@@ -108,6 +124,8 @@ def ocean_loss_noO4(lamin, lamax):
     sim2.smartin.sza = 57
     sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
 
+    sim2.lblin.par_file = 'HITRAN2019.par'
+
     sim2.smartin.FWHM = res
     sim2.smartin.sample_res = res
 
@@ -116,6 +134,12 @@ def ocean_loss_noO4(lamin, lamax):
 
     sim2.lblin.minwn = 1e4/lamax
     sim2.lblin.maxwn = 1e4/lamin
+
+    co2 = sim2.atmosphere.gases[0]
+    co2.cia_file = 'co2_calc.cia'
+
+    n2 = sim2.atmosphere.gases[6]
+    n2.cia_file = 'n4_calc.cia'
 
     o2 = sim2.atmosphere.gases[1]
     o2.cia_file = None
@@ -149,6 +173,8 @@ def ocean_outgassing_noO4(lamin, lamax):
     sim2.smartin.sza = 57
     sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
 
+    sim2.lblin.par_file = 'HITRAN2019.par'
+
     sim2.smartin.FWHM = res
     sim2.smartin.sample_res = res
 
@@ -156,8 +182,14 @@ def ocean_outgassing_noO4(lamin, lamax):
     sim2.smartin.maxwn = 1e4/lamin 
 
     sim2.lblin.minwn = 1e4/lamax
-    sim2.lblin.maxwn = 1e4/lamin
+    sim2.lblin.maxwn = 1e4/lamin 
 
+    co2 = sim2.atmosphere.gases[1]
+    co2.cia_file = 'co2_calc.cia'
+
+    n2 = sim2.atmosphere.gases[8]
+    n2.cia_file = 'n4_calc.cia'
+    
     o2 = sim2.atmosphere.gases[2]
     o2.cia_file = None
 

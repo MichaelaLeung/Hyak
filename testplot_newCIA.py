@@ -82,13 +82,13 @@ def ocean_loss(lamin, lamax):
     sim2.lblin.minwn = 1e4/lamax
     sim2.lblin.maxwn = 1e4/lamin
 
-    co2 = sim.atmosphere.gases[0]
+    co2 = sim2.atmosphere.gases[0]
     co2.cia_file = 'co2_calc.cia'
 
-    o2 = sim.atmosphere.gases[1]
+    o2 = sim2.atmosphere.gases[1]
     o2.cia_file = 'o4_calc.cia'
 
-    n2 = sim.atmosphere.gases[6]
+    n2 = sim2.atmosphere.gases[6]
     n2.cia_file = 'n4_calc.cia'
 
     sim2.gen_lblscripts()
@@ -131,13 +131,13 @@ def ocean_outgassing(lamin, lamax):
     sim2.lblin.minwn = 1e4/lamax
     sim2.lblin.maxwn = 1e4/lamin 
 
-    co2 = sim.atmosphere.gases[1]
+    co2 = sim2.atmosphere.gases[1]
     co2.cia_file = 'co2_calc.cia'
 
-    o2 = sim.atmosphere.gases[2]
+    o2 = sim2.atmosphere.gases[2]
     o2.cia_file = 'o4_calc.cia'
 
-    n2 = sim.atmosphere.gases[8]
+    n2 = sim2.atmosphere.gases[8]
     n2.cia_file = 'n4_calc.cia'
     
     sim2.gen_lblscripts()

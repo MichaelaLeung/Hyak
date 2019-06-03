@@ -16,32 +16,50 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
         infile = "earth_avg.pt"
         sim.smartin.alb_file = "composite1_txt.txt"
         sim.load_atmosphere_from_pt(infile, addn2 = False)
-        o2 = sim.atmosphere.gases[6]
-        o2.cia_file = "cia_adj_mix.cia"
+        sim.lblin.par_file = 'HITRAN2019.par'
+        co2 = sim2.atmosphere.gases[1]
+        co2.cia_file = 'co2_calc.cia'
+        o2 = sim2.atmosphere.gases[6]
+        o2.cia_file = 'o4_calc.cia'
+        n2 = sim2.atmosphere.gases[7]
+        n2.cia_file = 'n4_calc.cia'
     elif atmos == "prox":
         infile = "profile_Earth_proxb_.pt_filtered"
         label = "Simulated Earth-like planet orbiting Proxima Centauri"
         sim.smartin.alb_file = "composite1_txt.txt"
         sim.set_planet_proxima_b()
         sim.load_atmosphere_from_pt(infile, addn2 = False)
+        sim.lblin.par_file = 'HITRAN2019.par'
+        co2 = sim.atmosphere.gases[2]
+        co2.cia_file = 'co2_calc.cia'
         o2 = sim.atmosphere.gases[3]
-        o2.cia_file = "cia_adj_calc.cia"
+        o2.cia_file = 'o4_calc.cia'
     elif atmos == "highd":
         infile = "10bar_O2_dry.pt_filtered.pt"
         label = "Simulated post ocean-loss planet orbiting Proxima Centauri"
         sim.smartin.alb_file = "desert_highd.alb"
         sim.set_planet_proxima_b()
         sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
+        sim.lblin.par_file = 'HITRAN2019.par'
+        co2 = sim.atmosphere.gases[0]
+        co2.cia_file = 'co2_calc.cia'
         o2 = sim.atmosphere.gases[1]
-        o2.cia_file = "cia_adj_mix.cia"
+        o2.cia_file = 'o4_calc.cia'
+        n2 = sim.atmosphere.gases[6]
+        n2.cia_file = 'n4_calc.cia'
     elif atmos == "highw":
         infile = "10bar_O2_wet.pt_filtered.pt"
         label = "Simulated 10 bar oxygen ocean planet orbiting Proxima Centauri"
         sim.smartin.alb_file = "earth_noveg_highw.alb"
         sim.set_planet_proxima_b()
         sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
+        sim.lblin.par_file = 'HITRAN2019.par'
+        co2 = sim.atmosphere.gases[1]
+        co2.cia_file = 'co2_calc.cia'
         o2 = sim.atmosphere.gases[2]
-        o2.cia_file = "cia_adj_mix.cia"
+        o2.cia_file = 'o4_calc.cia'
+        n2 = sim.atmosphere.gases[8]
+        n2.cia_file = 'n4_calc.cia'
     elif atmos == "arch_prox":
         infile = "clearsky_archean.pt"
         sim.set_planet_proxima_b()
