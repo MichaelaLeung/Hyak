@@ -220,6 +220,5 @@ if __name__ == '__main__':
         plotting(0.67,0.71,1,"Oxygen B band (0.69) Ocean Outgassing")
         plotting(0.74,0.78,1,"Oxygen A band (0.76) Ocean Outgassing")
         plotting(1.25,1.29,1,"1.27 Ocean Outgassing")
-        plotting(0.78,0.82,1,"0.8 Methane Ocean Outgassing")
     else:
         plotting(1.25,1.29,1,"1.27 Ocean Outgassing")
