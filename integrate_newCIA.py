@@ -85,11 +85,11 @@ def ocean_loss(lamin, lamax, res, cia):
     sim2.lblin.maxwn = 1e4/lamin
 
     if cia == "new":
-        co2 = sim.atmosphere.gases[0]
+        co2 = sim2.atmosphere.gases[0]
         co2.cia_file = 'co2_calc.cia'
-        o2 = sim.atmosphere.gases[1]
+        o2 = sim2.atmosphere.gases[1]
         o2.cia_file = 'o4_calc.cia'
-        n2 = sim.atmosphere.gases[6]
+        n2 = sim2.atmosphere.gases[6]
         n2.cia_file = 'n4_calc.cia'
     elif cia == "none":
         o2 = sim2.atmosphere.gases[1]
@@ -136,11 +136,11 @@ def ocean_outgassing(lamin, lamax, res, cia):
     sim2.lblin.maxwn = 1e4/lamin
 
     if cia == "new":
-        co2 = sim.atmosphere.gases[1]
+        co2 = sim2.atmosphere.gases[1]
         co2.cia_file = 'co2_calc.cia'
-        o2 = sim.atmosphere.gases[2]
+        o2 = sim2.atmosphere.gases[2]
         o2.cia_file = 'o4_calc.cia'
-        n2 = sim.atmosphere.gases[8]
+        n2 = sim2.atmosphere.gases[8]
         n2.cia_file = 'n4_calc.cia'
     elif cia == "none":
         o2 = sim2.atmosphere.gases[2]
@@ -248,10 +248,11 @@ if __name__ == '__main__':
                                rm_after_submit = True)
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
-        output(0.61, 0.65)
-        output(0.67, 0.71)
-        output(0.74, 0.78)
-        output(1.24, 1.28)
+       # output(0.78, 0.81)
+         output(0.61, 0.65)
+      #  output(0.67, 0.71)
+      #  output(0.74, 0.78)
+       # output(1.24, 1.28)
 
     else:
         output(0.61, 0.65)
