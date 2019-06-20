@@ -25,8 +25,6 @@ def earth_like(lamin, lamax, res, cia):
     sim.smartin.sza = 57
     sim.load_atmosphere_from_pt(infile, addn2 = False)
 
-    sim.lblin.par_file = 'HITRAN2019.par'
-
     sim.smartin.FWHM = res
     sim.smartin.sample_res = res
 
@@ -37,10 +35,8 @@ def earth_like(lamin, lamax, res, cia):
     sim.lblin.maxwn = 1e4/lamin
     
     if cia == "new":
-        co2 = sim.atmosphere.gases[2]
-        co2.cia_file = 'co2_calc.cia'
         o2 = sim.atmosphere.gases[3]
-        o2.cia_file = 'o4_calc.cia'
+        o2.cia_file = 'cia_adj_calc.cia'
     elif cia == "none":
         o2 = sim.atmosphere.gases[3]
         o2.cia_file = None
@@ -73,8 +69,6 @@ def ocean_loss(lamin, lamax, res, cia):
     sim2.smartin.sza = 57
     sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
 
-    sim2.lblin.par_file = 'HITRAN2019.par'
-
     sim2.smartin.FWHM = res
     sim2.smartin.sample_res = res
 
@@ -85,12 +79,8 @@ def ocean_loss(lamin, lamax, res, cia):
     sim2.lblin.maxwn = 1e4/lamin
 
     if cia == "new":
-        co2 = sim2.atmosphere.gases[0]
-        co2.cia_file = 'co2_calc.cia'
         o2 = sim2.atmosphere.gases[1]
-        o2.cia_file = 'o4_calc.cia'
-        n2 = sim2.atmosphere.gases[6]
-        n2.cia_file = 'n4_calc.cia'
+        o2.cia_file = 'cia_adj_calc.cia'
     elif cia == "none":
         o2 = sim2.atmosphere.gases[1]
         o2.cia_file = None
@@ -124,8 +114,6 @@ def ocean_outgassing(lamin, lamax, res, cia):
     sim2.smartin.sza = 57
     sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
 
-    sim2.lblin.par_file = 'HITRAN2019.par'
-
     sim2.smartin.FWHM = res
     sim2.smartin.sample_res = res
 
@@ -136,12 +124,8 @@ def ocean_outgassing(lamin, lamax, res, cia):
     sim2.lblin.maxwn = 1e4/lamin
 
     if cia == "new":
-        co2 = sim2.atmosphere.gases[1]
-        co2.cia_file = 'co2_calc.cia'
         o2 = sim2.atmosphere.gases[2]
-        o2.cia_file = 'o4_calc.cia'
-        n2 = sim2.atmosphere.gases[8]
-        n2.cia_file = 'n4_calc.cia'
+        o2.cia_file = 'cia_adj_calc.cia'
     elif cia == "none":
         o2 = sim2.atmosphere.gases[2]
         o2.cia_file = None

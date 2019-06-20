@@ -15,6 +15,14 @@ def earth_like(lamin, lamax):
 
     sim = smart.interface.Smart(tag = "prox")
     infile = "profile_Earth_proxb_.pt_filtered"
+    label = "Simulated Earth-like planet orbiting Proxima Centauri"
+    sim.smartin.alb_file = "composite1_txt.txt"
+    sim.set_planet_proxima_b()
+    sim.load_atmosphere_from_pt(infile, addn2 = False)
+    
+    o2 = sim.atmosphere.gases[3]
+    o2.cia_file = 'cia_adj_calc.cia'
+    infile = "profile_Earth_proxb_.pt_filtered"
     label = "Earth-Like"
     sim.smartin.alb_file = "composite1_txt.txt"
     sim.set_planet_proxima_b()
@@ -24,9 +32,6 @@ def earth_like(lamin, lamax):
     sim.set_executables_automatically()
 
     sim.smartin.sza = 57
-    sim.load_atmosphere_from_pt(infile, addn2 = False)
-
-    sim.lblin.par_file = 'HITRAN2019.par'
 
     sim.smartin.FWHM = res
     sim.smartin.sample_res = res
@@ -35,13 +40,8 @@ def earth_like(lamin, lamax):
     sim.smartin.maxwn = 1e4/lamin 
 
     sim.lblin.minwn = 1e4/lamax
-    sim.lblin.maxwn = 1e4/lamin
+    sim.lblin.maxwn = 1e4/lamin 
 
-    co2 = sim.atmosphere.gases[2]
-    co2.cia_file = 'co2_calc.cia'
-
-    o2 = sim.atmosphere.gases[3]
-    o2.cia_file = 'o4_calc.cia'
 
     sim.gen_lblscripts()
     sim.run_lblabc()
@@ -58,48 +58,40 @@ def earth_like(lamin, lamax):
 def ocean_loss(lamin, lamax):
     res = 1/(10*lamin)
 
-    sim2 = smart.interface.Smart(tag = "highd")
-    infile2 = "10bar_O2_dry.pt_filtered.pt"
-    label = "Ocean Loss"
-    sim2.smartin.alb_file = "desert_highd.alb"
-    sim2.set_planet_proxima_b()
-    sim2.set_star_proxima()
+    sim = smart.interface.Smart(tag = "highd")
+    infile = "10bar_O2_dry.pt_filtered.pt"
+    label = "Simulated post ocean-loss planet orbiting Proxima Centauri"
+    sim.smartin.alb_file = "desert_highd.alb"
+    sim.set_planet_proxima_b()
+    sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
+   
+    o2 = sim.atmosphere.gases[1]
+    o2.cia_file = 'cia_adj_calc.cia'
+    
+    sim.write_smart(write_file = True)
+    sim.run_smart()
 
-    sim2.set_run_in_place() 
-    sim2.set_executables_automatically()
+    sim.set_run_in_place() 
+    sim.set_executables_automatically()
 
-    sim2.smartin.sza = 57
-    sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
+    sim.smartin.sza = 57
 
-    sim2.lblin.par_file = 'HITRAN2019.par'
+    sim.smartin.FWHM = res
+    sim.smartin.sample_res = res
 
-    sim2.smartin.FWHM = res
-    sim2.smartin.sample_res = res
+    sim.smartin.minwn = 1e4/lamax
+    sim.smartin.maxwn = 1e4/lamin 
 
-    sim2.smartin.minwn = 1e4/lamax
-    sim2.smartin.maxwn = 1e4/lamin 
+    sim.lblin.minwn = 1e4/lamax
+    sim.lblin.maxwn = 1e4/lamin 
 
-    sim2.lblin.minwn = 1e4/lamax
-    sim2.lblin.maxwn = 1e4/lamin
+    sim.gen_lblscripts()
+    sim.run_lblabc()
 
-    co2 = sim2.atmosphere.gases[0]
-    co2.cia_file = 'co2_calc.cia'
-
-    o2 = sim2.atmosphere.gases[1]
-    o2.cia_file = 'o4_calc.cia'
-
-    n2 = sim2.atmosphere.gases[6]
-    n2.cia_file = 'n4_calc.cia'
-
-    sim2.gen_lblscripts()
-    sim2.run_lblabc()
-    sim2.write_smart(write_file = True)
-    sim2.run_smart()
-
-    sim2.open_outputs()
-    wl2 = sim2.output.rad.lam
-    flux2 = sim2.output.rad.pflux
-    sflux2 = sim2.output.rad.sflux
+    sim.open_outputs()
+    wl2 = sim.output.rad.lam
+    flux2 = sim.output.rad.pflux
+    sflux2 = sim.output.rad.sflux
 
     adj_flux2 = flux2/sflux2
     return(wl2, adj_flux2)
@@ -120,8 +112,6 @@ def ocean_outgassing(lamin, lamax):
     sim2.smartin.sza = 57
     sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
 
-    sim2.lblin.par_file = 'HITRAN2019.par'
-
     sim2.smartin.FWHM = res
     sim2.smartin.sample_res = res
 
@@ -131,14 +121,10 @@ def ocean_outgassing(lamin, lamax):
     sim2.lblin.minwn = 1e4/lamax
     sim2.lblin.maxwn = 1e4/lamin 
 
-    co2 = sim2.atmosphere.gases[1]
-    co2.cia_file = 'co2_calc.cia'
 
     o2 = sim2.atmosphere.gases[2]
-    o2.cia_file = 'o4_calc.cia'
+    o2.cia_file = 'cia_adj_calc.cia'
 
-    n2 = sim2.atmosphere.gases[8]
-    n2.cia_file = 'n4_calc.cia'
     
     sim2.gen_lblscripts()
     sim2.run_lblabc()
@@ -171,8 +157,8 @@ def plotting(lamin, lamax, atmos, title):
         wl, flux = earth_like(lamin, lamax)
         wl2, flux2 = ocean_loss(lamin, lamax)
         fig, ax = plt.subplots(figsize = (10,10))
-        ax.plot(wl, flux, label = "Earth-Like")
-        ax.plot(wl2, flux2, label = "Ocean Loss")
+        ax.plot(wl, flux, label = "1 bar Earth-Like")
+        ax.plot(wl2, flux2, label = "10 bar Ocean Loss")
         ax.set_title(title)
         ax.set_ylabel("Reflectance")
         ax.set_xlabel("Wavelength ($\mu$ m)")
@@ -182,8 +168,8 @@ def plotting(lamin, lamax, atmos, title):
         wl, flux = earth_like(lamin, lamax)
         wl2, flux2 = ocean_outgassing(lamin, lamax)
         fig, ax = plt.subplots(figsize = (10,10))
-        ax.plot(wl, flux, label = "Earth-Like")
-        ax.plot(wl2, flux2, label = "Ocean Outgassing")
+        ax.plot(wl, flux, label = "1 bar Earth-Like")
+        ax.plot(wl2, flux2, label = "10 bar Ocean Outgassing")
         ax.set_title(title)
         ax.set_ylabel("Reflectance")
         ax.set_xlabel("Wavelength ($\mu$ m)")
@@ -221,4 +207,4 @@ if __name__ == '__main__':
         plotting(0.74,0.78,1,"Oxygen A band (0.76) Ocean Outgassing")
         plotting(1.25,1.29,1,"1.27 Ocean Outgassing")
     else:
-        plotting(1.25,1.29,1,"1.27 Ocean Outgassing")
+        plotting(1.25,1.29,0,"1.27 Ocean Loss")
