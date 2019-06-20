@@ -68,8 +68,7 @@ def ocean_loss(lamin, lamax):
     o2 = sim.atmosphere.gases[1]
     o2.cia_file = 'cia_adj_calc.cia'
     
-    sim.write_smart(write_file = True)
-    sim.run_smart()
+
 
     sim.set_run_in_place() 
     sim.set_executables_automatically()
@@ -87,6 +86,8 @@ def ocean_loss(lamin, lamax):
 
     sim.gen_lblscripts()
     sim.run_lblabc()
+    sim.write_smart(write_file = True)
+    sim.run_smart()
 
     sim.open_outputs()
     wl2 = sim.output.rad.lam
