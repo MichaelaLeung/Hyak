@@ -67,8 +67,6 @@ def ocean_loss(lamin, lamax):
    
     o2 = sim.atmosphere.gases[1]
     o2.cia_file = 'cia_adj_calc.cia'
-    
-
 
     sim.set_run_in_place() 
     sim.set_executables_automatically()
@@ -126,7 +124,6 @@ def ocean_outgassing(lamin, lamax):
     o2 = sim2.atmosphere.gases[2]
     o2.cia_file = 'cia_adj_calc.cia'
 
-    
     sim2.gen_lblscripts()
     sim2.run_lblabc()
     sim2.write_smart(write_file = True)
@@ -202,10 +199,9 @@ if __name__ == '__main__':
         plotting(0.67,0.71,0,"Oxygen B band (0.69) Ocean Loss")
         plotting(0.74,0.78,0,"Oxygen A band (0.76) Ocean Loss")
         plotting(1.25,1.29,0,"1.27 Ocean Loss")
-        plotting(0.78,0.82,0,"0.8 Methane Ocean Loss")
         plotting(0.61,0.65,1,"Gamma band (0.63) Ocean Outgassing")
         plotting(0.67,0.71,1,"Oxygen B band (0.69) Ocean Outgassing")
         plotting(0.74,0.78,1,"Oxygen A band (0.76) Ocean Outgassing")
         plotting(1.25,1.29,1,"1.27 Ocean Outgassing")
     else:
-        plotting(1.25,1.29,0,"1.27 Ocean Loss")
+        plotting(1.25,1.29,1,"1.27 Ocean Outgassing")

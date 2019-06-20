@@ -146,6 +146,7 @@ def ocean_outgassing(lamin, lamax, res, cia):
     return(wl2, adj_flux2)
 
 def integrate(lamin, lamax, atmos, cia):
+    f = open("integrations_new.txt", "aw")
     if atmos == 0:
         wl, flux = earth_like(lamin, lamax, 0.01, cia)
         wl_low, flux_low = earth_like(lamin, lamax,1, cia)
@@ -232,11 +233,11 @@ if __name__ == '__main__':
                                rm_after_submit = True)
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
-       # output(0.78, 0.81)
+         #output(0.78, 0.81)
          output(0.61, 0.65)
-      #  output(0.67, 0.71)
-      #  output(0.74, 0.78)
-       # output(1.24, 1.28)
+         output(0.67, 0.71)
+         output(0.74, 0.78)
+         output(1.24, 1.28)
 
     else:
         output(0.61, 0.65)
