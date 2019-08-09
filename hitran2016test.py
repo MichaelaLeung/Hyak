@@ -26,9 +26,9 @@ sim.smartin.alb_file = "composite1_txt.txt"
 sim.set_planet_proxima_b()
 sim.load_atmosphere_from_pt(infile, addn2 = False)
 
-sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_inputs/HITRAN2016.par'
+sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016.par'
 sim.lblin.hitran_tag = 'hitran2016'
-sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_inputs/fundamntl2016.dat'
+sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
 sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
     
 o2 = sim.atmosphere.gases[3]
