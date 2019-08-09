@@ -107,5 +107,5 @@ if __name__ == '__main__':
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
         plotting(0.61,0.645,0,"Gamma band (0.63) Ocean Loss")
-            else:
+    else:
         plotting(0.61,0.645,1,"Gamma band (0.63) Ocean Outgassing")
