@@ -13,8 +13,8 @@ matplotlib.rcParams['text.usetex'] = False
 import random
 import platform
 
-lamin = 0.74
-lamax = 0.78
+lamin = 0.6
+lamax = 2.0
 
 
 res = 1/(10*lamin)
