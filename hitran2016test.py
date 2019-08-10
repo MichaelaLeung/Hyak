@@ -25,7 +25,7 @@ label = "Simulated Earth-like planet orbiting Proxima Centauri"
 sim.smartin.alb_file = "composite1_txt.txt"
 sim.set_planet_proxima_b()
 sim.load_atmosphere_from_pt(infile, addn2 = False)
-
+sim.set_executables_automatically()
 sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016.par'
 sim.lblin.hitran_tag = 'hitran2016'
 sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
