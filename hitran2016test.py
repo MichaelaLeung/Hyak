@@ -13,13 +13,8 @@ matplotlib.rcParams['text.usetex'] = False
 import random
 import platform
 
-
-
-
 lamin = 0.7
 lamax = 0.8
-
-
 res = 1/(10*lamin)
 
 sim = smart.interface.Smart(tag = "prox")
@@ -40,10 +35,10 @@ sim.set_star_proxima()
 sim.set_run_in_place() 
 sim.set_executables_automatically()
 
-sim.lblin.par_file = 'HITRAN2016.par' #/gscratch/vsm/alinc/fixed_input/
+sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016.par' #/gscratch/vsm/alinc/fixed_input/
 sim.lblin.hitran_tag = 'hitran2016'
-sim.lblin.fundamntl_file = 'fundamntl2016.dat'
-sim.lblin.lblabc_exe = 'lblabc_2016'
+sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
+sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
 
 sim.smartin.sza = 57
 
