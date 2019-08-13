@@ -13,6 +13,9 @@ matplotlib.rcParams['text.usetex'] = False
 import random
 import platform
 
+
+
+
 lamin = 0.7
 lamax = 0.8
 
@@ -24,14 +27,7 @@ infile = "profile_Earth_proxb_.pt_filtered"
 label = "Simulated Earth-like planet orbiting Proxima Centauri"
 sim.smartin.alb_file = "composite1_txt.txt"
 sim.set_planet_proxima_b()
-sim.set_run_in_place()
 sim.load_atmosphere_from_pt(infile, addn2 = False)
-
-sim.set_executables_automatically()
-sim.lblin.par_file = 'HITRAN2016.par'
-sim.lblin.hitran_tag = 'hitran2016'
-sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
-sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
     
 o2 = sim.atmosphere.gases[3]
 o2.cia_file = 'cia_adj_calc.cia'
@@ -42,8 +38,15 @@ sim.set_planet_proxima_b()
 sim.set_star_proxima()
 
 sim.set_run_in_place() 
+sim.set_executables_automatically()
+
+sim.lblin.par_file = 'HITRAN2016.par' #/gscratch/vsm/alinc/fixed_input/
+sim.lblin.hitran_tag = 'hitran2016'
+sim.lblin.fundamntl_file = 'fundamntl2016.dat'
+sim.lblin.lblabc_exe = 'lblabc_2016'
 
 sim.smartin.sza = 57
+
 sim.smartin.FWHM = res
 sim.smartin.sample_res = res
 
@@ -55,7 +58,6 @@ sim.lblin.maxwn = 1e4/lamin
 
 
 sim.gen_lblscripts()
-print(sim.lblin.__dict__)
 sim.run_lblabc()
 sim.write_smart(write_file = True)
 sim.run_smart()
@@ -64,7 +66,7 @@ sim.open_outputs()
 wl = sim.output.rad.lam
 flux = sim.output.rad.pflux
 sflux = sim.output.rad.sflux
-adj_flux = flux/sflux   
+adj_flux = flux/sflux
     
 mpl.rc('font',**{'family':'serif','serif':['Computer Modern']})
 mpl.rcParams['font.size'] = 25.0
