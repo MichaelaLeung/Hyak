@@ -75,6 +75,11 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
     sim.set_run_in_place(place) 
     sim.set_executables_automatically()
 
+    sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016' #/gscratch/vsm/alinc/fixed_input/
+    sim.lblin.hitran_tag = 'hitran2016'
+    sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
+    sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
+
     sim.smartin.sza = 57
 
     sim.smartin.FWHM = res
@@ -105,14 +110,14 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
     
     if platform.system() == 'Darwin':
         # On a Mac: usetex ok
-        mpl.rc('font',**{'family':'serif','serif':['Computer Modern']})
-        mpl.rcParams['font.size'] = 25.0
-        mpl.rc('text', usetex=True)
+        matplotlib.rc('font',**{'family':'serif','serif':['Computer Modern']})
+        matplotlib.rcParams['font.size'] = 25.0
+        matplotlib.rc('text', usetex=True)
     elif platform.node().startswith("n"):
         # On hyak: usetex not ok, must change backend to 'agg'
-        mpl.rc('font',**{'family':'serif','serif':['Computer Modern']})
-        mpl.rcParams['font.size'] = 25.0
-        mpl.rc('text', usetex=False)
+        matplotlib.rc('font',**{'family':'serif','serif':['Computer Modern']})
+        matplotlib.rcParams['font.size'] = 25.0
+        matplotlib.rc('text', usetex=False)
         plt.switch_backend('agg')
 
     sim.write_smart(write_file = True)
