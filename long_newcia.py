@@ -16,7 +16,6 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
         infile = "earth_avg.pt"
         sim.smartin.alb_file = "composite1_txt.txt"
         sim.load_atmosphere_from_pt(infile, addn2 = False)
-        sim.lblin.par_file = 'HITRAN2019.par'
         co2 = sim2.atmosphere.gases[1]
         co2.cia_file = 'co2_calc.cia'
         o2 = sim2.atmosphere.gases[6]
@@ -29,7 +28,6 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
         sim.smartin.alb_file = "composite1_txt.txt"
         sim.set_planet_proxima_b()
         sim.load_atmosphere_from_pt(infile, addn2 = False)
-        sim.lblin.par_file = 'HITRAN2019.par'
         co2 = sim.atmosphere.gases[2]
         co2.cia_file = 'co2_calc.cia'
         o2 = sim.atmosphere.gases[3]
@@ -40,7 +38,6 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
         sim.smartin.alb_file = "desert_highd.alb"
         sim.set_planet_proxima_b()
         sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
-        sim.lblin.par_file = 'HITRAN2019.par'
         co2 = sim.atmosphere.gases[0]
         co2.cia_file = 'co2_calc.cia'
         o2 = sim.atmosphere.gases[1]
@@ -53,7 +50,6 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
         sim.smartin.alb_file = "earth_noveg_highw.alb"
         sim.set_planet_proxima_b()
         sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
-        sim.lblin.par_file = 'HITRAN2019.par'
         co2 = sim.atmosphere.gases[1]
         co2.cia_file = 'co2_calc.cia'
         o2 = sim.atmosphere.gases[2]
