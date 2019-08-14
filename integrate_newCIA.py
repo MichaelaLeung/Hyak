@@ -160,7 +160,7 @@ def ocean_outgassing(lamin, lamax, res, cia):
     return(wl2, adj_flux2)
 
 def integrate(lamin, lamax, atmos, cia):
-    f = open("integrations_new.txt", "aw")
+    f = open("integrations_new.txt", "a")
     if atmos == 0:
         wl, flux = earth_like(lamin, lamax, 0.01, cia)
         wl_low, flux_low = earth_like(lamin, lamax,1, cia)
