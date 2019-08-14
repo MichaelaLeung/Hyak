@@ -1,13 +1,13 @@
 import numpy as np
-import smart
-from matplotlib import pyplot as plt
-import matplotlib as mpl
+import matplotlib; matplotlib.use('agg')
+import matplotlib.pyplot as plt
 from matplotlib.collections import LineCollection
-from astropy.io import fits 
-import matplotlib
+from astropy.io import fits
+import smart
 import sys, os
 import datetime
 matplotlib.rcParams['text.usetex'] = False
+import random
 
 def clouds(res, cirrus, strato):
     lamin = 0.5
@@ -28,6 +28,11 @@ def clouds(res, cirrus, strato):
         
     sim.set_run_in_place(place) 
     sim.set_executables_automatically()
+    
+    sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016' #/gscratch/vsm/alinc/fixed_input/
+    sim.lblin.hitran_tag = 'hitran2016'
+    sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
+    sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
 
     sim.load_atmosphere_from_pt(infile, addn2 = False)
     o2 = sim.atmosphere.gases[6]
@@ -59,16 +64,16 @@ def clouds(res, cirrus, strato):
 
     import platform
     
-    if platform.system() == 'Darwin':
+    if platform.system() == 'Jarvis':
         # On a Mac: usetex ok
-        mpl.rc('font',**{'family':'serif','serif':['Computer Modern']})
-        mpl.rcParams['font.size'] = 25.0
-        mpl.rc('text', usetex=True)
+        matplotlib.rc('font',**{'family':'serif','serif':['Computer Modern']})
+        matplotlib.rcParams['font.size'] = 25.0
+        matplotlib.rc('text', usetex=True)
     elif platform.node().startswith("n"):
         # On hyak: usetex not ok, must change backend to 'agg'
-        mpl.rc('font',**{'family':'serif','serif':['Computer Modern']})
-        mpl.rcParams['font.size'] = 25.0
-        mpl.rc('text', usetex=False)
+        matplotlib.rc('font',**{'family':'serif','serif':['Computer Modern']})
+        matplotlib.rcParams['font.size'] = 25.0
+        matplotlib.rc('text', usetex=False)
         plt.switch_backend('agg')
 
     sim.write_smart(write_file = True)
@@ -103,6 +108,11 @@ def longplot():
     sim.smartin.alb_file = "composite1_txt.txt"
     sim.set_run_in_place(place) 
     sim.set_executables_automatically()
+
+    sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016' #/gscratch/vsm/alinc/fixed_input/
+    sim.lblin.hitran_tag = 'hitran2016'
+    sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
+    sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
 
     sim.load_atmosphere_from_pt(infile, addn2 = False)
     o2 = sim.atmosphere.gases[6]
