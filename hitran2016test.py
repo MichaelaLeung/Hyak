@@ -1,15 +1,8 @@
 #!/usr/bin/python
-
 import numpy as np
-
-print('numpy')
 import matplotlib; matplotlib.use('agg')
-print('mpl')
 import matplotlib.pyplot as plt
 plt.switch_backend('agg')
-print('agg')
-
-print('plt')
 from matplotlib.collections import LineCollection
 from astropy.io import fits 
 import smart
