@@ -1,12 +1,18 @@
 #!/usr/bin/python
 
 import numpy as np
-import smart
-from matplotlib import pyplot as plt
-import matplotlib as mpl
+
+print('numpy')
+import matplotlib; matplotlib.use('agg')
+print('mpl')
+import matplotlib.pyplot as plt
+plt.switch_backend('agg')
+print('agg')
+
+print('plt')
 from matplotlib.collections import LineCollection
 from astropy.io import fits 
-import matplotlib
+import smart
 import sys, os
 import datetime
 matplotlib.rcParams['text.usetex'] = False
@@ -63,9 +69,10 @@ flux = sim.output.rad.pflux
 sflux = sim.output.rad.sflux
 adj_flux = flux/sflux
     
-mpl.rc('font',**{'family':'serif','serif':['Computer Modern']})
-mpl.rcParams['font.size'] = 25.0
-mpl.rc('text', usetex=False)
+matplotlib.rc('font',**{'family':'serif','serif':['Computer Modern']})
+matplotlib.rcParams['font.size'] = 25.0
+matplotlib.rc('text', usetex=False)
+
 plt.switch_backend('agg')
 fig_name = int(100*(float(lamin) + float(lamax))/2)
 fig, ax = plt.subplots(figsize = (10,10))
