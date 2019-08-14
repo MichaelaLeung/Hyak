@@ -24,8 +24,8 @@ def ocean_loss(lamin, lamax):
     sim.set_run_in_place() 
     sim.set_executables_automatically()
 
-    sim.lblin.par_file = 'HITRAN2019' #/gscratch/vsm/alinc/fixed_input/
-    sim.lblin.hitran_tag = 'hitran2019'
+    sim.lblin.par_file = 'HITRAN2016' #/gscratch/vsm/alinc/fixed_input/
+    sim.lblin.hitran_tag = 'hitran2016'
     sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
     sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
 
@@ -70,8 +70,8 @@ def ocean_outgassing(lamin, lamax):
     sim.set_run_in_place() 
     sim.set_executables_automatically()
     
-    sim.lblin.par_file = 'HITRAN2019' #/gscratch/vsm/alinc/fixed_input/
-    sim.lblin.hitran_tag = 'hitran2019'
+    sim.lblin.par_file = 'HITRAN2016' #/gscratch/vsm/alinc/fixed_input/
+    sim.lblin.hitran_tag = 'hitran2016'
     sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
     sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
 
@@ -116,8 +116,8 @@ def ocean_loss_noO4(lamin, lamax):
     sim2.set_run_in_place() 
     sim2.set_executables_automatically()
 
-    sim2.lblin.par_file = 'HITRAN2019' #/gscratch/vsm/alinc/fixed_input/
-    sim2.lblin.hitran_tag = 'hitran2019'
+    sim2.lblin.par_file = 'HITRAN2016' #/gscratch/vsm/alinc/fixed_input/
+    sim2.lblin.hitran_tag = 'hitran2016'
     sim2.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
     sim2.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
 
@@ -162,8 +162,8 @@ def ocean_outgassing_noO4(lamin, lamax):
     sim2.set_run_in_place() 
     sim2.set_executables_automatically()
 
-    sim2.lblin.par_file = 'HITRAN2019' #/gscratch/vsm/alinc/fixed_input/
-    sim2.lblin.hitran_tag = 'hitran2019'
+    sim2.lblin.par_file = 'HITRAN2016' #/gscratch/vsm/alinc/fixed_input/
+    sim2.lblin.hitran_tag = 'hitran2016'
     sim2.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
     sim2.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
 

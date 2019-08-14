@@ -1,15 +1,8 @@
 #!/usr/bin/python
 
 import numpy as np
-
-print('numpy')
 import matplotlib; matplotlib.use('agg')
-print('mpl')
 import matplotlib.pyplot as plt
-plt.switch_backend('agg')
-print('agg')
-
-print('plt')
 from matplotlib.collections import LineCollection
 from astropy.io import fits
 import smart
@@ -39,7 +32,7 @@ def earth_like(lamin, lamax):
     sim.set_run_in_place() 
     sim.set_executables_automatically()
 
-    sim.lblin.par_file = 'HITRAN2016' #/gscratch/vsm/alinc/fixed_input/
+    sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016.par' #/gscratch/vsm/alinc/fixed_input/
     sim.lblin.hitran_tag = 'hitran2016'
     sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
     sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
@@ -84,8 +77,8 @@ def ocean_loss(lamin, lamax):
     sim.set_run_in_place() 
     sim.set_executables_automatically()
 
-    sim.lblin.par_file = 'HITRAN2019' #/gscratch/vsm/alinc/fixed_input/
-    sim.lblin.hitran_tag = 'hitran2019'
+    sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016.par' #/gscratch/vsm/alinc/fixed_input/
+    sim.lblin.hitran_tag = 'hitran2016'
     sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
     sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
 
