@@ -1,15 +1,16 @@
+#!/usr/bin/python
+
 import numpy as np
-import smart
-from matplotlib import pyplot as plt
-import matplotlib as mpl
+import matplotlib; matplotlib.use('agg')
+import matplotlib.pyplot as plt
+plt.switch_backend('agg')
 from matplotlib.collections import LineCollection
-from astropy.io import fits 
-import matplotlib
+from astropy.io import fits
+import smart
 import sys, os
 import datetime
 matplotlib.rcParams['text.usetex'] = False
 import random
-
 def ocean_loss(lamin, lamax):
     res = 1/(10*lamin)
 
@@ -22,6 +23,11 @@ def ocean_loss(lamin, lamax):
 
     sim.set_run_in_place() 
     sim.set_executables_automatically()
+
+    sim.lblin.par_file = 'HITRAN2019' #/gscratch/vsm/alinc/fixed_input/
+    sim.lblin.hitran_tag = 'hitran2019'
+    sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
+    sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
 
     sim.smartin.sza = 57
     sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
@@ -63,6 +69,11 @@ def ocean_outgassing(lamin, lamax):
 
     sim.set_run_in_place() 
     sim.set_executables_automatically()
+    
+    sim.lblin.par_file = 'HITRAN2019' #/gscratch/vsm/alinc/fixed_input/
+    sim.lblin.hitran_tag = 'hitran2019'
+    sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
+    sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
 
     sim.smartin.sza = 57
     sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
@@ -105,6 +116,11 @@ def ocean_loss_noO4(lamin, lamax):
     sim2.set_run_in_place() 
     sim2.set_executables_automatically()
 
+    sim2.lblin.par_file = 'HITRAN2019' #/gscratch/vsm/alinc/fixed_input/
+    sim2.lblin.hitran_tag = 'hitran2019'
+    sim2.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
+    sim2.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
+
     sim2.smartin.sza = 57
     sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
 
@@ -145,6 +161,11 @@ def ocean_outgassing_noO4(lamin, lamax):
 
     sim2.set_run_in_place() 
     sim2.set_executables_automatically()
+
+    sim2.lblin.par_file = 'HITRAN2019' #/gscratch/vsm/alinc/fixed_input/
+    sim2.lblin.hitran_tag = 'hitran2019'
+    sim2.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
+    sim2.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
 
     sim2.smartin.sza = 57
     sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
