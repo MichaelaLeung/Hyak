@@ -16,11 +16,11 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
         infile = "earth_avg.pt"
         sim.smartin.alb_file = "composite1_txt.txt"
         sim.load_atmosphere_from_pt(infile, addn2 = False)
-        co2 = sim2.atmosphere.gases[1]
+        co2 = sim.atmosphere.gases[1]
         co2.cia_file = 'co2_calc.cia'
-        o2 = sim2.atmosphere.gases[6]
+        o2 = sim.atmosphere.gases[6]
         o2.cia_file = 'o4_calc.cia'
-        n2 = sim2.atmosphere.gases[7]
+        n2 = sim.atmosphere.gases[7]
         n2.cia_file = 'n4_calc.cia'
     elif atmos == "prox":
         infile = "profile_Earth_proxb_.pt_filtered"
@@ -74,7 +74,7 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
     sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016' #/gscratch/vsm/alinc/fixed_input/
     sim.lblin.hitran_tag = 'hitran2016'
     sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
-    sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
+    #sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
 
     sim.smartin.sza = 57
 
@@ -139,7 +139,7 @@ if __name__ == '__main__':
         # On the mox login node: submit job
         runfile = __file__
         smart.utils.write_slurm_script_python(runfile,
-                               name="long",
+                               name="context",
                                subname="submit.csh",
                                workdir = "",
                                nodes = 1,
