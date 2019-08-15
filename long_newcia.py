@@ -90,32 +90,6 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
 
     sim.gen_lblscripts()
     sim.run_lblabc()
-
-    if cirrus == True:
-        sim.aerosols = smart.interface.Aerosols(cirrus=True, stratocum=False)
-        sim.tag = atmos + "_cirrus"
-
-    elif strato == True:
-        sim.aerosols = smart.interface.Aerosols(cirrus=False, stratocum=True)
-        sim.tag = atmos + "_strato"
-
-    else:
-        pass
-
-    import platform
-    
-    if platform.system() == 'Darwin':
-        # On a Mac: usetex ok
-        matplotlib.rc('font',**{'family':'serif','serif':['Computer Modern']})
-        matplotlib.rcParams['font.size'] = 25.0
-        matplotlib.rc('text', usetex=True)
-    elif platform.node().startswith("n"):
-        # On hyak: usetex not ok, must change backend to 'agg'
-        matplotlib.rc('font',**{'family':'serif','serif':['Computer Modern']})
-        matplotlib.rcParams['font.size'] = 25.0
-        matplotlib.rc('text', usetex=False)
-        plt.switch_backend('agg')
-
     sim.write_smart(write_file = True)
     sim.run_smart()
 
@@ -128,6 +102,18 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
     refl = flux/sflux
     flux = adj_flux
     
+    if platform.system() == 'Darwin':
+        # On a Mac: usetex ok
+        matplotlib.rc('font',**{'family':'serif','serif':['Computer Modern']})
+        matplotlib.rcParams['font.size'] = 25.0
+        matplotlib.rc('text', usetex=True)
+    elif platform.node().startswith("n"):
+        # On hyak: usetex not ok, must change backend to 'agg'
+        matplotlib.rc('font',**{'family':'serif','serif':['Computer Modern']})
+        matplotlib.rcParams['font.size'] = 25.0
+        matplotlib.rc('text', usetex=False)
+        plt.switch_backend('agg')
+        
     fig, ax = plt.subplots(figsize = (30, 10))
     ax3 = ax.twinx()
     ax3.plot(wl, refl)
@@ -140,7 +126,6 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
     ax.axvspan(0.74, 0.78, alpha=0.5, color='0.85')
     ax.axvspan(1.25, 1.29, alpha=0.5, color='0.85')
     
-
     fig.savefig(str(atmos) + "_newCIA.png", bbox_inches = 'tight')
 
 

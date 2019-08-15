@@ -62,20 +62,6 @@ def clouds(res, cirrus, strato):
     else:
         pass
 
-    import platform
-    
-    if platform.system() == 'Jarvis':
-        # On a Mac: usetex ok
-        matplotlib.rc('font',**{'family':'serif','serif':['Computer Modern']})
-        matplotlib.rcParams['font.size'] = 25.0
-        matplotlib.rc('text', usetex=True)
-    elif platform.node().startswith("n"):
-        # On hyak: usetex not ok, must change backend to 'agg'
-        matplotlib.rc('font',**{'family':'serif','serif':['Computer Modern']})
-        matplotlib.rcParams['font.size'] = 25.0
-        matplotlib.rc('text', usetex=False)
-        plt.switch_backend('agg')
-
     sim.write_smart(write_file = True)
     sim.run_smart()
 

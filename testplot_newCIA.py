@@ -199,7 +199,7 @@ if __name__ == '__main__':
         # On the mox login node: submit job
         runfile = __file__
         smart.utils.write_slurm_script_python(runfile,
-                               name="smartplt",
+                               name="nor_plt",
                                subname="submit.csh",
                                workdir = "",
                                nodes = 1,
@@ -212,11 +212,11 @@ if __name__ == '__main__':
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
         plotting(0.61,0.645,0,"Gamma band (0.63) Ocean Loss")
-        #plotting(0.67,0.71,0,"Oxygen B band (0.69) Ocean Loss")
-        #plotting(0.74,0.78,0,"Oxygen A band (0.76) Ocean Loss")
+        plotting(0.67,0.71,0,"Oxygen B band (0.69) Ocean Loss")
+        plotting(0.74,0.78,0,"Oxygen A band (0.76) Ocean Loss")
         plotting(1.25,1.29,0,"1.27 Ocean Loss")
-        #plotting(0.61,0.65,1,"Gamma band (0.63) Ocean Outgassing")
-        #plotting(0.67,0.71,1,"Oxygen B band (0.69) Ocean Outgassing")
+        plotting(0.61,0.65,1,"Gamma band (0.63) Ocean Outgassing")
+        plotting(0.67,0.71,1,"Oxygen B band (0.69) Ocean Outgassing")
         plotting(0.74,0.78,1,"Oxygen A band (0.76) Ocean Outgassing")
         plotting(1.25,1.29,1,"1.27 Ocean Outgassing")
     else:
