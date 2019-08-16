@@ -24,10 +24,10 @@ def ocean_loss(lamin, lamax):
     sim.set_run_in_place() 
     sim.set_executables_automatically()
 
-    sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016' #/gscratch/vsm/alinc/fixed_input/
+    sim.lblin.par_file = 'HITRAN2016' #/gscratch/vsm/alinc/fixed_input/
     sim.lblin.hitran_tag = 'hitran2016'
-    sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
-    sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
+    sim.lblin.fundamntl_file = 'fundamntl2016.dat'
+    sim.lblin.lblabc_exe = 'lblabc_2016'
 
     sim.smartin.sza = 57
     sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
@@ -70,10 +70,10 @@ def ocean_outgassing(lamin, lamax):
     sim.set_run_in_place() 
     sim.set_executables_automatically()
     
-    sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016' #/gscratch/vsm/alinc/fixed_input/
+    sim.lblin.par_file = 'HITRAN2016' #/gscratch/vsm/alinc/fixed_input/
     sim.lblin.hitran_tag = 'hitran2016'
-    sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
-    sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
+    sim.lblin.fundamntl_file = 'fundamntl2016.dat'
+    sim.lblin.lblabc_exe = 'lblabc_2016'
 
     sim.smartin.sza = 57
     sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
@@ -116,10 +116,10 @@ def ocean_loss_noO4(lamin, lamax):
     sim2.set_run_in_place() 
     sim2.set_executables_automatically()
 
-    sim2.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016' #/gscratch/vsm/alinc/fixed_input/
+    sim2.lblin.par_file = 'HITRAN2016' #/gscratch/vsm/alinc/fixed_input/
     sim2.lblin.hitran_tag = 'hitran2016'
-    sim2.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
-    sim2.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
+    sim2.lblin.fundamntl_file = 'fundamntl2016.dat'
+    sim2.lblin.lblabc_exe = 'lblabc_2016'
 
     sim2.smartin.sza = 57
     sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
@@ -164,8 +164,8 @@ def ocean_outgassing_noO4(lamin, lamax):
 
     sim2.lblin.par_file = 'HITRAN2016' #/gscratch/vsm/alinc/fixed_input/
     sim2.lblin.hitran_tag = 'hitran2016'
-    sim2.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
-    sim2.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
+    sim2.lblin.fundamntl_file = 'fundamntl2016.dat'
+    sim2.lblin.lblabc_exe = 'lblabc_2016'
 
     sim2.smartin.sza = 57
     sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
@@ -264,6 +264,5 @@ if __name__ == '__main__':
         plotting(0.74,0.78,1,"Oxygen A band (0.76) Ocean Outgassing")
         plotting(1.25,1.29,1,"1.27 Ocean Outgassing")
     else:
-        plotting(0.61,0.645,0,"Gamma band (0.63) Ocean Loss")
         plotting(0.61,0.645,1,"Gamma band (0.63) Ocean Outgassing")
 

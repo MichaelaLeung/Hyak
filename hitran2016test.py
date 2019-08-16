@@ -12,8 +12,6 @@ matplotlib.rcParams['text.usetex'] = False
 import random
 import platform
 
-lamin = 0.71
-lamax = 0.81
 res = 1/(10*lamin)
 
 sim = smart.interface.Smart(tag = "prox")
@@ -61,16 +59,3 @@ wl = sim.output.rad.lam
 flux = sim.output.rad.pflux
 sflux = sim.output.rad.sflux
 adj_flux = flux/sflux
-    
-matplotlib.rc('font',**{'family':'serif','serif':['Computer Modern']})
-matplotlib.rcParams['font.size'] = 25.0
-matplotlib.rc('text', usetex=False)
-
-plt.switch_backend('agg')
-fig_name = int(100*(float(lamin) + float(lamax))/2)
-fig, ax = plt.subplots(figsize = (10,10))
-ax.plot(wl, adj_flux, label = "1 bar Earth-Like")
-ax.set_ylabel("Reflectance")
-ax.set_xlabel("Wavelength ($\mu$ m)")
-ax.legend()
-fig.savefig(str(fig_name) +  "2016_test.png", bbox_inches = "tight")
