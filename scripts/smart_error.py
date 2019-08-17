@@ -129,7 +129,7 @@ def plotting(lamin, lamax, atmos, title):
         plt.switch_backend('agg')
     fig_name = int(100*(float(lamin) + float(lamax))/2)
     if atmos == 0: # zero = ocean loss
-        wl, flux = ocean_loss(lamin, lamax)
+        wl, flux = earth_like(lamin, lamax)
         wl2, flux2 = ocean_loss_noO4(lamin, lamax)
         fig, ax = plt.subplots(figsize = (10,10))
         ax.plot(wl, flux, label = "1 bar Earth-Like")
