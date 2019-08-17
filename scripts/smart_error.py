@@ -22,13 +22,13 @@ def earth_like(lamin, lamax):
     sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
 
-    infile = "/gscratch/vsm/mwjl/projects/high_res/inputs/profile_Earth_proxb_.pt_filtered"
+    infile = "/gscratch/vsm/mwjl/projects/high_res/inputs/10bar_O2_dry.pt_filtered.pt"
     label = "Simulated Earth-like planet orbiting Proxima Centauri"
-    sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/composite1_txt.txt"
+    sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/desert_highd.alb"
     sim.set_planet_proxima_b()
     sim.load_atmosphere_from_pt(infile, addn2 = False)
     
-    o2 = sim.atmosphere.gases[3]
+    o2 = sim.atmosphere.gases[1]
     o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/cia_adj_calc.cia'
     label = "Earth-Like"
     sim.set_planet_proxima_b()

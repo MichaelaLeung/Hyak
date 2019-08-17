@@ -128,9 +128,9 @@ def ocean_outgassing(lamin, lamax, res, cia):
     sim2.set_planet_proxima_b()
     sim2.set_star_proxima()
 
-    sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim2.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim2.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim2.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
 
     sim2.set_executables_automatically()
 
