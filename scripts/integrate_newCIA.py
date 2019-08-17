@@ -10,15 +10,19 @@ matplotlib.rcParams['text.usetex'] = False
 import random
 
 def earth_like(lamin, lamax, res, cia):
-
+    place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim = smart.interface.Smart(tag = "prox")
-    infile = "profile_Earth_proxb_.pt_filtered"
+    sim.set_run_in_place(place)
+    infile = "/gscratch/vsm/mwjl/projects/high_res/inputs/profile_Earth_proxb_.pt_filtered"
     label = "Earth-Like"
-    sim.smartin.alb_file = "composite1_txt.txt"
+    sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/composite1_txt.txt"
     sim.set_planet_proxima_b()
     sim.set_star_proxima()
 
-    sim.set_run_in_place() 
+    sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+
     sim.set_executables_automatically()
     
     sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016' #/gscratch/vsm/alinc/fixed_input/
@@ -40,7 +44,7 @@ def earth_like(lamin, lamax, res, cia):
     
     if cia == "new":
         o2 = sim.atmosphere.gases[3]
-        o2.cia_file = 'cia_adj_calc.cia'
+        o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/cia_adj_calc.cia'
     elif cia == "none":
         o2 = sim.atmosphere.gases[3]
         o2.cia_file = None
@@ -60,14 +64,19 @@ def earth_like(lamin, lamax, res, cia):
     return(wl, adj_flux)
 
 def ocean_loss(lamin, lamax, res, cia):
+    place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim2 = smart.interface.Smart(tag = "highd")
-    infile2 = "10bar_O2_dry.pt_filtered.pt"
+    sim2.set_run_in_place(place) 
+    infile2 = "/gscratch/vsm/mwjl/projects/high_res/inputs/10bar_O2_dry.pt_filtered.pt"
     label = "Ocean Loss"
-    sim2.smartin.alb_file = "desert_highd.alb"
+    sim2.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/desert_highd.alb"
     sim2.set_planet_proxima_b()
     sim2.set_star_proxima()
 
-    sim2.set_run_in_place() 
+    sim2.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim2.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim2.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+
     sim2.set_executables_automatically()
 
     sim2.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016' #/gscratch/vsm/alinc/fixed_input/
@@ -89,7 +98,7 @@ def ocean_loss(lamin, lamax, res, cia):
 
     if cia == "new":
         o2 = sim2.atmosphere.gases[1]
-        o2.cia_file = 'cia_adj_calc.cia'
+        o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/cia_adj_calc.cia'
     elif cia == "none":
         o2 = sim2.atmosphere.gases[1]
         o2.cia_file = None
@@ -110,14 +119,19 @@ def ocean_loss(lamin, lamax, res, cia):
     return(wl2, adj_flux2)
 
 def ocean_outgassing(lamin, lamax, res, cia):
+    place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim2 = smart.interface.Smart(tag = "highw")
+    sim2.set_run_in_place(place) 
     infile2 = "10bar_O2_wet.pt_filtered.pt"
     label = "Ocean Outgassing"
     sim2.smartin.alb_file = "earth_noveg_highw.alb"
     sim2.set_planet_proxima_b()
     sim2.set_star_proxima()
 
-    sim2.set_run_in_place() 
+    sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+
     sim2.set_executables_automatically()
 
     sim2.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016' #/gscratch/vsm/alinc/fixed_input/
@@ -139,7 +153,7 @@ def ocean_outgassing(lamin, lamax, res, cia):
 
     if cia == "new":
         o2 = sim2.atmosphere.gases[2]
-        o2.cia_file = 'cia_adj_calc.cia'
+        o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/cia_adj_calc.cia'
     elif cia == "none":
         o2 = sim2.atmosphere.gases[2]
         o2.cia_file = None
@@ -160,7 +174,7 @@ def ocean_outgassing(lamin, lamax, res, cia):
     return(wl2, adj_flux2)
 
 def integrate(lamin, lamax, atmos, cia):
-    f = open("integrations_new.txt", "a")
+    f = open("/gscratch/vsm/mwjl/projects/high_res/output/integrations_new.txt", "a")
     if atmos == 0:
         wl, flux = earth_like(lamin, lamax, 0.01, cia)
         wl_low, flux_low = earth_like(lamin, lamax,1, cia)
@@ -210,7 +224,7 @@ def integrate(lamin, lamax, atmos, cia):
     import scipy.integrate as integrate
     adds = integrate.trapz(out, wl[:-25])
     name = str(abs(adds)), str(lamin) + "to" + str(lamax), str(cia), str(tag)
-    f = open("integrations_new.txt", "a")
+    f = open("/gscratch/vsm/mwjl/projects/high_res/output/integrations_new.txt", "a")
     f.write(str(name) + "\n")
 
 def output(lamin, lamax):
