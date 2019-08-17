@@ -12,22 +12,25 @@ matplotlib.rcParams['text.usetex'] = False
 import random
 
 def earth_like(lamin, lamax):
+    
     res = 1/(10*lamin)
 
+    place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim = smart.interface.Smart(tag = "prox")
     sim.set_run_in_place()
+    sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
 
-    infile = "profile_Earth_proxb_.pt_filtered"
+    infile = "/gscratch/vsm/mwjl/projects/high_res/inputs/profile_Earth_proxb_.pt_filtered"
     label = "Simulated Earth-like planet orbiting Proxima Centauri"
-    sim.smartin.alb_file = "composite1_txt.txt"
+    sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/composite1_txt.txt"
     sim.set_planet_proxima_b()
     sim.load_atmosphere_from_pt(infile, addn2 = False)
     
     o2 = sim.atmosphere.gases[3]
-    o2.cia_file = 'cia_adj_calc.cia'
-    infile = "profile_Earth_proxb_.pt_filtered"
+    o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/smart_output/cia_adj_calc.cia'
     label = "Earth-Like"
-    sim.smartin.alb_file = "composite1_txt.txt"
     sim.set_planet_proxima_b()
     sim.set_star_proxima()
 
@@ -64,17 +67,22 @@ def earth_like(lamin, lamax):
 
 def ocean_loss(lamin, lamax):
     res = 1/(10*lamin)
+    place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
 
     sim = smart.interface.Smart(tag = "highd")
-    sim.set_run_in_place()
-    infile = "10bar_O2_dry.pt_filtered.pt"
+    sim.set_run_in_place(place)
+    sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    
+    infile = "/gscratch/vsm/mwjl/projects/high_res/inputs/10bar_O2_dry.pt_filtered.pt"
     label = "Simulated post ocean-loss planet orbiting Proxima Centauri"
-    sim.smartin.alb_file = "desert_highd.alb"
+    sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/desert_highd.alb"
     sim.set_planet_proxima_b()
     sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
    
     o2 = sim.atmosphere.gases[1]
-    o2.cia_file = 'cia_adj_calc.cia'
+    o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/cia_adj_calc.cia'
 
     sim.set_run_in_place() 
     sim.set_executables_automatically()
@@ -110,12 +118,16 @@ def ocean_loss(lamin, lamax):
 
 def ocean_outgassing(lamin, lamax):
     res = 1/(10*lamin)
+    place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
 
     sim2 = smart.interface.Smart(tag = "highw")
-    sim2.set_run_in_place()
-    infile2 = "10bar_O2_wet.pt_filtered.pt"
+    sim2.set_run_in_place(place)
+    sim2.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim2.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim2.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    infile2 = "/gscratch/vsm/mwjl/projects/high_res/inputs/10bar_O2_wet.pt_filtered.pt"
     label = "Ocean Outgassing"
-    sim2.smartin.alb_file = "earth_noveg_highw.alb"
+    sim2.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/earth_noveg_highw.alb"
     sim2.set_planet_proxima_b()
     sim2.set_star_proxima()
 
@@ -141,7 +153,7 @@ def ocean_outgassing(lamin, lamax):
 
 
     o2 = sim2.atmosphere.gases[2]
-    o2.cia_file = 'cia_adj_calc.cia'
+    o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/cia_adj_calc.cia'
 
     sim2.gen_lblscripts()
     sim2.run_lblabc()
@@ -180,7 +192,7 @@ def plotting(lamin, lamax, atmos, title):
         ax.set_ylabel("Reflectance")
         ax.set_xlabel("Wavelength ($\mu$ m)")
         ax.legend()
-        fig.savefig(str(fig_name) +  "new_CIA.png", bbox_inches = "tight")
+        fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots" + str(fig_name) +  "new_CIA.png", bbox_inches = "tight")
     else:
         wl, flux = earth_like(lamin, lamax)
         wl2, flux2 = ocean_outgassing(lamin, lamax)
@@ -191,7 +203,7 @@ def plotting(lamin, lamax, atmos, title):
         ax.set_ylabel("Reflectance")
         ax.set_xlabel("Wavelength ($\mu$ m)")
         ax.legend()
-        fig.savefig(str(fig_name) +  "new_CIA_ocean.png", bbox_inches = "tight")
+        fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots" + str(fig_name) +  "new_CIA_ocean.png", bbox_inches = "tight")
 
    
 if __name__ == '__main__':
