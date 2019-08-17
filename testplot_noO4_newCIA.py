@@ -13,15 +13,19 @@ matplotlib.rcParams['text.usetex'] = False
 import random
 def ocean_loss(lamin, lamax):
     res = 1/(10*lamin)
-
+    place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim = smart.interface.Smart(tag = "highd")
-    infile = "10bar_O2_dry.pt_filtered.pt"
+    sim.set_run_in_place(place)
+
+    infile = "/gscratch/vsm/mwjl/projects/high_res/inputs/10bar_O2_dry.pt_filtered.pt"
     label = "Ocean Loss"
-    sim.smartin.alb_file = "desert_highd.alb"
+    sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/desert_highd.alb"
     sim.set_planet_proxima_b()
     sim.set_star_proxima()
+    sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
 
-    sim.set_run_in_place() 
     sim.set_executables_automatically()
 
     sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016' #/gscratch/vsm/alinc/fixed_input/
@@ -42,7 +46,7 @@ def ocean_loss(lamin, lamax):
     sim.lblin.maxwn = 1e4/lamin
 
     o2 = sim.atmosphere.gases[1]
-    o2.cia_file = 'cia_adj_calc.cia'
+    o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/cia_adj_calc.cia'
 
     sim.gen_lblscripts()
     sim.run_lblabc()
@@ -59,15 +63,20 @@ def ocean_loss(lamin, lamax):
 
 def ocean_outgassing(lamin, lamax):
     res = 1/(10*lamin)
+    place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
 
     sim = smart.interface.Smart(tag = "highw")
-    infile = "10bar_O2_wet.pt_filtered.pt"
+    sim.set_run_in_place(place)
+
+    infile = "/gscratch/vsm/mwjl/projects/high_res/inputs/10bar_O2_wet.pt_filtered.pt"
     label = "Ocean Outgassing"
-    sim.smartin.alb_file = "earth_noveg_highw.alb"
+    sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/earth_noveg_highw.alb"
     sim.set_planet_proxima_b()
     sim.set_star_proxima()
 
-    sim.set_run_in_place() 
+    sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim.set_executables_automatically()
     
     sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016' #/gscratch/vsm/alinc/fixed_input/
@@ -88,7 +97,7 @@ def ocean_outgassing(lamin, lamax):
     sim.lblin.maxwn = 1e4/lamin 
 
     o2 = sim.atmosphere.gases[2]
-    o2.cia_file = 'cia_adj_calc.cia'
+    o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/cia_adj_calc.cia'
 
     sim.gen_lblscripts()
     sim.run_lblabc()
@@ -105,15 +114,20 @@ def ocean_outgassing(lamin, lamax):
 
 def ocean_loss_noO4(lamin, lamax):
     res = 1/(10*lamin)
+    place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
 
     sim2 = smart.interface.Smart(tag = "highd_noO4")
-    infile2 = "10bar_O2_dry.pt_filtered.pt"
+    sim2.set_run_in_place(place) 
+
+    infile2 = "/gscratch/vsm/mwjl/projects/high_res/inputs/10bar_O2_dry.pt_filtered.pt"
     label = "Ocean Loss"
-    sim2.smartin.alb_file = "desert_highd.alb"
+    sim2.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/desert_highd.alb"
     sim2.set_planet_proxima_b()
     sim2.set_star_proxima()
+    sim2.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim2.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim2.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
 
-    sim2.set_run_in_place() 
     sim2.set_executables_automatically()
 
     sim2.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016' #/gscratch/vsm/alinc/fixed_input/
@@ -151,15 +165,21 @@ def ocean_loss_noO4(lamin, lamax):
 
 def ocean_outgassing_noO4(lamin, lamax):
     res = 1/(10*lamin)
+    place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
 
     sim2 = smart.interface.Smart(tag = "highw_noO4")
-    infile2 = "10bar_O2_wet.pt_filtered.pt"
+    sim2.set_run_in_place(place) 
+
+    infile2 = "/gscratch/vsm/mwjl/projects/high_res/inputs/10bar_O2_wet.pt_filtered.pt"
     label = "Ocean Outgassing"
-    sim2.smartin.alb_file = "earth_noveg_highw.alb"
+    sim2.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/earth_noveg_highw.alb"
     sim2.set_planet_proxima_b()
     sim2.set_star_proxima()
 
-    sim2.set_run_in_place() 
+    sim2.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim2.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim2.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+
     sim2.set_executables_automatically()
 
     sim2.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016' #/gscratch/vsm/alinc/fixed_input/
@@ -221,7 +241,7 @@ def plotting(lamin, lamax, atmos, title):
         ax.set_ylabel("Reflectance")
         ax.set_xlabel("Wavelength ($\mu$ m)")
         ax.legend()
-        fig.savefig(str(fig_name) +  "new_CIA_noO4.png", bbox_inches = "tight")
+        fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots/"+ str(fig_name) +  "new_CIA_noO4.png", bbox_inches = "tight")
     else:
         wl, flux = ocean_outgassing(lamin, lamax)
         wl2, flux2 = ocean_outgassing_noO4(lamin, lamax)
@@ -232,7 +252,7 @@ def plotting(lamin, lamax, atmos, title):
         ax.set_ylabel("Reflectance")
         ax.set_xlabel("Wavelength ($\mu$ m)")
         ax.legend()
-        fig.savefig(str(fig_name) +  "new_CIA_noO4_ocean.png", bbox_inches = "tight")
+        fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots/"+ str(fig_name) +  "new_CIA_noO4_ocean.png", bbox_inches = "tight")
 
    
 if __name__ == '__main__':

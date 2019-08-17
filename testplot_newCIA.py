@@ -17,7 +17,7 @@ def earth_like(lamin, lamax):
 
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim = smart.interface.Smart(tag = "prox")
-    sim.set_run_in_place()
+    sim.set_run_in_place(place)
     sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
@@ -29,7 +29,7 @@ def earth_like(lamin, lamax):
     sim.load_atmosphere_from_pt(infile, addn2 = False)
     
     o2 = sim.atmosphere.gases[3]
-    o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/smart_output/cia_adj_calc.cia'
+    o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/cia_adj_calc.cia'
     label = "Earth-Like"
     sim.set_planet_proxima_b()
     sim.set_star_proxima()
@@ -192,7 +192,7 @@ def plotting(lamin, lamax, atmos, title):
         ax.set_ylabel("Reflectance")
         ax.set_xlabel("Wavelength ($\mu$ m)")
         ax.legend()
-        fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots" + str(fig_name) +  "new_CIA.png", bbox_inches = "tight")
+        fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots/" + str(fig_name) +  "new_CIA.png", bbox_inches = "tight")
     else:
         wl, flux = earth_like(lamin, lamax)
         wl2, flux2 = ocean_outgassing(lamin, lamax)
@@ -203,7 +203,7 @@ def plotting(lamin, lamax, atmos, title):
         ax.set_ylabel("Reflectance")
         ax.set_xlabel("Wavelength ($\mu$ m)")
         ax.legend()
-        fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots" + str(fig_name) +  "new_CIA_ocean.png", bbox_inches = "tight")
+        fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots/" + str(fig_name) +  "new_CIA_ocean.png", bbox_inches = "tight")
 
    
 if __name__ == '__main__':

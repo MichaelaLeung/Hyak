@@ -32,7 +32,6 @@ o2 = sim.atmosphere.gases[3]
 o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/smart_output/cia_adj_calc.cia'
 
 label = "Earth-Like"
-sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputscomposite1_txt.txt"
 sim.set_planet_proxima_b()
 sim.set_star_proxima()
 
