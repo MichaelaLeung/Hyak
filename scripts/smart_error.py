@@ -16,7 +16,7 @@ def earth_like(lamin, lamax):
     res = 1/(10*lamin)
 
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim = smart.interface.Smart(tag = "prox")
+    sim = smart.interface.Smart(tag = "highd")
     sim.set_run_in_place(place)
     sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
