@@ -12,8 +12,8 @@ matplotlib.rcParams['text.usetex'] = False
 import random
 import platform
 
-lamin = 0.6
-lamax = 0.7
+lamin = 0.7
+lamax = 0.8
 res = 1/(10*lamin)
 
 sim = smart.interface.Smart(tag = "prox")
@@ -25,7 +25,7 @@ sim.set_planet_proxima_b()
 sim.load_atmosphere_from_pt(infile, addn2 = False)
     
 o2 = sim.atmosphere.gases[3]
-#o2.cia_file = 'None'
+o2.cia_file = 'cia_adj_calc.cia'
 infile = "profile_Earth_proxb_.pt_filtered"
 label = "Earth-Like"
 sim.smartin.alb_file = "composite1_txt.txt"
