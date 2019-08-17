@@ -15,6 +15,8 @@ def earth_like(lamin, lamax):
     res = 1/(10*lamin)
 
     sim = smart.interface.Smart(tag = "prox")
+    sim.set_run_in_place()
+
     infile = "profile_Earth_proxb_.pt_filtered"
     label = "Simulated Earth-like planet orbiting Proxima Centauri"
     sim.smartin.alb_file = "composite1_txt.txt"
@@ -29,7 +31,6 @@ def earth_like(lamin, lamax):
     sim.set_planet_proxima_b()
     sim.set_star_proxima()
 
-    sim.set_run_in_place() 
     sim.set_executables_automatically()
 
     sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016.par' #/gscratch/vsm/alinc/fixed_input/
@@ -65,6 +66,7 @@ def ocean_loss(lamin, lamax):
     res = 1/(10*lamin)
 
     sim = smart.interface.Smart(tag = "highd")
+    sim.set_run_in_place()
     infile = "10bar_O2_dry.pt_filtered.pt"
     label = "Simulated post ocean-loss planet orbiting Proxima Centauri"
     sim.smartin.alb_file = "desert_highd.alb"
@@ -110,6 +112,7 @@ def ocean_outgassing(lamin, lamax):
     res = 1/(10*lamin)
 
     sim2 = smart.interface.Smart(tag = "highw")
+    sim2.set_run_in_place()
     infile2 = "10bar_O2_wet.pt_filtered.pt"
     label = "Ocean Outgassing"
     sim2.smartin.alb_file = "earth_noveg_highw.alb"

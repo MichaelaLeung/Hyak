@@ -71,9 +71,9 @@ def longplot(atmos, res, lamin, lamax, cirrus, strato):
     sim.set_run_in_place(place) 
     sim.set_executables_automatically()
 
-    sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016' #/gscratch/vsm/alinc/fixed_input/
-    sim.lblin.hitran_tag = 'hitran2016'
-    sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
+#    sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016' #/gscratch/vsm/alinc/fixed_input/
+ #   sim.lblin.hitran_tag = 'hitran2016'
+#    sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
     #sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
 
     sim.smartin.sza = 57
@@ -139,7 +139,7 @@ if __name__ == '__main__':
         # On the mox login node: submit job
         runfile = __file__
         smart.utils.write_slurm_script_python(runfile,
-                               name="context",
+                               name="co_test",
                                subname="submit.csh",
                                workdir = "",
                                nodes = 1,

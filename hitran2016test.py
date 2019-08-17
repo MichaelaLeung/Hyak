@@ -11,10 +11,12 @@ import datetime
 matplotlib.rcParams['text.usetex'] = False
 import random
 import platform
-
+lamin = 0.7
+lamax = 0.8
 res = 1/(10*lamin)
 
 sim = smart.interface.Smart(tag = "prox")
+sim.set_run_in_place()
 infile = "profile_Earth_proxb_.pt_filtered"
 label = "Simulated Earth-like planet orbiting Proxima Centauri"
 sim.smartin.alb_file = "composite1_txt.txt"

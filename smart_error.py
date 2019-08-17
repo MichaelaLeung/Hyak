@@ -17,6 +17,7 @@ lamax = 0.7
 res = 1/(10*lamin)
 
 sim = smart.interface.Smart(tag = "prox")
+sim.set_run_in_place()
 infile = "profile_Earth_proxb_.pt_filtered"
 label = "Simulated Earth-like planet orbiting Proxima Centauri"
 sim.smartin.alb_file = "composite1_txt.txt"
@@ -24,7 +25,7 @@ sim.set_planet_proxima_b()
 sim.load_atmosphere_from_pt(infile, addn2 = False)
     
 o2 = sim.atmosphere.gases[3]
-o2.cia_file = 'None'
+#o2.cia_file = 'None'
 infile = "profile_Earth_proxb_.pt_filtered"
 label = "Earth-Like"
 sim.smartin.alb_file = "composite1_txt.txt"
