@@ -12,7 +12,7 @@ matplotlib.rcParams['text.usetex'] = False
 import random
 import math 
 
-def earth_like(lamin, lamax):
+def ocean_loss(lamin, lamax):
     
     res = 1/(10*lamin)
 
@@ -135,13 +135,13 @@ def plotting(lamin, lamax, atmos, title):
         wl, flux = earth_like(lamin, lamax)
         wl2, flux2 = ocean_loss_noO4(lamin, lamax)
         fig, ax = plt.subplots(figsize = (10,10))
-        ax.plot(wl, flux, label = "1 bar Earth-Like")
-        ax.plot(wl2, flux2, label = "10 bar Ocean Loss")
+        ax.plot(wl, flux, label = "10 bar Ocean Loss")
+        ax.plot(wl2, flux2, label = "10 bar Ocean Loss, no O2-O2")
         ax.set_title(title)
         ax.set_ylabel("Reflectance")
         ax.set_xlabel("Wavelength ($\mu$ m)")
         ax.legend()
-        fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots/" + str(fig_name) +  "new_CIA_test.png", bbox_inches = "tight")
+        fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots/" + str(fig_name) +  "_noO4_new_CIA.png", bbox_inches = "tight")
    
 if __name__ == '__main__':
 
@@ -163,6 +163,9 @@ if __name__ == '__main__':
                                rm_after_submit = True)
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run       
+        plotting(0.61,0.65,0,"Oxygen Gamma band ")
+        plotting(0.67,0.71,0,"Oxygen B band (0.69) ")
+        plotting(0.74,0.78,0,"Oxygen A band (0.76) ")
         plotting(1.25,1.29,0,"1.27 Ocean Loss")
     else:
         plotting(0.61,0.645,1,"Gamma band (0.63) Ocean Outgassing")
