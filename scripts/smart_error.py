@@ -75,7 +75,7 @@ def ocean_loss_noO4(lamin, lamax):
     
     infile = "/gscratch/vsm/mwjl/projects/high_res/inputs/10bar_O2_dry.pt_filtered.pt"
     label = "Simulated post ocean-loss planet orbiting Proxima Centauri"
-    sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/desert_highd.alb"
+    sim2.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/desert_highd.alb"
 
     sim2.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim2.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
