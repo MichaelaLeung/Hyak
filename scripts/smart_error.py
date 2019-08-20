@@ -10,6 +10,7 @@ import sys, os
 import datetime
 matplotlib.rcParams['text.usetex'] = False
 import random
+import math 
 
 def earth_like(lamin, lamax):
     
@@ -62,56 +63,58 @@ def earth_like(lamin, lamax):
     wl = sim.output.rad.lam
     flux = sim.output.rad.pflux
     sflux = sim.output.rad.sflux
-    adj_flux = flux/sflux
+    adj_flux = math.pi * (flux/sflux)
     return(wl, adj_flux)
 
 def ocean_loss_noO4(lamin, lamax):
     res = 1/(10*lamin)
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
 
-    sim = smart.interface.Smart(tag = "highd_noO4")
-    sim.set_run_in_place(place)
-    sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim2 = smart.interface.Smart(tag = "highd_noO4")
+    sim2.set_run_in_place(place)
     
     infile = "/gscratch/vsm/mwjl/projects/high_res/inputs/10bar_O2_dry.pt_filtered.pt"
     label = "Simulated post ocean-loss planet orbiting Proxima Centauri"
     sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/desert_highd.alb"
-    sim.set_planet_proxima_b()
-    sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
+
+    sim2.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim2.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim2.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+
+    sim2.set_planet_proxima_b()
+    sim2.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
    
-    o2 = sim.atmosphere.gases[1]
+    o2 = sim2.atmosphere.gases[1]
     o2.cia_file = None
-    sim.set_executables_automatically()
+    sim2.set_executables_automatically()
 
-    sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016.par' #/gscratch/vsm/alinc/fixed_input/
-    sim.lblin.hitran_tag = 'hitran2016'
-    sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
-    sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
+    sim2.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016.par' #/gscratch/vsm/alinc/fixed_input/
+    sim2.lblin.hitran_tag = 'hitran2016'
+    sim2.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
+    sim2.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
 
-    sim.smartin.sza = 57
+    sim2.smartin.sza = 57
 
-    sim.smartin.FWHM = res
-    sim.smartin.sample_res = res
+    sim2.smartin.FWHM = res
+    sim2.smartin.sample_res = res
 
-    sim.smartin.minwn = 1e4/lamax
-    sim.smartin.maxwn = 1e4/lamin 
+    sim2.smartin.minwn = 1e4/lamax
+    sim2.smartin.maxwn = 1e4/lamin 
 
-    sim.lblin.minwn = 1e4/lamax
-    sim.lblin.maxwn = 1e4/lamin 
+    sim2.lblin.minwn = 1e4/lamax
+    sim2.lblin.maxwn = 1e4/lamin 
 
-    sim.gen_lblscripts()
-    sim.run_lblabc()
-    sim.write_smart(write_file = True)
-    sim.run_smart()
+    sim2.gen_lblscripts()
+    sim2.run_lblabc()
+    sim2.write_smart(write_file = True)
+    sim2.run_smart()
 
-    sim.open_outputs()
-    wl2 = sim.output.rad.lam
-    flux2 = sim.output.rad.pflux
-    sflux2 = sim.output.rad.sflux
+    sim2.open_outputs()
+    wl2 = sim2.output.rad.lam
+    flux2 = sim2.output.rad.pflux
+    sflux2 = sim2.output.rad.sflux
 
-    adj_flux2 = flux2/sflux2
+    adj_flux2 = math.pi * (flux2/sflux2)
     return(wl2, adj_flux2)
 
 def plotting(lamin, lamax, atmos, title):
