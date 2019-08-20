@@ -10,6 +10,7 @@ import sys, os
 import datetime
 matplotlib.rcParams['text.usetex'] = False
 import random
+import math 
 
 def earth_like(lamin, lamax):
     
@@ -62,7 +63,7 @@ def earth_like(lamin, lamax):
     wl = sim.output.rad.lam
     flux = sim.output.rad.pflux
     sflux = sim.output.rad.sflux
-    adj_flux = flux/sflux
+    adj_flux = math.pi * (flux/sflux)
     return(wl, adj_flux)
 
 def ocean_loss(lamin, lamax):

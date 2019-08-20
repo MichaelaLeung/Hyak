@@ -11,6 +11,8 @@ import sys, os
 import datetime
 matplotlib.rcParams['text.usetex'] = False
 import random
+import math 
+
 def ocean_loss(lamin, lamax):
     res = 1/(10*lamin)
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
@@ -58,7 +60,7 @@ def ocean_loss(lamin, lamax):
     flux = sim.output.rad.pflux
     sflux = sim.output.rad.sflux
 
-    adj_flux = flux/sflux
+    adj_flux = (flux/sflux) * math.pi
     return(wl, adj_flux)
 
 def ocean_outgassing(lamin, lamax):
@@ -109,7 +111,7 @@ def ocean_outgassing(lamin, lamax):
     flux = sim.output.rad.pflux
     sflux = sim.output.rad.sflux
 
-    adj_flux = flux/sflux
+    adj_flux = (flux/sflux)*math.pi
     return(wl, adj_flux)
 
 def ocean_loss_noO4(lamin, lamax):
@@ -160,7 +162,7 @@ def ocean_loss_noO4(lamin, lamax):
     flux2 = sim2.output.rad.pflux
     sflux2 = sim2.output.rad.sflux
 
-    adj_flux2 = flux2/sflux2
+    adj_flux2 = math.pi*(flux2/sflux2)
     return(wl2, adj_flux2)
 
 def ocean_outgassing_noO4(lamin, lamax):
@@ -212,7 +214,7 @@ def ocean_outgassing_noO4(lamin, lamax):
     flux2 = sim2.output.rad.pflux
     sflux2 = sim2.output.rad.sflux
 
-    adj_flux2 = flux2/sflux2
+    adj_flux2 = math.pi*(flux2/sflux2)
     return(wl2, adj_flux2)
 
 
