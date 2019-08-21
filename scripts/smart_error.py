@@ -30,7 +30,7 @@ def ocean_loss(lamin, lamax):
     sim.load_atmosphere_from_pt(infile, addn2 = False)
     
     o2 = sim.atmosphere.gases[1]
-    o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/cia_adj_calc.cia'
+    o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
     label = "Earth-Like"
     sim.set_planet_proxima_b()
     sim.set_star_proxima()
