@@ -13,7 +13,6 @@ import random
 import math 
 
 def earth_like(lamin, lamax):
-    print("earth-like")
     res = 1/(10*lamin)
     sim = smart.interface.Smart(tag = "prox")
     sim.set_run_in_place()
@@ -147,6 +146,7 @@ def earth_like_hyak(lamin, lamax):
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim = smart.interface.Smart(tag = "prox")
     sim.set_run_in_place(place)
+    
     sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
@@ -299,9 +299,7 @@ def ocean_outgassing_hyak(lamin, lamax):
 
 def plotting(lamin, lamax, atmos, title):
     import platform
-    print('plotting')
     if platform.system() == 'Darwin':
-        print('mac chosen')
         # On a Mac: usetex ok
         matplotlib.rc('font',**{'family':'serif','serif':['Computer Modern']})
         matplotlib.rcParams['font.size'] = 25.0
@@ -310,7 +308,6 @@ def plotting(lamin, lamax, atmos, title):
 
         fig_name = int(100*(float(lamin) + float(lamax))/2)
         if atmos == 0: # zero = ocean loss
-            print('ocean loss chosen')
             wl, flux = earth_like(lamin, lamax)
             wl2, flux2 = ocean_loss(lamin, lamax)
             fig, ax = plt.subplots(figsize = (10,10))
@@ -322,7 +319,6 @@ def plotting(lamin, lamax, atmos, title):
             ax.legend()
             fig.savefig(str(fig_name) +  "new_CIA.png", bbox_inches = "tight")
         else:
-            print('ocean outgassing chosen')
             wl, flux = earth_like(lamin, lamax)
             wl2, flux2 = ocean_outgassing(lamin, lamax)
             fig, ax = plt.subplots(figsize = (10,10))
