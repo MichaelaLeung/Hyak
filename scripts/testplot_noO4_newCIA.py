@@ -3,7 +3,7 @@
 import numpy as np
 import matplotlib; matplotlib.use('agg')
 import matplotlib.pyplot as plt
-plt.switch_backend('agg')
+#plt.switch_backend('agg')
 from matplotlib.collections import LineCollection
 from astropy.io import fits
 import smart
@@ -27,7 +27,7 @@ def ocean_loss(lamin, lamax):
     sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-
+    sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
     sim.set_executables_automatically()
 
     sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016' #/gscratch/vsm/alinc/fixed_input/
@@ -36,7 +36,7 @@ def ocean_loss(lamin, lamax):
     sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
 
     sim.smartin.sza = 57
-    sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
+   # sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
 
     sim.smartin.FWHM = res
     sim.smartin.sample_res = res
@@ -48,7 +48,7 @@ def ocean_loss(lamin, lamax):
     sim.lblin.maxwn = 1e4/lamin
 
     o2 = sim.atmosphere.gases[1]
-    o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/cia_adj_calc.cia'
+    o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
 
     sim.gen_lblscripts()
     sim.run_lblabc()
@@ -99,7 +99,7 @@ def ocean_outgassing(lamin, lamax):
     sim.lblin.maxwn = 1e4/lamin 
 
     o2 = sim.atmosphere.gases[2]
-    o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/cia_adj_calc.cia'
+    o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
 
     sim.gen_lblscripts()
     sim.run_lblabc()
