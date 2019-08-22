@@ -203,7 +203,7 @@ def plotting(atmos):
         fig.savefig(str(atmos) + "_newCIA.png", bbox_inches = 'tight')
             
     elif platform.node().startswith("n"):
-                matplotlib.rc('font',**{'family':'serif','serif':['Computer Modern']})
+        matplotlib.rc('font',**{'family':'serif','serif':['Computer Modern']})
         matplotlib.rcParams['font.size'] = 25.0
         matplotlib.rc('text', usetex=False)
         plt.switch_backend('agg')
