@@ -190,7 +190,6 @@ def plotting(atmos):
         matplotlib.rcParams['font.size'] = 25.0
         matplotlib.rc('text', usetex=False)
         plt.switch_backend('agg')
-        fig_name = int(100*(float(lamin) + float(lamax))/2)
         fig, ax = plt.subplots(figsize = (30, 10))
         wl, flux = longplot(atmos)
         ax.plot(wl, flux)
@@ -209,7 +208,6 @@ def plotting(atmos):
         matplotlib.rcParams['font.size'] = 25.0
         matplotlib.rc('text', usetex=False)
         plt.switch_backend('agg')
-        fig_name = int(100*(float(lamin) + float(lamax))/2)
         fig, ax = plt.subplots(figsize = (30, 10))
         wl, flux = longplot_hyak(atmos)
         ax.plot(wl, flux)

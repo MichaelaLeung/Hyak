@@ -124,9 +124,9 @@ def ocean_outgassing(lamin, lamax, res, cia):
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim2 = smart.interface.Smart(tag = "highw")
     sim2.set_run_in_place(place) 
-    infile2 = "10bar_O2_wet.pt_filtered.pt"
+    infile2 = "/gscratch/vsm/mwjl/projects/high_res/inputs/10bar_O2_wet.pt_filtered.pt"
     label = "Ocean Outgassing"
-    sim2.smartin.alb_file = "earth_noveg_highw.alb"
+    sim2.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/earth_noveg_highw.alb"
     sim2.set_planet_proxima_b()
     sim2.set_star_proxima()
 
@@ -156,7 +156,7 @@ def ocean_outgassing(lamin, lamax, res, cia):
 
     if cia == "new":
         o2 = sim2.atmosphere.gases[2]
-        o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/cia_adj_calc.cia'
+        o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
     elif cia == "none":
         o2 = sim2.atmosphere.gases[2]
         o2.cia_file = None
