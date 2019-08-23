@@ -34,7 +34,7 @@ def ocean_loss(lamin, lamax):
     sim.lblin.hitran_tag = 'hitran2016'
     sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
     sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
-
+    sim.lblin.par_index = 7
     sim.smartin.sza = 57
    # sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
 
@@ -75,7 +75,7 @@ def ocean_outgassing(lamin, lamax):
     sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/earth_noveg_highw.alb"
     sim.set_planet_proxima_b()
     sim.set_star_proxima()
-
+    sim.lblin.par_index	= 7
     sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
@@ -129,7 +129,7 @@ def ocean_loss_noO4(lamin, lamax):
     sim2.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim2.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim2.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-
+    sim2.lblin.par_index	= 7
     sim2.set_executables_automatically()
 
     sim2.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016.par' #/gscratch/vsm/alinc/fixed_input/
@@ -171,7 +171,7 @@ def ocean_outgassing_noO4(lamin, lamax):
 
     sim2 = smart.interface.Smart(tag = "highw_noO4")
     sim2.set_run_in_place(place) 
-
+    sim2.lblin.par_index	= 7
     infile2 = "/gscratch/vsm/mwjl/projects/high_res/inputs/10bar_O2_wet.pt_filtered.pt"
     label = "Ocean Outgassing"
     sim2.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/earth_noveg_highw.alb"
