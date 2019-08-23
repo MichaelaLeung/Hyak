@@ -34,6 +34,7 @@ def clouds(res, cirrus, strato):
     sim.lblin.hitran_tag = 'hitran2016'
     sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
     sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
+    sim.lblin.par_index = 7
 
     sim.load_atmosphere_from_pt(infile, addn2 = False)
     o2 = sim.atmosphere.gases[6]
@@ -72,7 +73,7 @@ def clouds(res, cirrus, strato):
     sflux = sim.output.rad.sflux
 
     adj_flux = flux/sflux * math.pi
-    r_km = 149,598,000 * sim.smartin.r_AU
+    r_km = 149598000 * sim.smartin.r_AU
     fpfs = flux/sflux * (sim.smartin.radius/r_km)**2
 
     return(wl, adj_flux, fpfs)
@@ -102,6 +103,8 @@ def longplot():
     sim.lblin.hitran_tag = 'hitran2016'
     sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
     sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
+    sim.lblin.par_index = 7
+
 
     sim.load_atmosphere_from_pt(infile, addn2 = False)
     o2 = sim.atmosphere.gases[6]
@@ -130,7 +133,7 @@ def longplot():
     sflux = sim.output.rad.sflux
 
     adj_flux = flux/sflux * math.pi
-    r_km = 149,598,000 * sim.smartin.r_AU
+    r_km = 149598000 * sim.smartin.r_AU
     fpfs = flux/sflux * (sim.smartin.radius/r_km)**2
 
     return(wl, adj_flux, fpfs)
