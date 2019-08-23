@@ -8,6 +8,7 @@ import sys, os
 import datetime
 matplotlib.rcParams['text.usetex'] = False
 import random
+import math
 
 def clouds(res, cirrus, strato):
     lamin = 0.5
