@@ -245,9 +245,9 @@ if __name__ == '__main__':
         # On a mox compute node: ready to run
  #       longplot("earth", 0.01, 0.5, 2, True, False)
  #       longplot("earth", 0.01, 0.5, 2, False, True)
-        longplot("prox")
-        longplot("highd") 
-        longplot("highw")
+        plotting("prox")
+        plotting("highd") 
+        plotting("highw")
  #       longplot("arch_prox", 0.01, 0.5, 2, False, False)
     else:
         # Presumably, on a regular computer: ready to run
