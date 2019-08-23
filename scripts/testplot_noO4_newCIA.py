@@ -74,7 +74,6 @@ def ocean_outgassing(lamin, lamax):
     sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/earth_noveg_highw.alb"
     sim.set_planet_proxima_b()
     sim.set_star_proxima()
-    sim.lblin.par_index	= 7
     sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
