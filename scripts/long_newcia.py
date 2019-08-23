@@ -13,6 +13,7 @@ import math
 def longplot(atmos):
     lamin = 0.5
     lamax = 2.0
+    res = 0.01
     
     sim = smart.interface.Smart(tag = atmos)
     if atmos == "earth":
@@ -96,6 +97,7 @@ def longplot(atmos):
 def longplot_hyak(atmos):
     lamin = 0.5
     lamax = 2.0
+    res = 0.01
     
     sim = smart.interface.Smart(tag = atmos)
     if atmos == "earth":
