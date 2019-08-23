@@ -230,6 +230,12 @@ def integrate(lamin, lamax, atmos, cia):
     f = open("/gscratch/vsm/mwjl/projects/high_res/output/integrations_new.txt", "a")
     f.write(str(name) + "\n")
 
+    plot diff
+
+    fig, ax = plt.subplots(figsize = (10,10))
+    ax.plot(wl[:-25], out)
+    fig.savefig(str(name) +  "new_CIA_ocean.png", bbox_inches = "tight")
+
 def output(lamin, lamax):
     integrate(lamin,lamax, 0, "new")
     integrate(lamin,lamax, 1, "new")

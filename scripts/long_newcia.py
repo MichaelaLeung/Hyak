@@ -205,7 +205,7 @@ def plotting(atmos):
         ax.set_ylabel("Reflectance")
         ax.set_xlabel("Wavelength ($\mu$ m)")
 
-        ax2 = ax.clone()
+        ax2 = ax.twinx()
         ax2.set_ylabel("Planet-to-star contrast ratio")
         ax2.plot(wl, fpfs)
         
