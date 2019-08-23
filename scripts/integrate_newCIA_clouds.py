@@ -303,7 +303,7 @@ def integrate(lamin, lamax, atmos, cia):
     import scipy.integrate as integrate
     adds = integrate.trapz(out, wl[:-25])
     name = str(abs(adds)), str(lamin) + "to" + str(lamax), str(cia), str(tag)
-    f = open("/gscratch/vsm/mwjl/projects/high_res/output/integrations_new.txt", "a")
+    f = open("/gscratch/vsm/mwjl/projects/high_res/output/integrations_clouds.txt", "a")
     f.write(str(name) + "\n")
 
 def output(lamin, lamax):
