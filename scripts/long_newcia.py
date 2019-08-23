@@ -94,7 +94,7 @@ def longplot(atmos):
     r_km = 149,598,000 * sim.smartin.r_AU
     fpfs = flux/sflux * (sim.smartin.radius/r_km)**2
 
-    return(wl, adj_flux, fpfs)
+    return(wl, adj_flux, fpfs, label)
 
 
 def longplot_hyak(atmos):
@@ -188,7 +188,7 @@ def longplot_hyak(atmos):
     r_km = 149598000 * sim.smartin.r_AU
     fpfs = flux/sflux * (sim.smartin.radius/r_km)**2
 
-    return(wl, adj_flux, fpfs)
+    return(wl, adj_flux, fpfs, label)
 
 
 def plotting(atmos):
@@ -199,7 +199,7 @@ def plotting(atmos):
         matplotlib.rc('text', usetex=False)
         plt.switch_backend('agg')
         fig, ax = plt.subplots(figsize = (30, 10))
-        wl, flux, fpfs = longplot(atmos)
+        wl, flux, fpfs, label = longplot(atmos)
         ax.plot(wl, flux)
         ax.set_ylabel("Reflectance")
         ax.set_xlabel("Wavelength ($\mu$ m)")
