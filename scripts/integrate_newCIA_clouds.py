@@ -10,8 +10,7 @@ matplotlib.rcParams['text.usetex'] = False
 import random
 import math
 
-def clouds(lamin, lamax, cloud_type):
-    res = 0.01
+def clouds(lamin, lamax, cloud_type, res):
 
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim = smart.interface.Smart(tag = "prox")
@@ -116,7 +115,7 @@ def earth_like(lamin, lamax, res, cia):
     
     if cia == "new":
         o2 = sim.atmosphere.gases[3]
-        o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/cia_adj_calc.cia'
+        o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
     elif cia == "none":
         o2 = sim.atmosphere.gases[3]
         o2.cia_file = None
@@ -134,8 +133,8 @@ def earth_like(lamin, lamax, res, cia):
     sflux = sim.output.rad.sflux
     adj_flux = flux/sflux * math.pi
 
-    cirrus_wl, cirrus_flux = clouds(lamin, lamax, 0)
-    strato_wl, strato_flux = clouds(lamin, lamax,1)
+    cirrus_wl, cirrus_flux = clouds(lamin, lamax, 0, res)
+    strato_wl, strato_flux = clouds(lamin, lamax,1, res)
 
     avg_flux = (flux + cirrus_flux + strato_flux)/3
     return(wl, avg_flux)
@@ -176,7 +175,7 @@ def ocean_loss(lamin, lamax, res, cia):
 
     if cia == "new":
         o2 = sim2.atmosphere.gases[1]
-        o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/cia_adj_calc.cia'
+        o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
     elif cia == "none":
         o2 = sim2.atmosphere.gases[1]
         o2.cia_file = None
