@@ -91,7 +91,11 @@ def longplot(atmos):
 
     adj_flux = flux/sflux * math.pi
 
-    return(wl, adj_flux)
+    
+    r_km = 149,598,000 * sim.smartin.r_AU
+    fpfs = flux/sflux * (sim.smartin.radius/r_km)**2
+
+    return(wl, adj_flux, fpfs)
 
 
 def longplot_hyak(atmos):
@@ -182,7 +186,10 @@ def longplot_hyak(atmos):
 
     adj_flux = flux/sflux * math.pi
 
-    return(wl, adj_flux)
+    r_km = 149,598,000 * sim.smartin.r_AU
+    fpfs = flux/sflux * (sim.smartin.radius/r_km)**2
+
+    return(wl, adj_flux, fpfs)
 
 
 def plotting(atmos):
@@ -193,10 +200,15 @@ def plotting(atmos):
         matplotlib.rc('text', usetex=False)
         plt.switch_backend('agg')
         fig, ax = plt.subplots(figsize = (30, 10))
-        wl, flux = longplot(atmos)
+        wl, flux, fpfs = longplot(atmos)
         ax.plot(wl, flux)
         ax.set_ylabel("Reflectance")
         ax.set_xlabel("Wavelength ($\mu$ m)")
+
+        ax2 = ax.clone()
+        ax2.set_ylabel("Planet-to-star contrast ratio")
+        ax2.plot(wl, fpfs)
+        
         ax.set_title(label)
         ax.set_xlim(0.5,2)
         ax.axvspan(0.61, 0.65, alpha=0.5, color='0.85')
@@ -210,11 +222,16 @@ def plotting(atmos):
         matplotlib.rcParams['font.size'] = 25.0
         matplotlib.rc('text', usetex=False)
         plt.switch_backend('agg')
+        
         fig, ax = plt.subplots(figsize = (30, 10))
-        wl, flux = longplot_hyak(atmos)
+        wl, flux, fpfs = longplot_hyak(atmos)
         ax.plot(wl, flux)
         ax.set_ylabel("Reflectance")
         ax.set_xlabel("Wavelength ($\mu$ m)")
+        ax2 = ax.clone()
+        ax2.set_ylabel("Planet-to-star contrast ratio")
+        ax2.plot(wl, fpfs)
+        
         ax.set_title(label)
         ax.set_xlim(0.5,2)
         ax.axvspan(0.61, 0.65, alpha=0.5, color='0.85')
