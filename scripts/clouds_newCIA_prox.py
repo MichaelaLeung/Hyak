@@ -30,7 +30,7 @@ def clouds(res, cirrus, strato):
     sim.set_run_in_place(place) 
     sim.set_executables_automatically()
     
-    sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016' #/gscratch/vsm/alinc/fixed_input/
+    sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016.par' #/gscratch/vsm/alinc/fixed_input/
     sim.lblin.hitran_tag = 'hitran2016'
     sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
     sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
@@ -99,7 +99,7 @@ def longplot():
     sim.set_run_in_place(place) 
     sim.set_executables_automatically()
 
-    sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016' #/gscratch/vsm/alinc/fixed_input/
+    sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016.par' #/gscratch/vsm/alinc/fixed_input/
     sim.lblin.hitran_tag = 'hitran2016'
     sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
     sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
@@ -163,7 +163,7 @@ def plotting():
     ax.axvspan(0.74, 0.78, alpha=0.5, color='0.85')
     ax.axvspan(1.25, 1.29, alpha=0.5, color='0.85')
     ax.plot(avg_wl, avg_flux)
-    fig.savefig("/gscratch/vsm/mwjl/projects/plots/avg_clouds.png", bbox_inches = 'tight')
+    fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots/avg_clouds.png", bbox_inches = 'tight')
     
 if __name__ == '__main__':
 
