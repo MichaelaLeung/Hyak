@@ -63,8 +63,7 @@ def longplot(atmos):
     elif atmos == "arch_prox":
         infile = "/Users/mwl/python/clearsky_archean.pt"
         sim.set_planet_proxima_b()
-    place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim.set_run_in_place(place) 
+    sim.set_run_in_place() 
     sim.set_executables_automatically()
 
     sim.smartin.sza = 57
@@ -186,7 +185,7 @@ def longplot_hyak(atmos):
 
     adj_flux = flux/sflux * math.pi
 
-    r_km = 149,598,000 * sim.smartin.r_AU
+    r_km = 149598000 * sim.smartin.r_AU
     fpfs = flux/sflux * (sim.smartin.radius/r_km)**2
 
     return(wl, adj_flux, fpfs)
