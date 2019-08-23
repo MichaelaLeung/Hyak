@@ -36,7 +36,6 @@ def ocean_loss(lamin, lamax):
     sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
     sim.lblin.par_index = 7
     sim.smartin.sza = 57
-   # sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
 
     sim.smartin.FWHM = res
     sim.smartin.sample_res = res
@@ -85,6 +84,7 @@ def ocean_outgassing(lamin, lamax):
     sim.lblin.hitran_tag = 'hitran2016'
     sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
     sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
+    sim.lblin.par_index = 7
 
     sim.smartin.sza = 57
     sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
@@ -136,6 +136,7 @@ def ocean_loss_noO4(lamin, lamax):
     sim2.lblin.hitran_tag = 'hitran2016'
     sim2.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
     sim2.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
+    sim2.lblin.par_index = 7
 
     sim2.smartin.sza = 57
     sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
@@ -188,6 +189,7 @@ def ocean_outgassing_noO4(lamin, lamax):
     sim2.lblin.hitran_tag = 'hitran2016'
     sim2.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
     sim2.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
+    sim2.lblin.par_index = 7
 
     sim2.smartin.sza = 57
     sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)

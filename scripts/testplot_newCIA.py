@@ -13,7 +13,6 @@ import random
 import math 
 
 def earth_like(lamin, lamax):
-<<<<<<< HEAD
     res = 1/(10*lamin)
     sim = smart.interface.Smart(tag = "prox")
     sim.set_run_in_place()
@@ -141,8 +140,6 @@ def ocean_outgassing(lamin, lamax):
     return(wl2, adj_flux2)
 
 def earth_like_hyak(lamin, lamax):
-=======
->>>>>>> 595214c9e186fe96f2312b6a0c53ba4bd49f912b
     
     res = 1/(10*lamin)
 
@@ -172,6 +169,8 @@ def earth_like_hyak(lamin, lamax):
     sim.lblin.hitran_tag = 'hitran2016'
     sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
     sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
+    sim.lblin.par_index = 7
+
 
     sim.smartin.sza = 57
 
@@ -197,7 +196,7 @@ def earth_like_hyak(lamin, lamax):
     adj_flux = math.pi * (flux/sflux)
     return(wl, adj_flux)
 
-def ocean_loss(lamin, lamax):
+def ocean_loss_hyak(lamin, lamax):
     res = 1/(10*lamin)
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
 
@@ -223,6 +222,8 @@ def ocean_loss(lamin, lamax):
     sim.lblin.hitran_tag = 'hitran2016'
     sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
     sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
+    sim.lblin.par_index = 7
+
 
     sim.smartin.sza = 57
 
@@ -248,7 +249,7 @@ def ocean_loss(lamin, lamax):
     adj_flux2 = flux2/sflux2
     return(wl2, adj_flux2)
 
-def ocean_outgassing(lamin, lamax):
+def ocean_outgassing_hyak(lamin, lamax):
     res = 1/(10*lamin)
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
 
@@ -270,6 +271,8 @@ def ocean_outgassing(lamin, lamax):
     sim2.lblin.hitran_tag = 'hitran2016'
     sim2.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
     sim2.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
+    sim2.lblin.par_index = 7
+
 
     sim2.smartin.sza = 57
     sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
@@ -302,7 +305,6 @@ def ocean_outgassing(lamin, lamax):
 
 def plotting(lamin, lamax, atmos, title):
     import platform
-<<<<<<< HEAD
     if platform.system() == 'Darwin':
         # On a Mac: usetex ok
         matplotlib.rc('font',**{'family':'serif','serif':['Computer Modern']})
@@ -334,42 +336,35 @@ def plotting(lamin, lamax, atmos, title):
             ax.legend()
             fig.savefig(str(fig_name) +  "new_CIA_ocean.png", bbox_inches = "tight")
             
-=======
-    if platform.system() == 'Jarvis':
-        # On a Mac: usetex ok
-        matplotlib.rc('font',**{'family':'serif','serif':['Computer Modern']})
-        matplotlib.rcParams['font.size'] = 25.0
-        matplotlib.rc('text', usetex=True)
->>>>>>> 595214c9e186fe96f2312b6a0c53ba4bd49f912b
     elif platform.node().startswith("n"):
         # On hyak: usetex not ok, must change backend to 'agg'
         matplotlib.rc('font',**{'family':'serif','serif':['Computer Modern']})
         matplotlib.rcParams['font.size'] = 25.0
         matplotlib.rc('text', usetex=False)
         plt.switch_backend('agg')
-    fig_name = int(100*(float(lamin) + float(lamax))/2)
-    if atmos == 0: # zero = ocean loss
-        wl, flux = earth_like(lamin, lamax)
-        wl2, flux2 = ocean_loss(lamin, lamax)
-        fig, ax = plt.subplots(figsize = (10,10))
-        ax.plot(wl, flux, label = "1 bar Earth-Like")
-        ax.plot(wl2, flux2, label = "10 bar Ocean Loss")
-        ax.set_title(title)
-        ax.set_ylabel("Reflectance")
-        ax.set_xlabel("Wavelength ($\mu$ m)")
-        ax.legend()
-        fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots/" + str(fig_name) +  "new_CIA.png", bbox_inches = "tight")
-    else:
-        wl, flux = earth_like(lamin, lamax)
-        wl2, flux2 = ocean_outgassing(lamin, lamax)
-        fig, ax = plt.subplots(figsize = (10,10))
-        ax.plot(wl, flux, label = "1 bar Earth-Like")
-        ax.plot(wl2, flux2, label = "10 bar Ocean Outgassing")
-        ax.set_title(title)
-        ax.set_ylabel("Reflectance")
-        ax.set_xlabel("Wavelength ($\mu$ m)")
-        ax.legend()
-        fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots/" + str(fig_name) +  "new_CIA_ocean.png", bbox_inches = "tight")
+        fig_name = int(100*(float(lamin) + float(lamax))/2)
+        if atmos == 0: # zero = ocean loss
+            wl, flux = earth_like_hyak(lamin, lamax)
+            wl2, flux2 = ocean_loss_hyak(lamin, lamax)
+            fig, ax = plt.subplots(figsize = (10,10))
+            ax.plot(wl, flux, label = "1 bar Earth-Like")
+            ax.plot(wl2, flux2, label = "10 bar Ocean Loss")
+            ax.set_title(title)
+            ax.set_ylabel("Reflectance")
+            ax.set_xlabel("Wavelength ($\mu$ m)")
+            ax.legend()
+            fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots/" + str(fig_name) +  "new_CIA.png", bbox_inches = "tight")
+        else:
+            wl, flux = earth_like_hyak(lamin, lamax)
+            wl2, flux2 = ocean_outgassing_hyak(lamin, lamax)
+            fig, ax = plt.subplots(figsize = (10,10))
+            ax.plot(wl, flux, label = "1 bar Earth-Like")
+            ax.plot(wl2, flux2, label = "10 bar Ocean Outgassing")
+            ax.set_title(title)
+            ax.set_ylabel("Reflectance")
+            ax.set_xlabel("Wavelength ($\mu$ m)")
+            ax.legend()
+            fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots/" + str(fig_name) +  "new_CIA_ocean.png", bbox_inches = "tight")
 
    
 if __name__ == '__main__':
