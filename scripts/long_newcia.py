@@ -227,7 +227,7 @@ def plotting(atmos):
         ax.plot(wl, flux)
         ax.set_ylabel("Reflectance")
         ax.set_xlabel("Wavelength ($\mu$ m)")
-        ax2 = ax.clone()
+        ax2 = ax.twinx()
         ax2.set_ylabel("Planet-to-star contrast ratio")
         ax2.plot(wl, fpfs)
         
@@ -252,7 +252,7 @@ if __name__ == '__main__':
                                workdir = "",
                                nodes = 1,
                                mem = "500G",
-                               walltime = "10:00:00",
+                               walltime = "24:00:00",
                                ntasks = 28,
                                account = "vsm",
                                submit = True,
