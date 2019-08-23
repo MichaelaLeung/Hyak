@@ -8,6 +8,7 @@ import sys, os
 import datetime
 matplotlib.rcParams['text.usetex'] = False
 import random
+import math
 
 def clouds(lamin, lamax, cloud_type):
     res = 1/(10*lamin)
