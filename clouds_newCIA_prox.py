@@ -70,9 +70,11 @@ def clouds(res, cirrus, strato):
     flux = sim.output.rad.pflux
     sflux = sim.output.rad.sflux
 
-    adj_flux = flux/sflux
+    adj_flux = flux/sflux * math.pi
+    r_km = 149,598,000 * sim.smartin.r_AU
+    fpfs = flux/sflux * (sim.smartin.radius/r_km)**2
 
-    return(wl, adj_flux)
+    return(wl, adj_flux, fpfs)
 
 def longplot():
     HERE = os.path.dirname(os.path.abspath(__file__))
@@ -126,23 +128,30 @@ def longplot():
     flux = sim.output.rad.pflux
     sflux = sim.output.rad.sflux
 
-    adj_flux = flux/sflux
-    
-    return(wl, adj_flux)
+    adj_flux = flux/sflux * math.pi
+    r_km = 149,598,000 * sim.smartin.r_AU
+    fpfs = flux/sflux * (sim.smartin.radius/r_km)**2
 
+    return(wl, adj_flux, fpfs)
+    
 
 def plotting():
-    cirrus_wl, cirrus_flux = clouds(0.01, 1, 0)
-    strato_wl, strato_flux = clouds(0.01, 0, 1)
-    wl, flux = longplot()
+    cirrus_wl, cirrus_flux, cirrus_fpfs = clouds(0.01, 1, 0)
+    strato_wl, strato_flux, strato_fpfs = clouds(0.01, 0, 1)
+    wl, flux,fpfs = longplot()
     length_wl = min(len(cirrus_wl), len(strato_wl), len(wl))-1
     avg_wl = (cirrus_wl[:length_wl] + strato_wl[:length_wl] + wl[:length_wl])/3
     avg_flux = (cirrus_flux[:length_wl] + strato_flux[:length_wl] +flux[:length_wl])/3
+    avg_fpfs = (cirrus_fpfs[:length_wl] + strato_fpfs[:length_wl] +fpfs[:length_wl])/3
+
     fig, ax = plt.subplots(figsize = (30, 10))
-    ax3 = ax.twinx()
-    ax3.plot(avg_wl, avg_flux)
-    ax3.set_ylabel("Reflectance")
+    ax.plot(avg_wl, avg_flux)
+    ax.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength ($\mu$ m)")
+
+    ax2 = ax.twinx()
+    ax2.set_ylabel("Planet-to-star contrast ratio")
+    ax2.plot(avg_wl, avg_fpfs)
     ax.set_title("Simulated Earth-like planet with clouds orbiting Proxima Centauri")
     ax.set_xlim(0.5,2)
     ax.axvspan(0.61, 0.65, alpha=0.5, color='0.85')
