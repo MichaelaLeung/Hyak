@@ -69,7 +69,7 @@ def earth_like_hyak(lamin, lamax):
     adj_flux = math.pi * (flux/sflux)
     return(wl, adj_flux)
 
-def clouds(lamin, lamax, cloud_type)
+def clouds(lamin, lamax, cloud_type):
     res = 1/(10*lamin)
 
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
@@ -287,7 +287,7 @@ if __name__ == '__main__':
         # On the mox login node: submit job
         runfile = __file__
         smart.utils.write_slurm_script_python(runfile,
-                               name="nor_plt",
+                               name="nor_cld",
                                subname="submit.csh",
                                workdir = "",
                                nodes = 1,
