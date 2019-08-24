@@ -223,7 +223,7 @@ def plotting(atmos):
         plt.switch_backend('agg')
         
         fig, ax = plt.subplots(figsize = (30, 10))
-        wl, flux, fpfs = longplot_hyak(atmos)
+        wl, flux, fpfs,label = longplot_hyak(atmos)
         ax.plot(wl, flux)
         ax.set_ylabel("Reflectance")
         ax.set_xlabel("Wavelength ($\mu$ m)")
