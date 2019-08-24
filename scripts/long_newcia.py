@@ -151,7 +151,9 @@ def longplot_hyak(atmos):
         infile = "/gscratch/vsm/mwjl/projects/high_res/inputs/clearsky_archean.pt"
         sim.set_planet_proxima_b()
    
-    sim.set_run_in_place() 
+    sim.set_run_in_place(place)
+    place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+
     sim.set_executables_automatically()
 
     sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016.par' #/gscratch/vsm/alinc/fixed_input/
@@ -237,7 +239,7 @@ def plotting(atmos):
         ax.axvspan(0.67, 0.71, alpha=0.5, color='0.85')
         ax.axvspan(0.74, 0.78, alpha=0.5, color='0.85')
         ax.axvspan(1.25, 1.29, alpha=0.5, color='0.85')
-        fig.savefig(str(atmos) + "_newCIA.png", bbox_inches = 'tight')
+        fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots/" + str(atmos) + "_newCIA.png", bbox_inches = 'tight')
 
 if __name__ == '__main__':
 

@@ -29,6 +29,8 @@ def clouds(res, cirrus, strato):
         
     sim.set_run_in_place(place) 
     sim.set_executables_automatically()
+    sim.set_planet_proxima_b()
+    sim.set_star_proxima()
     
     sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016.par' #/gscratch/vsm/alinc/fixed_input/
     sim.lblin.hitran_tag = 'hitran2016'
@@ -98,6 +100,9 @@ def longplot():
     sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/composite1_txt.txt"
     sim.set_run_in_place(place) 
     sim.set_executables_automatically()
+    sim.set_planet_proxima_b()
+    sim.set_star_proxima()
+    
 
     sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016.par' #/gscratch/vsm/alinc/fixed_input/
     sim.lblin.hitran_tag = 'hitran2016'
