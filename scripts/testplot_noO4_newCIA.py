@@ -243,7 +243,8 @@ def plotting(lamin, lamax, atmos, title):
         ax.set_title(title)
         ax.set_ylabel("Reflectance")
         ax.set_xlabel("Wavelength ($\mu$ m)")
-        ax.legend()
+        if lamin == 0.61:
+            ax.legend()
         fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots/"+ str(fig_name) +  "new_CIA_noO4.png", bbox_inches = "tight")
     else:
         wl, flux = ocean_outgassing(lamin, lamax)
@@ -254,7 +255,8 @@ def plotting(lamin, lamax, atmos, title):
         ax.set_title(title)
         ax.set_ylabel("Reflectance")
         ax.set_xlabel("Wavelength ($\mu$ m)")
-        ax.legend()
+        if lamin == 0.61:
+            ax.legend()
         fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots/"+ str(fig_name) +  "new_CIA_noO4_ocean.png", bbox_inches = "tight")
 
    
