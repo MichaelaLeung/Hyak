@@ -257,6 +257,8 @@ def plotting(lamin, lamax, atmos, title):
     wl2, flux2 = clouds(lamin, lamax, 0)
     wl3, flux3 = clouds(lamin, lamax, 1)
     avg_flux = (flux+flux2+flux3)/3
+    if lamin = 0.61:
+        ax.legend()
     if atmos == 0: # zero = ocean loss
         wl4, flux4 = ocean_loss_hyak(lamin, lamax)
         fig, ax = plt.subplots(figsize = (10,10))
@@ -265,7 +267,6 @@ def plotting(lamin, lamax, atmos, title):
         ax.set_title(title)
         ax.set_ylabel("Reflectance")
         ax.set_xlabel("Wavelength ($\mu$ m)")
-        ax.legend()
         fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots/" + str(fig_name) +  "new_CIA_clouds.png", bbox_inches = "tight")
     else:
         wl4, flux4 = ocean_outgassing_hyak(lamin, lamax)
@@ -275,7 +276,6 @@ def plotting(lamin, lamax, atmos, title):
         ax.set_title(title)
         ax.set_ylabel("Reflectance")
         ax.set_xlabel("Wavelength ($\mu$ m)")
-        ax.legend()
         fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots/" + str(fig_name) +  "new_CIA_ocean_clouds.png", bbox_inches = "tight")
 
    
