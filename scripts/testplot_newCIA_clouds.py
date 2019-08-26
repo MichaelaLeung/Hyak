@@ -257,7 +257,7 @@ def plotting(lamin, lamax, atmos, title):
     wl2, flux2 = clouds(lamin, lamax, 0)
     wl3, flux3 = clouds(lamin, lamax, 1)
     avg_flux = (flux+flux2+flux3)/3
-    if lamin = 0.61:
+    if lamin == 0.61:
         ax.legend()
     if atmos == 0: # zero = ocean loss
         wl4, flux4 = ocean_loss_hyak(lamin, lamax)
