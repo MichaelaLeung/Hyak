@@ -88,7 +88,7 @@ def longplot(atmos):
     flux = sim.output.rad.pflux
     sflux = sim.output.rad.sflux
 
-    adj_flux = flux/sflux * math.pi
+    adj_flux = flux/sflux
 
     
     r_km = 149,598,000 * sim.smartin.r_AU
@@ -185,7 +185,7 @@ def longplot_hyak(atmos):
     flux = sim.output.rad.pflux
     sflux = sim.output.rad.sflux
 
-    adj_flux = flux/sflux * math.pi
+    adj_flux = flux/sflux
 
     r_km = 149598000 * sim.smartin.r_AU
     fpfs = flux/sflux * (sim.smartin.radius/r_km)**2
@@ -263,7 +263,7 @@ if __name__ == '__main__':
         # On a mox compute node: ready to run
  #       longplot("earth", 0.01, 0.5, 2, True, False)
  #       longplot("earth", 0.01, 0.5, 2, False, True)
-        plotting("prox")
+ #       plotting("prox")
         plotting("highd") 
         plotting("highw")
  #       longplot("arch_prox", 0.01, 0.5, 2, False, False)

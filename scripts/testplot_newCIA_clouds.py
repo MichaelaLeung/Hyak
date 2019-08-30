@@ -66,7 +66,7 @@ def earth_like_hyak(lamin, lamax):
     wl = sim.output.rad.lam
     flux = sim.output.rad.pflux
     sflux = sim.output.rad.sflux
-    adj_flux = math.pi * (flux/sflux)
+    adj_flux = (flux/sflux)
     return(wl, adj_flux)
 
 def clouds(lamin, lamax, cloud_type):
@@ -135,7 +135,7 @@ def clouds(lamin, lamax, cloud_type):
     flux = sim.output.rad.pflux
     sflux = sim.output.rad.sflux
 
-    adj_flux = flux/sflux * math.pi
+    adj_flux = flux/sflux
 
     return(wl, adj_flux)
 
@@ -190,7 +190,7 @@ def ocean_loss_hyak(lamin, lamax):
     flux2 = sim.output.rad.pflux
     sflux2 = sim.output.rad.sflux
 
-    adj_flux2 = flux2/sflux2 * math.pi
+    adj_flux2 = flux2/sflux2
     return(wl2, adj_flux2)
 
 def ocean_outgassing_hyak(lamin, lamax):
@@ -244,7 +244,7 @@ def ocean_outgassing_hyak(lamin, lamax):
     flux2 = sim2.output.rad.pflux
     sflux2 = sim2.output.rad.sflux
 
-    adj_flux2 = flux2/sflux2 * math.pi
+    adj_flux2 = flux2/sflux2
     return(wl2, adj_flux2)
 
 def plotting(lamin, lamax, atmos, title):
