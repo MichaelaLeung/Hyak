@@ -204,7 +204,7 @@ def plotting(atmos):
         wl, flux, fpfs, label = longplot(atmos)
         ax.plot(wl, flux)
         ax.set_ylabel("Reflectance")
-        ax.set_xlabel("Wavelength ($\mu$ m)")
+        ax.set_xlabel("Wavelength ($\mu$m)")
 
         ax2 = ax.twinx()
         ax2.set_ylabel("Planet-to-star contrast ratio")
@@ -228,7 +228,7 @@ def plotting(atmos):
         wl, flux, fpfs,label = longplot_hyak(atmos)
         ax.plot(wl, flux)
         ax.set_ylabel("Reflectance")
-        ax.set_xlabel("Wavelength ($\mu$ m)")
+        ax.set_xlabel("Wavelength ($\mu$m)")
         ax2 = ax.twinx()
         ax2.set_ylabel("Planet-to-star contrast ratio")
         ax2.plot(wl, fpfs)

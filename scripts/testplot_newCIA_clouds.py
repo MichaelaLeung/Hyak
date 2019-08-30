@@ -256,7 +256,7 @@ def plotting(lamin, lamax, atmos, title):
     wl, flux = earth_like_hyak(lamin, lamax)
     wl2, flux2 = clouds(lamin, lamax, 0)
     wl3, flux3 = clouds(lamin, lamax, 1)
-    avg_flux = (flux+flux2+flux3)/3
+    avg_flux = (0.5*flux+0.25*flux2+0.25*flux3)
     if atmos == 0: # zero = ocean loss
         wl4, flux4 = ocean_loss_hyak(lamin, lamax)
         fig, ax = plt.subplots(figsize = (10,10))

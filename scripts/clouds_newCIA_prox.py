@@ -74,7 +74,7 @@ def clouds(res, cirrus, strato):
     flux = sim.output.rad.pflux
     sflux = sim.output.rad.sflux
 
-    adj_flux = flux/sflux
+    adj_flux = flux/sflux * math.pi
     r_km = 149598000 * sim.smartin.r_AU
     fpfs = flux/sflux * (sim.smartin.radius/r_km)**2
 
@@ -149,14 +149,14 @@ def plotting():
     strato_wl, strato_flux, strato_fpfs = clouds(0.01, 0, 1)
     wl, flux,fpfs = longplot()
     length_wl = min(len(cirrus_wl), len(strato_wl), len(wl))-1
-    avg_wl = (cirrus_wl[:length_wl] + strato_wl[:length_wl] + wl[:length_wl])/3
-    avg_flux = (cirrus_flux[:length_wl] + strato_flux[:length_wl] +flux[:length_wl])/3
-    avg_fpfs = (cirrus_fpfs[:length_wl] + strato_fpfs[:length_wl] +fpfs[:length_wl])/3
+    avg_wl = (0.25*cirrus_wl[:length_wl] + 0.25*strato_wl[:length_wl] + 0.5*wl[:length_wl])
+    avg_flux = (0.25*cirrus_flux[:length_wl] + 0.25*strato_flux[:length_wl] + 0.5*flux[:length_wl])
+    avg_fpfs = (0.25*cirrus_fpfs[:length_wl] + 0.25*strato_fpfs[:length_wl] + 0.5*fpfs[:length_wl])
 
     fig, ax = plt.subplots(figsize = (30, 10))
     ax.plot(avg_wl, avg_flux)
     ax.set_ylabel("Reflectance")
-    ax.set_xlabel("Wavelength ($\mu$ m)")
+    ax.set_xlabel("Wavelength ($\mu$m)")
 
     ax2 = ax.twinx()
     ax2.set_ylabel("Planet-to-star contrast ratio")
