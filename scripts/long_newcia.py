@@ -150,9 +150,9 @@ def longplot_hyak(atmos):
     elif atmos == "arch_prox":
         infile = "/gscratch/vsm/mwjl/projects/high_res/inputs/clearsky_archean.pt"
         sim.set_planet_proxima_b()
-   
-    sim.set_run_in_place(place)
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+
+    sim.set_run_in_place(place)
 
     sim.set_executables_automatically()
 
