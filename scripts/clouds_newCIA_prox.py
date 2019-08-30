@@ -74,7 +74,7 @@ def clouds(res, cirrus, strato):
     flux = sim.output.rad.pflux
     sflux = sim.output.rad.sflux
 
-    adj_flux = flux/sflux * math.pi
+    adj_flux = flux/sflux
     r_km = 149598000 * sim.smartin.r_AU
     fpfs = flux/sflux * (sim.smartin.radius/r_km)**2
 
@@ -137,7 +137,7 @@ def longplot():
     flux = sim.output.rad.pflux
     sflux = sim.output.rad.sflux
 
-    adj_flux = flux/sflux * math.pi
+    adj_flux = flux/sflux
     r_km = 149598000 * sim.smartin.r_AU
     fpfs = flux/sflux * (sim.smartin.radius/r_km)**2
 
