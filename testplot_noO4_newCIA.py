@@ -221,7 +221,7 @@ def ocean_outgassing_noO4(lamin, lamax):
 
 def plotting(lamin, lamax, atmos, title):
     import platform
-    if platform.system() == 'Jarvis':
+    if platform.system() == 'Darwin':
         # On a Mac: usetex ok
         matplotlib.rc('font',**{'family':'serif','serif':['Computer Modern']})
         matplotlib.rcParams['font.size'] = 25.0
