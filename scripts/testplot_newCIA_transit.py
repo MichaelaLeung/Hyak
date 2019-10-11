@@ -50,7 +50,7 @@ def earth_like(lamin, lamax):
 
     sim.open_outputs()
     wl = sim.output.trnst.lam
-    app_rad = sim.output.trnst.abs_rad
+    app_rad = sim.output.trnst.absrad
     return(wl, app_rad)
 
 def ocean_loss(lamin, lamax):
@@ -80,7 +80,9 @@ def ocean_loss(lamin, lamax):
     sim.smartin.maxwn = 1e4/lamin 
 
     sim.lblin.minwn = 1e4/lamax
-    sim.lblin.maxwn = 1e4/lamin 
+    sim.lblin.maxwn = 1e4/lamin
+
+    sim.radstar = 0.1542
 
     sim.gen_lblscripts()
     sim.run_lblabc()
@@ -88,12 +90,9 @@ def ocean_loss(lamin, lamax):
     sim.run_smart()
 
     sim.open_outputs()
-    wl2 = sim.output.rad.lam
-    flux2 = sim.output.rad.pflux
-    sflux2 = sim.output.rad.sflux
-
-    adj_flux2 = flux2/sflux2
-    return(wl2, adj_flux2)
+    wl = sim.output.trnst.lam
+    app_rad = sim.output.trnst.absrad
+    return(wl, app_rad)
 
 def ocean_outgassing(lamin, lamax):
     res = 1/(10*lamin)
@@ -115,6 +114,8 @@ def ocean_outgassing(lamin, lamax):
     sim2.smartin.FWHM = res
     sim2.smartin.sample_res = res
 
+    sim2.radstar = 0.1542
+
     sim2.smartin.minwn = 1e4/lamax
     sim2.smartin.maxwn = 1e4/lamin 
 
@@ -131,12 +132,9 @@ def ocean_outgassing(lamin, lamax):
     sim2.run_smart()
 
     sim2.open_outputs()
-    wl2 = sim2.output.rad.lam
-    flux2 = sim2.output.rad.pflux
-    sflux2 = sim2.output.rad.sflux
-
-    adj_flux2 = flux2/sflux2
-    return(wl2, adj_flux2)
+    wl = sim2.output.trnst.lam
+    app_rad = sim2.output.trnst.absrad
+    return(wl, app_rad)
 
 def earth_like_hyak(lamin, lamax):
     
@@ -170,6 +168,7 @@ def earth_like_hyak(lamin, lamax):
     sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
     sim.lblin.par_index = 7
 
+    sim.radstar = 0.1542
 
     sim.smartin.sza = 57
 
@@ -189,11 +188,9 @@ def earth_like_hyak(lamin, lamax):
     sim.run_smart()
 
     sim.open_outputs()
-    wl = sim.output.rad.lam
-    flux = sim.output.rad.pflux
-    sflux = sim.output.rad.sflux
-    adj_flux = math.pi * (flux/sflux)
-    return(wl, adj_flux)
+    wl = sim.output.trnst.lam
+    app_rad = sim.output.trnst.absrad
+    return(wl, app_rad)
 
 def ocean_loss_hyak(lamin, lamax):
     res = 1/(10*lamin)
@@ -222,6 +219,8 @@ def ocean_loss_hyak(lamin, lamax):
     sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
     sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
     sim.lblin.par_index = 7
+    
+    sim.radstar = 0.1542
 
 
     sim.smartin.sza = 57
@@ -241,12 +240,9 @@ def ocean_loss_hyak(lamin, lamax):
     sim.run_smart()
 
     sim.open_outputs()
-    wl2 = sim.output.rad.lam
-    flux2 = sim.output.rad.pflux
-    sflux2 = sim.output.rad.sflux
-
-    adj_flux2 = flux2/sflux2
-    return(wl2, adj_flux2)
+    wl = sim.output.trnst.lam
+    app_rad = sim.output.trnst.absrad
+    return(wl, app_rad)
 
 def ocean_outgassing_hyak(lamin, lamax):
     res = 1/(10*lamin)
@@ -271,6 +267,7 @@ def ocean_outgassing_hyak(lamin, lamax):
     sim2.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
     sim2.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
     sim2.lblin.par_index = 7
+    sim2.radstar = 0.1542
 
 
     sim2.smartin.sza = 57
@@ -295,12 +292,9 @@ def ocean_outgassing_hyak(lamin, lamax):
     sim2.run_smart()
 
     sim2.open_outputs()
-    wl2 = sim2.output.rad.lam
-    flux2 = sim2.output.rad.pflux
-    sflux2 = sim2.output.rad.sflux
-
-    adj_flux2 = flux2/sflux2
-    return(wl2, adj_flux2)
+    wl = sim2.output.trnst.lam
+    app_rad = sim2.output.trnst.absrad
+    return(wl, app_rad)
 
 def plotting(lamin, lamax, atmos, title):
     import platform
@@ -343,22 +337,22 @@ def plotting(lamin, lamax, atmos, title):
         plt.switch_backend('agg')
         fig_name = int(100*(float(lamin) + float(lamax))/2)
         if atmos == 0: # zero = ocean loss
-            wl, flux = earth_like_hyak(lamin, lamax)
-            wl2, flux2 = ocean_loss_hyak(lamin, lamax)
+            wl, app_rad = earth_like_hyak(lamin, lamax)
+            wl2, app_rad2 = ocean_loss_hyak(lamin, lamax)
             fig, ax = plt.subplots(figsize = (10,10))
-            ax.plot(wl, flux, label = "1 bar Earth-Like")
-            ax.plot(wl2, flux2, label = "10 bar Ocean Loss")
+            ax.plot(wl, app_rad, label = "1 bar Earth-Like")
+            ax.plot(wl2, app_rad2, label = "10 bar Ocean Loss")
             ax.set_title(title)
             ax.set_ylabel("Reflectance")
             ax.set_xlabel("Wavelength ($\mu$ m)")
             ax.legend()
             fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots/" + str(fig_name) +  "_trn_new_CIA.png", bbox_inches = "tight")
         else:
-            wl, flux = earth_like_hyak(lamin, lamax)
-            wl2, flux2 = ocean_outgassing_hyak(lamin, lamax)
+            wl, app_rad = earth_like_hyak(lamin, lamax)
+            wl2, app_rad2 = ocean_outgassing_hyak(lamin, lamax)
             fig, ax = plt.subplots(figsize = (10,10))
-            ax.plot(wl, flux, label = "1 bar Earth-Like")
-            ax.plot(wl2, flux2, label = "10 bar Ocean Outgassing")
+            ax.plot(wl, app_rad, label = "1 bar Earth-Like")
+            ax.plot(wl2, app_rad2, label = "10 bar Ocean Outgassing")
             ax.set_title(title)
             ax.set_ylabel("Reflectance")
             ax.set_xlabel("Wavelength ($\mu$ m)")
@@ -387,12 +381,12 @@ if __name__ == '__main__':
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
         plotting(0.61,0.645,0,"Gamma band (0.63) Ocean Loss")
-      #  plotting(0.67,0.71,0,"Oxygen B band (0.69) Ocean Loss")
-      #  plotting(0.74,0.78,0,"Oxygen A band (0.76) Ocean Loss")
-      #  plotting(1.25,1.29,0,"1.27 Ocean Loss")
-      #  plotting(0.61,0.645,1,"Gamma band (0.63) Ocean Outgassing")
-      #  plotting(0.67,0.71,1,"Oxygen B band (0.69) Ocean Outgassing")
-      #  plotting(0.74,0.78,1,"Oxygen A band (0.76) Ocean Outgassing")
-      #  plotting(1.25,1.29,1,"1.27 Ocean Outgassing")
+        plotting(0.67,0.71,0,"Oxygen B band (0.69) Ocean Loss")
+        plotting(0.74,0.78,0,"Oxygen A band (0.76) Ocean Loss")
+        plotting(1.25,1.29,0,"1.27 Ocean Loss")
+        plotting(0.61,0.645,1,"Gamma band (0.63) Ocean Outgassing")
+        plotting(0.67,0.71,1,"Oxygen B band (0.69) Ocean Outgassing")
+        plotting(0.74,0.78,1,"Oxygen A band (0.76) Ocean Outgassing")
+        plotting(1.25,1.29,1,"1.27 Ocean Outgassing")
     else:
         plotting(0.61,0.645,1,"Gamma band (0.63) Ocean Outgassing")
