@@ -155,7 +155,7 @@ def ocean_loss(lamin, lamax, res, cia):
 
     sim2.set_executables_automatically()
 
-    sim.lblin.par_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/HITRAN2019.par'
+    sim2.lblin.par_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/HITRAN2019.par'
     sim2.lblin.hitran_tag = 'hitran2016'
     sim2.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
     sim2.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
