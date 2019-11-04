@@ -25,7 +25,7 @@ def run_prox(lamin, lamax):
     label = "Simulated Earth-like planet orbiting Proxima Centauri"
     sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/composite1_txt.txt"
     sim.set_planet_proxima_b()
-    sim.load_atmosphere_from_pt(infile, addn2 = False)
+    sim.load_atmosphere_from_pt(infile, addn2 = True)
     
     o2 = sim.atmosphere.gases[3]
     o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
@@ -79,7 +79,7 @@ def run_earth(lamin, lamax):
     label = "Simulated Earth-like planet orbiting Proxima Centauri"
     sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/composite1_txt.txt"
     sim.set_planet_proxima_b()
-    sim.load_atmosphere_from_pt(infile, addn2 = False)
+    sim.load_atmosphere_from_pt(infile, addn2 = True)
     
     o2 = sim.atmosphere.gases[3]
     o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
@@ -241,8 +241,62 @@ def basic_plot(lamin, lamax):
     ax.legend()
     fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots/" + str(lamin) +  "RV_dopp.png", bbox_inches = "tight")
 
-    
-    
+def make_gif(lamin,lamax)
+    mport platform
+    if platform.system() == 'Darwin':
+        # On a Mac: usetex ok
+        matplotlib.rc('font',**{'family':'serif','serif':['Computer Modern']})
+        matplotlib.rcParams['font.size'] = 25.0
+        matplotlib.rc('text', usetex=True)
+    elif platform.node().startswith("n"):
+        # On hyak: usetex not ok, must change backend to 'agg'
+        matplotlib.rc('font',**{'family':'serif','serif':['Computer Modern']})
+        matplotlib.rcParams['font.size'] = 25.0
+        matplotlib.rc('text', usetex=False)
+        plt.switch_backend('agg')
+    earth_wl, earth_flux = run_earth(lamin,lamax)
+    wl, flux = run_prox(lamin,lamax)
+    n_phase = 1000
+    phases = np.linspace(0,2*np.pi,n_phase)
+    inclination = np.pi/2
+    phi_90 = np.pi/2
+    sma = 7500000
+    c = 299792.458
+    fluxes = np.outer(earth_flux, np.ones(n_phase))
+    temp = np.arccos(-np.sin(inclination)*np.cos(phases))
+    phase_function = ((np.sin(temp)+(np.pi-temp)*(np.cos(temp)))/(np.pi))
+    #season = 0.55 #0-2PI march max 
+    season = -0.55 #july min? 
+    rv_bary = (29.8 * np.sin((11.2/365.)*phases + season))
+    print(min(rv_bary),max(rv_bary))
+    #rv_orb = (np.sqrt((G*m_prox)/(sma_m)) * np.sin(inclination)/1000 *np.sin(phases))
+    rv_orb = (sma*2*np.pi)/967680* np.sin(inclination) *np.sin(phases)
+    rv_sys = -21.7 * np.ones_like(phases)
+    #rv_bary = (29.8 * np.sin((11.2/365.)*phases))
+    rv = rv_sys + rv_orb - rv_bary
+    inclination = np.pi/2.9
+    i = 0
+    for i < len(rv):
+        obs_wl = np.outer(earth_wl,(1+rv/c))
+        ax.plot(wl, flux, label = "original")
+        ax.plot(obs_wl, flux, label = "doppler shift")
+        ax.set_title(title)
+        ax.set_ylabel("Reflectance")
+        ax.set_xlabel("Wavelength ($\mu$ m)")
+        ax.legend()
+        fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots/" + str(lamin) + str(i) + "RV.png", bbox_inches = "tight")
+        i = i+1
+
+    gif_path = str(lamin) + "RV.gif"
+    inputs = []
+    for i< len(rv)
+        name = "/gscratch/vsm/mwjl/projects/high_res/plots/"+str(lamin)+str(i)+"RV.png"
+        inputs.append(name)
+    plt.figure(figsize=(4,4))
+
+    with imageio.get_writer(gif_path, mode='I') as writer:
+        for i in range(len(inputs)):
+            writer.append_data(imageio.imread(inputs[i].format(i=i)))
 if __name__ == '__main__':
 
     import platform
