@@ -351,7 +351,7 @@ def plotting(lamin, lamax, atmos, title):
             ax.plot(wl2, flux2, label = "10 bar Ocean Loss")
             ax.set_title(title)
             ax.set_ylabel("Reflectance")
-            ax.set_xlabel("Wavelength ($\mu$ m)")
+            ax.set_xlabel("Wavelength ($\mu$m)")
             ax.legend()
             fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots/" + str(fig_name) +  "new_CIA.png", bbox_inches = "tight")
         else:
@@ -362,7 +362,7 @@ def plotting(lamin, lamax, atmos, title):
             ax.plot(wl2, flux2, label = "10 bar Ocean Outgassing")
             ax.set_title(title)
             ax.set_ylabel("Reflectance")
-            ax.set_xlabel("Wavelength ($\mu$ m)")
+            ax.set_xlabel("Wavelength ($\mu$m)")
             ax.legend()
             fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots/" + str(fig_name) +  "new_CIA_ocean.png", bbox_inches = "tight")
 

@@ -189,8 +189,10 @@ def earth_like_hyak(lamin, lamax):
 
     sim.open_outputs()
     wl = sim.output.trnst.lam
-    abs_rad = sim.output.trnst.abs_rad
+    abs_rad = sim.output.trnst.absrad
     t_depth = sim.output.trnst.tdepth
+    t_depth = np.asarray(t_depth)
+    t_depth = t_depth * 10**6
     return(wl, t_depth, abs_rad)
 
 def ocean_loss_hyak(lamin, lamax):
@@ -242,8 +244,10 @@ def ocean_loss_hyak(lamin, lamax):
 
     sim.open_outputs()
     wl = sim.output.trnst.lam
-    abs_rad = sim.output.trnst.abs_rad
+    abs_rad = sim.output.trnst.absrad
     t_depth = sim.output.trnst.tdepth
+    t_depth = np.asarray(t_depth)
+    t_depth = t_depth * 10**6
     return(wl, t_depth, abs_rad)
 
 def ocean_outgassing_hyak(lamin, lamax):
@@ -296,7 +300,9 @@ def ocean_outgassing_hyak(lamin, lamax):
     sim2.open_outputs()
     wl = sim2.output.trnst.lam
     t_depth = sim2.output.trnst.tdepth
-    abs_rad = sim2.output.trnst.abs_rad    
+    t_depth = np.asarray(t_depth)
+    t_depth = t_depth *10**6
+    abs_rad = sim2.output.trnst.absrad    
     return(wl, t_depth, abs_rad)
 
 def plotting(lamin, lamax, atmos, title):
@@ -345,21 +351,27 @@ def plotting(lamin, lamax, atmos, title):
             fig, ax = plt.subplots(figsize = (10,10))
             ax.plot(wl, app_rad, label = "1 bar Earth-Like")
             ax.plot(wl2, app_rad2, label = "10 bar Ocean Loss")
-            ax.plot(wl, t_depth)
-            ax.plot(wl2, t_depth2)
+            ax2 = ax.twinx()
+            ax2.plot(wl, t_depth)
+            ax2.plot(wl2, t_depth2)
             ax.set_title(title)
             ax.set_xlabel("Wavelength")
-            ax.set_ylabel("Transit depth (ppm)")
+            ax.set_ylabel("Apparent Radius (km)")
+            ax2.set_ylabel("Transit Depth (ppm)")
             ax.legend()
             fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots/" + str(fig_name) +  "_trn_new_CIA.png", bbox_inches = "tight")
         else:
-            wl, app_rad = earth_like_hyak(lamin, lamax)
-            wl2, app_rad2 = ocean_outgassing_hyak(lamin, lamax)
+            wl, t_depth,app_rad = earth_like_hyak(lamin, lamax)
+            wl2, t_depth2,app_rad2 = ocean_outgassing_hyak(lamin, lamax)
             fig, ax = plt.subplots(figsize = (10,10))
             ax.plot(wl, app_rad, label = "1 bar Earth-Like")
             ax.plot(wl2, app_rad2, label = "10 bar Ocean Outgassing")
+            ax2 = ax.twinx()
+            ax2.plot(wl, t_depth)
+            ax2.plot(wl2, t_depth2)
             ax.set_title(title)
-            ax.set_ylabel("Transit depth(ppm)")
+            ax.set_ylabel("Apparent Radius (km)")
+       	    ax2.set_ylabel("Transit Depth (ppm)")
             ax.set_xlabel("Wavelength ($\mu$ m)")
             ax.legend()
             fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots/" + str(fig_name) +  "_trn_new_CIA_ocean.png", bbox_inches = "tight")
