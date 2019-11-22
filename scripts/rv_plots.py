@@ -71,7 +71,6 @@ def run_prox(lamin, lamax, res):
     return(wl, adj_flux)
 
 def run_earth(lamin, lamax, res):
-
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim = smart.interface.Smart(tag = "earth")
     sim.set_run_in_place(place)
@@ -106,7 +105,6 @@ def run_earth(lamin, lamax, res):
 
     sim.lblin.minwn = 1e4/lamax
     sim.lblin.maxwn = 1e4/lamin 
-
 
     sim.lblin.par_index = 7
     sim.smartin.out_level = 3
@@ -237,7 +235,7 @@ def ocean_outgassing(lamin, lamax, res):
     flux2 = sim2.output.rad.pflux
     sflux2 = sim2.output.rad.sflux
 
-    adj_flux2 = flux2/sflux2
+    adj_flux2 = flux2/sflux2 * math.pi
     return(wl2, adj_flux2)
 
 def fluxes(lamin, lamax):
@@ -281,7 +279,6 @@ def fluxes(lamin, lamax):
         interp = scipy.interpolate.interp1d(obs_wl[:,i],flux,fill_value = "extrapolate")
         out.append(interp(earth_wl) * flux)
         i = i+1
-
     from matplotlib.collections import LineCollection
 
     # Create figure
@@ -290,7 +287,6 @@ def fluxes(lamin, lamax):
 
     # Create a continuous norm to map from flux to colors
     norm = plt.Normalize(np.min(fluxes), np.max(fluxes))
-
     # Loop over phases
     for i in range(len(phases)):
 
@@ -318,7 +314,6 @@ def fluxes(lamin, lamax):
     # Create colorbar
     cbar = fig.colorbar(line)
     cbar.set_label(r"Flux [W/m$^2$/$\mu$m]", rotation = 270, labelpad = 25)
-
 
     ax2 = ax.twinx()
     ax2.plot(earth_wl, earth_flux, 'r')
@@ -363,7 +358,7 @@ def basic_plot(lamin, lamax):
     rv = max(rv)
     obs_wl = np.outer(earth_wl,(1+rv/c))
     ax.plot(earth_wl, earth_flux, label = "original")
-    ax.plot(obs_wl, flux, label = "doppler shift")
+    ax.plot(obs_wl, flux, label = "shifted")
     ax.set_title(title)
     ax.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength ($\mu$ m)")
@@ -568,7 +563,9 @@ def read_integ():
         f.close()
      
 if __name__ == '__main__':
-    if platform.node().startswith("mox"):
+
+    import platform
+     if platform.node().startswith("mox"):
         # On the mox login node: submit job
         runfile = __file__
         smart.utils.write_slurm_script_python(runfile,
