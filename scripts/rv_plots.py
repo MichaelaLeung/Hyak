@@ -263,6 +263,7 @@ def fluxes(lamin, lamax):
     temp = np.arccos(-np.sin(inclination)*np.cos(phases))
     phase_function = ((np.sin(temp)+(np.pi-temp)*(np.cos(temp)))/(np.pi))
     #season = 0.55 #0-2PI march max 
+    fluxes2 = fluxes*(phase_function/phi_90)
     season = -0.55 #july min? 
     rv_bary = (29.8 * np.sin((11.2/365.)*phases + season))
     print(min(rv_bary),max(rv_bary))
@@ -275,10 +276,15 @@ def fluxes(lamin, lamax):
     obs_wl = np.outer(earth_wl,(1+rv/c))
     i = 0
     out = []
-    while i < len(obs_wl):
-        interp = scipy.interpolate.interp1d(obs_wl[:,i],flux,fill_value = "extrapolate")
-        out.append(interp(earth_wl) * flux)
+    while i < n_phase:
+        interp = scipy.interpolate.interp1d(obs_wl[:len(flux),i],flux[:len(obs_wl)],fill_value = "extrapolate")
+        out.append(interp(earth_wl[:len(flux)]) * flux[:len(earth_wl)])
+
         i = i+1
+    out = np.asarray(out) 
+    out = out.transpose()
+    print(np.shape(out))
+
     from matplotlib.collections import LineCollection
 
     # Create figure
@@ -286,14 +292,14 @@ def fluxes(lamin, lamax):
     ax.set_ylabel("Phase Angle")
 
     # Create a continuous norm to map from flux to colors
-    norm = plt.Normalize(np.min(fluxes), np.max(fluxes))
+    norm = plt.Normalize(np.min(fluxes2), np.max(fluxes2))
     # Loop over phases
     for i in range(len(phases)):
 
         # Set dimensions
-        x = out[:,i]
+        x = obs_wl[i,:]
         y = phases[i] * np.ones_like(x)
-        z = fluxes[:,i]
+        z = fluxes2[:,i]
 
         # Define line points and segments
         points = np.array([x, y]).T.reshape(-1, 1, 2)
@@ -308,7 +314,7 @@ def fluxes(lamin, lamax):
         line = ax.add_collection(lc)
         
     # Set the axis ranges
-    ax.set_xlim(0.76, 0.765)
+    ax.set_xlim(lamin, lamax)
     ax.set_ylim(min(phases), max(phases))
 
     # Create colorbar
@@ -442,7 +448,7 @@ def flux_calc(lamin,lamax, type):
     elif type == 2:      
          wl, flux = ocean_outgassing(lamin,lamax, 0.01)
          wl_low, flux_low = ocean_outgassing(lamin,lamax, 1)
-    n_phase = 1000
+    n_phase = 100
     phases = np.linspace(0,2*np.pi,n_phase)
     inclination = np.pi/2
     phi_90 = np.pi/2
@@ -479,29 +485,27 @@ def flux_calc(lamin,lamax, type):
 
     i = 0
     while i < n_phase:
-        interp = scipy.interpolate.interp1d(obs_wl[:,i],flux,fill_value = "extrapolate")
+        interp = scipy.interpolate.interp1d(obs_wl[:len(flux),i],flux[:len(obs_wl)],fill_value = "extrapolate")
         out = interp(earth_wl) * earth_flux
-        interp_low = scipy.interpolate.interp1d(obs_wl_low[:,i],flux_low,fill_value = "extrapolate")
+        interp_low = scipy.interpolate.interp1d(obs_wl_low[:len(flux_low),i],flux_low[:len(obs_wl_low)],fill_value = "extrapolate")
         out_low = interp(earth_wl_low) * earth_flux_low
         integ_calc(wl, out, wl_low, out_low, i, lamin, type) 
         i = i+1
 
 def integ_calc(wl, flux, wl_low, flux_low, z, lamin, type):
-    f = open("/gscratch/vsm/mwjl/projects/high_res/scripts/integrations_" + str(lamin) + "transmiss.txt", "a")
+    f = open("/gscratch/vsm/mwjl/projects/high_res/scripts/integrations_" + str(lamin) + "transmiss" + str(type) +".txt", "a")
     long_flux = []
     for i in flux_low:
         j = 0
         while j < 100: 
             long_flux.append(i)
             j = j+1
-
     mixed = []
     i = 0
     while i < len(flux):
         temp = (flux[i] + long_flux[i]) / 2
         mixed.append(temp)
         i = i+1
-
 
     i = 0
     flattened = []
@@ -512,21 +516,19 @@ def integ_calc(wl, flux, wl_low, flux_low, z, lamin, type):
             flattened.append(avg)
             j = j+1
         i = i+25
-        
-
     out = []
     i = 0
     while i < len(mixed[:-25]): 
         diff = abs(mixed[i] - flattened[i])
         out.append(diff)
         i = i+1
-
     import scipy.integrate as integrate
     adds = integrate.trapz(out[:len(wl)], wl[:len(out)])
     print(adds)    
     name = str(z) + "   " + str(abs(adds)) 
     f = open("/gscratch/vsm/mwjl/projects/high_res/scripts/integrations_" + str(lamin) + "transmiss" + str(type) +".txt", "a")
     f.write(str(name) + "\n")
+    f.close()
     
 def master_plot():
     flux_calc(0.74, 0.78, 0)
@@ -544,11 +546,11 @@ def master_plot():
 
 def read_integ():
     print('starting read_integ')
-#    master_plot()
-    files = "integrations_0.61transmiss.txt", "integrations_0.67transmiss.txt", "integrations_0.74transmiss.txt", "integrations_1.25transmiss.txt"
+    master_plot()
+    files = "integrations_0.61transmiss0.txt","integrations_0.61transmiss1.txt","integrations_0.61transmiss2.txt","integrations_0.67transmiss0.txt", "integrations_0.67transmiss1.txt", "integrations_0.67transmiss2.txt","integrations_0.74transmiss0.txt","integrations_0.74transmiss1.txt","integrations_0.74transmiss2.txt", "integrations_1.25transmiss0.txt", "integrations_1.25transmiss1.txt", "integrations_1.25transmiss2.txt"
     for name in files: 
         output = np.genfromtxt(name)
-        phase = output[:,0] * 2 * np.math.pi / 1000
+        phase = output[:,0] * 2 * np.math.pi / 100
         phase.astype(np.float)
         fig, ax = plt.subplots(figsize = (12,12))
         ax.plot(phase, output[:,1])
@@ -565,7 +567,7 @@ def read_integ():
 if __name__ == '__main__':
 
     import platform
-     if platform.node().startswith("mox"):
+    if platform.node().startswith("mox"):
         # On the mox login node: submit job
         runfile = __file__
         smart.utils.write_slurm_script_python(runfile,
@@ -574,7 +576,7 @@ if __name__ == '__main__':
                                workdir = "",
                                nodes = 1,
                                mem = "500G",
-                               walltime = "10:00:00",
+                               walltime = "96:00:00",
                                ntasks = 28,
                                account = "vsm",
                                submit = True,
@@ -582,7 +584,9 @@ if __name__ == '__main__':
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
         print('job submitted') 
-        fluxes(0.75, 0.76)
+        fluxes(0.74, 0.78)
+        fluxes(1.25, 1.29)
+#        read_integ()
     else:
         fluxes(0.60,0.70)
 
