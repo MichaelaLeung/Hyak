@@ -293,11 +293,12 @@ def fluxes(lamin, lamax):
 
     # Create a continuous norm to map from flux to colors
     norm = plt.Normalize(np.min(fluxes2), np.max(fluxes2))
+
     # Loop over phases
     for i in range(len(phases)):
 
         # Set dimensions
-        x = obs_wl[i,:]
+        x = obs_wl[:,i]
         y = phases[i] * np.ones_like(x)
         z = fluxes2[:,i]
 
@@ -314,13 +315,15 @@ def fluxes(lamin, lamax):
         line = ax.add_collection(lc)
         
     # Set the axis ranges
-    ax.set_xlim(lamin, lamax)
+    ax.set_xlim(0.76, 0.765)
     ax.set_ylim(min(phases), max(phases))
 
     # Create colorbar
     cbar = fig.colorbar(line)
     cbar.set_label(r"Flux [W/m$^2$/$\mu$m]", rotation = 270, labelpad = 25)
 
+
+    fig.savefig("prox0.76a.png", bbox_inches = "tight")
     ax2 = ax.twinx()
     ax2.plot(earth_wl, earth_flux, 'r')
     ax2.set_xlabel(r"Wavelength [$\mu$]")
