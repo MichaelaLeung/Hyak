@@ -68,7 +68,75 @@ def run_prox(lamin, lamax, res):
     flux = sim.output.rad.pflux
     sflux = sim.output.rad.sflux
     adj_flux = math.pi * (flux/sflux)
-    return(wl, adj_flux)
+    return(wl, flux)
+
+def clouds(lamin, lamax, cloud_type, res):
+    place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim = smart.interface.Smart(tag = "prox")
+    sim.set_run_in_place(place)
+    
+    sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+
+    infile = "/gscratch/vsm/mwjl/projects/high_res/inputs/profile_Earth_proxb_.pt_filtered"
+    label = "Simulated Earth-like planet orbiting Proxima Centauri"
+    sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/composite1_txt.txt"
+    sim.set_planet_proxima_b()
+    sim.load_atmosphere_from_pt(infile, addn2 = False)
+    
+    o2 = sim.atmosphere.gases[3]
+    o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
+    label = "Earth-Like"
+    sim.set_planet_proxima_b()
+    sim.set_star_proxima()
+
+    sim.set_executables_automatically()
+
+    sim.lblin.par_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/HITRAN2019.par'
+    sim.lblin.hitran_tag = 'hitran2016'
+    sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
+    sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
+    sim.lblin.par_index = 7
+
+
+    sim.smartin.sza = 57
+
+    sim.smartin.FWHM = res
+    sim.smartin.sample_res = res
+
+    sim.smartin.minwn = 1e4/lamax
+    sim.smartin.maxwn = 1e4/lamin 
+
+    sim.lblin.minwn = 1e4/lamax
+    sim.lblin.maxwn = 1e4/lamin 
+
+
+    sim.gen_lblscripts()
+    sim.run_lblabc()
+
+    if cloud_type == 0:
+        sim.aerosols = smart.interface.Aerosols(cirrus=True, stratocum=False)
+        sim.tag = "prox_cirrus"
+
+    elif cloud_type == 1:
+        sim.aerosols = smart.interface.Aerosols(cirrus=False, stratocum=True)
+        sim.tag = "prox_strato"
+
+    else:
+        pass
+
+    sim.write_smart(write_file = True)
+    sim.run_smart()
+
+    sim.open_outputs()
+    wl = sim.output.rad.lam
+    flux = sim.output.rad.pflux
+    sflux = sim.output.rad.sflux
+
+    adj_flux = flux/sflux
+
+    return(wl, flux)
 
 def run_earth(lamin, lamax, res):
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
@@ -137,6 +205,13 @@ def run_earth(lamin, lamax, res):
     transmiss = total_flux / solar
     return(lam, transmiss)
 
+def clouds_out(lamin, lamax, res):
+    wl, flux = run_prox(lamin, lamax, res)
+    wl2, flux2 = clouds(lamin, lamax, 0, res)
+    wl3, flux3 = clouds(lamin, lamax, 1, res)
+    avg_flux = (0.5*flux[:min(len(flux), len(flux2), len(flux3))]+0.25*flux2[:min(len(flux), len(flux2), len(flux3))]+0.25*flux3[:min(len(flux), len(flux2), len(flux3))])
+    return(wl, avg_flux)
+
 def ocean_loss(lamin, lamax, res):
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
 
@@ -185,7 +260,7 @@ def ocean_loss(lamin, lamax, res):
     sflux2 = sim.output.rad.sflux
 
     adj_flux2 = flux2/sflux2
-    return(wl2, adj_flux2)
+    return(wl2, flux2)
 
 def ocean_outgassing(lamin, lamax, res):
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
@@ -236,7 +311,7 @@ def ocean_outgassing(lamin, lamax, res):
     sflux2 = sim2.output.rad.sflux
 
     adj_flux2 = flux2/sflux2 * math.pi
-    return(wl2, adj_flux2)
+    return(wl2, flux2)
 
 def fluxes(lamin, lamax):
     import platform
@@ -252,7 +327,7 @@ def fluxes(lamin, lamax):
         matplotlib.rc('text', usetex=False)
         plt.switch_backend('agg')
     earth_wl, earth_flux = run_earth(lamin,lamax, 0.01)
-    wl, flux = run_prox(lamin,lamax, 0.01)
+    wl, flux = clouds_out(lamin,lamax, 0.01)
     n_phase = 1000
     phases = np.linspace(0,2*np.pi,n_phase)
     inclination = np.pi/2
@@ -300,7 +375,7 @@ def fluxes(lamin, lamax):
         # Set dimensions
         x = obs_wl[:,i]
         y = phases[i] * np.ones_like(x)
-        z = fluxes2[:,i]
+        z = out[:,i]
 
         # Define line points and segments
         points = np.array([x, y]).T.reshape(-1, 1, 2)
@@ -315,7 +390,7 @@ def fluxes(lamin, lamax):
         line = ax.add_collection(lc)
         
     # Set the axis ranges
-    ax.set_xlim(0.76, 0.765)
+    ax.set_xlim(lamin, lamax)
     ax.set_ylim(min(phases), max(phases))
 
     # Create colorbar
@@ -330,7 +405,7 @@ def fluxes(lamin, lamax):
 
     fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots/" + str(lamin) +  "_RV.png", bbox_inches = "tight")
 
-def basic_plot(lamin, lamax):
+def basic_plot(lamin, lamax, type):
     import platform
     if platform.system() == 'Darwin':
         # On a Mac: usetex ok
@@ -344,7 +419,12 @@ def basic_plot(lamin, lamax):
         matplotlib.rc('text', usetex=False)
         plt.switch_backend('agg')
     earth_wl, earth_flux = run_earth(lamin,lamax, 0.01)
-    wl, flux = run_prox(lamin,lamax,0.01)
+    if type == 0:
+         wl, flux = clouds_out(lamin,lamax, 0.01)
+    elif type == 1:
+         wl, flux = ocean_loss(lamin,lamax, 0.01)
+    elif type == 2:
+         wl, flux = ocean_outgassing(lamin,lamax, 0.01)
     n_phase = 1000
     phases = np.linspace(0,2*np.pi,n_phase)
     inclination = np.pi/2
@@ -365,14 +445,15 @@ def basic_plot(lamin, lamax):
     rv = rv_sys + rv_orb - rv_bary
     inclination = np.pi/2.9
     rv = max(rv)
+
     obs_wl = np.outer(earth_wl,(1+rv/c))
-    ax.plot(earth_wl, earth_flux, label = "original")
-    ax.plot(obs_wl, flux, label = "shifted")
-    ax.set_title(title)
+    fig, ax = plt.subplots(figsize = (10,10))
+    ax.plot(earth_wl[:len(earth_flux)], earth_flux[:len(earth_wl)], label = "original")
+    ax.plot(obs_wl[:len(flux)], flux[:len(obs_wl)], label = "shifted")
     ax.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength ($\mu$ m)")
     ax.legend()
-    fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots/" + str(lamin) +  "RV_dopp.png", bbox_inches = "tight")
+    fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots/" + str(lamin) + str(type) +  "RV_dopp.png", bbox_inches = "tight")
 
 def make_gif(lamin,lamax):
 #    if platform.system() == 'Darwin':
@@ -387,7 +468,7 @@ def make_gif(lamin,lamax):
 #        matplotlib.rc('text', usetex=False)
 #        plt.switch_backend('agg')
     earth_wl, earth_flux = run_earth(lamin,lamax, 0.01)
-    wl, flux = run_prox(lamin,lamax, 0.01)
+    wl, flux = clouds_out(lamin,lamax, 0.01)
     print("wl")
     n_phase = 100
     phases = np.linspace(0,2*np.pi,n_phase)
@@ -443,8 +524,8 @@ def flux_calc(lamin,lamax, type):
     wl_low, flux_low = run_prox(lamin, lamax, 1)
    
     if type == 0: 
-         wl, flux = run_prox(lamin,lamax, 0.01)
-         wl_low, flux_low = run_prox(lamin, lamax, 1)
+         wl, flux = clouds_out(lamin,lamax, 0.01)
+         wl_low, flux_low = clouds_out(lamin, lamax, 1)
     elif type == 1:
          wl, flux = ocean_loss(lamin,lamax, 0.01)
          wl_low, flux_low = ocean_loss(lamin,lamax, 1)
@@ -587,9 +668,12 @@ if __name__ == '__main__':
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
         print('job submitted') 
-        fluxes(0.74, 0.78)
-        fluxes(1.25, 1.29)
-#        read_integ()
+        fluxes(0.76, 0.77) 
+        fluxes(1.25, 1.26)
+        basic_plot(0.67, 0.71, 0)
+        basic_plot(0.67, 0.71, 1)
+        basic_plot(0.67, 0.71, 2)
+        read_integ()
     else:
         fluxes(0.60,0.70)
 
