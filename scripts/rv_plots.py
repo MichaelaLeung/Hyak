@@ -203,6 +203,7 @@ def run_earth(lamin, lamax, res):
     total_flux = dir_flux + diff_flux 
     print(len(lam), len(total_flux))
     transmiss = total_flux / solar
+    transmiss = transmiss / max(transmiss)
     return(lam, transmiss)
 
 def clouds_out(lamin, lamax, res):
@@ -520,8 +521,7 @@ def make_gif(lamin,lamax):
 def flux_calc(lamin,lamax, type):
     earth_wl, earth_flux = run_earth(lamin,lamax, 0.01)
     earth_wl_low, earth_flux_low = run_earth(lamin, lamax, 1)
-   
-    wl, flux = high_pass(type)
+
     n_phase = 100
     phases = np.linspace(0,2*np.pi,n_phase)
     inclination = np.pi/2
@@ -545,20 +545,18 @@ def flux_calc(lamin,lamax, type):
 
     i = 0
     while i < n_phase:
-        interp = scipy.interpolate.interp1d(obs_wl[:len(flux),i],flux[:len(obs_wl)],fill_value = "extrapolate")
-        out = interp(earth_wl) * earth_flux
+        high_pass_wl, high_pass_flux = high_pass(obs_wl[:len(flux),i],flux[:len(obs_wl)]) 
+        interp = scipy.interpolate.interp1d(high_pass_wl, high_pass_flux,fill_value = "extrapolate")
+        out.append(interp(earth_wl) * earth_flux)
         i = i+1
     return(wl, out)
 
-def high_pass(type):
+def high_pass(wl, flux, type):
     if type == 0: 
-         wl, flux = clouds_out(lamin,lamax, 0.01)
          wl_low, flux_low = clouds_out(lamin, lamax, 1)
     elif type == 1:
-         wl, flux = ocean_loss(lamin,lamax, 0.01)
          wl_low, flux_low = ocean_loss(lamin,lamax, 1)
     elif type == 2:      
-         wl, flux = ocean_outgassing(lamin,lamax, 0.01)
          wl_low, flux_low = ocean_outgassing(lamin,lamax, 1)
     long_flux = []
     for i in flux_low:
