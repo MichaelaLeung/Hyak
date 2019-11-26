@@ -519,19 +519,9 @@ def make_gif(lamin,lamax):
 
 def flux_calc(lamin,lamax, type):
     earth_wl, earth_flux = run_earth(lamin,lamax, 0.01)
-    wl, flux = run_prox(lamin,lamax, 0.01)
     earth_wl_low, earth_flux_low = run_earth(lamin, lamax, 1)
-    wl_low, flux_low = run_prox(lamin, lamax, 1)
    
-    if type == 0: 
-         wl, flux = clouds_out(lamin,lamax, 0.01)
-         wl_low, flux_low = clouds_out(lamin, lamax, 1)
-    elif type == 1:
-         wl, flux = ocean_loss(lamin,lamax, 0.01)
-         wl_low, flux_low = ocean_loss(lamin,lamax, 1)
-    elif type == 2:      
-         wl, flux = ocean_outgassing(lamin,lamax, 0.01)
-         wl_low, flux_low = ocean_outgassing(lamin,lamax, 1)
+    wl, flux = high_pass(type)
     n_phase = 100
     phases = np.linspace(0,2*np.pi,n_phase)
     inclination = np.pi/2
@@ -553,31 +543,23 @@ def flux_calc(lamin,lamax, type):
     inclination = np.pi/2.9
     obs_wl = np.outer(wl,(1+rv/c))
 
-    fluxes_low = np.outer(earth_flux_low, np.ones(n_phase))
-    temp = np.arccos(-np.sin(inclination)*np.cos(phases))
-    phase_function = ((np.sin(temp)+(np.pi-temp)*(np.cos(temp)))/(np.pi))
-    #season = 0.55 #0-2PI march max
-    season = -0.55 #july min?
-    rv_bary = (29.8 * np.sin((11.2/365.)*phases + season))
-    #rv_orb = (np.sqrt((G*m_prox)/(sma_m)) * np.sin(inclination)/1000 *np.sin(phases))
-    rv_orb = (sma*2*np.pi)/967680* np.sin(inclination) *np.sin(phases)
-    rv_sys = -21.7 * np.ones_like(phases)
-    #rv_bary = (29.8 * np.sin((11.2/365.)*phases))
-    rv = rv_sys + rv_orb - rv_bary
-    inclination = np.pi/2.9
-    obs_wl_low  = np.outer(wl_low,(1+rv/c))
-
     i = 0
     while i < n_phase:
         interp = scipy.interpolate.interp1d(obs_wl[:len(flux),i],flux[:len(obs_wl)],fill_value = "extrapolate")
         out = interp(earth_wl) * earth_flux
-        interp_low = scipy.interpolate.interp1d(obs_wl_low[:len(flux_low),i],flux_low[:len(obs_wl_low)],fill_value = "extrapolate")
-        out_low = interp(earth_wl_low) * earth_flux_low
-        integ_calc(wl, out, wl_low, out_low, i, lamin, type) 
         i = i+1
+    return(wl, out)
 
-def integ_calc(wl, flux, wl_low, flux_low, z, lamin, type):
-    f = open("/gscratch/vsm/mwjl/projects/high_res/scripts/integrations_" + str(lamin) + "transmiss" + str(type) +".txt", "a")
+def high_pass(type):
+    if type == 0: 
+         wl, flux = clouds_out(lamin,lamax, 0.01)
+         wl_low, flux_low = clouds_out(lamin, lamax, 1)
+    elif type == 1:
+         wl, flux = ocean_loss(lamin,lamax, 0.01)
+         wl_low, flux_low = ocean_loss(lamin,lamax, 1)
+    elif type == 2:      
+         wl, flux = ocean_outgassing(lamin,lamax, 0.01)
+         wl_low, flux_low = ocean_outgassing(lamin,lamax, 1)
     long_flux = []
     for i in flux_low:
         j = 0
@@ -606,7 +588,11 @@ def integ_calc(wl, flux, wl_low, flux_low, z, lamin, type):
         diff = abs(mixed[i] - flattened[i])
         out.append(diff)
         i = i+1
-    import scipy.integrate as integrate
+    return(wl, out)
+
+def integ_calc(lamin,lamax, type):
+    f = open("/gscratch/vsm/mwjl/projects/high_res/scripts/integrations_" + str(lamin) + "transmiss" + str(type) +".txt", "a")
+    wl, out = flux_calc(lamin, lamax, type)
     adds = integrate.trapz(out[:len(wl)], wl[:len(out)])
     print(adds)    
     name = str(z) + "   " + str(abs(adds)) 
@@ -615,18 +601,18 @@ def integ_calc(wl, flux, wl_low, flux_low, z, lamin, type):
     f.close()
     
 def master_plot():
-    flux_calc(0.74, 0.78, 0)
-    flux_calc(0.67, 0.71, 0)
-    flux_calc(0.61, 0.65, 0)
-    flux_calc(1.25, 1.27, 0)
-    flux_calc(0.74, 0.78, 1)
-    flux_calc(0.67, 0.71, 1)
-    flux_calc(0.61, 0.65, 1)
-    flux_calc(1.25, 1.27, 1)
-    flux_calc(0.74, 0.78, 2)
-    flux_calc(0.67, 0.71, 2)
-    flux_calc(0.61, 0.65, 2)
-    flux_calc(1.25, 1.27, 2)
+    integ_calc(0.74, 0.78, 0)
+    integ_calc(0.67, 0.71, 0)
+    integ_calc(0.61, 0.65, 0)
+    integ_calc(1.25, 1.27, 0)
+    integ_calc(0.74, 0.78, 1)
+    integ_calc(0.67, 0.71, 1)
+    integ_calc(0.61, 0.65, 1)
+    integ_calc(1.25, 1.27, 1)
+    integ_calc(0.74, 0.78, 2)
+    integ_calc(0.67, 0.71, 2)
+    integ_calc(0.61, 0.65, 2)
+    integ_calc(1.25, 1.27, 2)
 
 def read_integ():
     print('starting read_integ')
@@ -668,11 +654,6 @@ if __name__ == '__main__':
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
         print('job submitted') 
-        fluxes(0.76, 0.77) 
-        fluxes(1.25, 1.26)
-        basic_plot(0.67, 0.71, 0)
-        basic_plot(0.67, 0.71, 1)
-        basic_plot(0.67, 0.71, 2)
         read_integ()
     else:
         fluxes(0.60,0.70)
