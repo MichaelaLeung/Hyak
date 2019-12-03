@@ -402,7 +402,8 @@ def fluxes(lamin, lamax):
     fig.savefig("prox0.76a.png", bbox_inches = "tight")
     ax2 = ax.twinx()
     ax2.plot(earth_wl, earth_flux, 'r')
-    ax2.set_xlabel(r"Wavelength [$\mu$]")
+    ax2.axis('off')
+    ax2.set_xlabel(r"Wavelength [$\mu$m]")
 
     fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots/" + str(lamin) +  "_RV.png", bbox_inches = "tight")
 
@@ -452,7 +453,7 @@ def basic_plot(lamin, lamax, type):
     ax.plot(earth_wl[:len(earth_flux)], earth_flux[:len(earth_wl)], label = "original")
     ax.plot(obs_wl[:len(flux)], flux[:len(obs_wl)], label = "shifted")
     ax.set_ylabel("Reflectance")
-    ax.set_xlabel("Wavelength ($\mu$ m)")
+    ax.set_xlabel("Wavelength ($\mu$m)")
     ax.legend()
     fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots/" + str(lamin) + str(type) +  "RV_dopp.png", bbox_inches = "tight")
 
@@ -521,6 +522,12 @@ def make_gif(lamin,lamax):
 def flux_calc(lamin,lamax, type):
     earth_wl, earth_flux = run_earth(lamin,lamax, 0.01)
     earth_wl_low, earth_flux_low = run_earth(lamin, lamax, 1)
+    if type == 0:
+         wl, flux = clouds_out(lamin, lamax,0.01)
+    elif type == 1:
+         wl, flux = ocean_loss(lamin,lamax,0.01)
+    elif type == 2:
+         wl, flux = ocean_outgassing(lamin,lamax, 0.01)
 
     n_phase = 100
     phases = np.linspace(0,2*np.pi,n_phase)
@@ -545,7 +552,7 @@ def flux_calc(lamin,lamax, type):
 
     i = 0
     while i < n_phase:
-        high_pass_wl, high_pass_flux = high_pass(obs_wl[:len(flux),i],flux[:len(obs_wl)]) 
+        high_pass_wl, high_pass_flux = high_pass(obs_wl[:len(flux),i],flux[:len(obs_wl)], type) 
         interp = scipy.interpolate.interp1d(high_pass_wl, high_pass_flux,fill_value = "extrapolate")
         out.append(interp(earth_wl) * earth_flux)
         i = i+1
@@ -652,7 +659,8 @@ if __name__ == '__main__':
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
         print('job submitted') 
-        read_integ()
+       # read_integ()
+        fluxes(0.76, 0.77)
     else:
         fluxes(0.60,0.70)
 
