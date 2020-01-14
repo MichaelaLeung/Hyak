@@ -137,7 +137,7 @@ def earth_like(lamin, lamax, res, cia):
     strato_wl, strato_flux = clouds(lamin, lamax,1, res)
 
     avg_flux = (flux + cirrus_flux + strato_flux)/3
-    return(wl, avg_flux)
+    return(wl, flux)
 
 def ocean_loss(lamin, lamax, res, cia):
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
@@ -193,7 +193,7 @@ def ocean_loss(lamin, lamax, res, cia):
     sflux2 = sim2.output.rad.sflux
 
     adj_flux2 = flux2/sflux2 * math.pi
-    return(wl2, adj_flux2)
+    return(wl2, flux2)
 
 def ocean_outgassing(lamin, lamax, res, cia):
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
@@ -249,7 +249,7 @@ def ocean_outgassing(lamin, lamax, res, cia):
     sflux2 = sim2.output.rad.sflux
 
     adj_flux2 = flux2/sflux2 * math.pi
-    return(wl2, adj_flux2)
+    return(wl2, flux2)
 
 def integrate(lamin, lamax, atmos, cia):
     f = open("/gscratch/vsm/mwjl/projects/high_res/output/integrations_new.txt", "a")
@@ -302,7 +302,7 @@ def integrate(lamin, lamax, atmos, cia):
     import scipy.integrate as integrate
     adds = integrate.trapz(out, wl[:-25])
     name = str(abs(adds)), str(lamin) + "to" + str(lamax), str(cia), str(tag)
-    f = open("/gscratch/vsm/mwjl/projects/high_res/output/integrations_new.txt", "a")
+    f = open("/gscratch/vsm/mwjl/projects/high_res/output/integrations_new_rfl.txt", "a")
     f.write(str(name) + "\n")
 
 def output(lamin, lamax):

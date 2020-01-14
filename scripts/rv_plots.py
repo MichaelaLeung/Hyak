@@ -354,13 +354,13 @@ def fluxes(lamin, lamax):
     out = []
     while i < n_phase:
         interp = scipy.interpolate.interp1d(obs_wl[:len(flux),i],flux[:len(obs_wl)],fill_value = "extrapolate")
-        out.append(interp(earth_wl[:len(flux)]) * flux[:len(earth_wl)])
-
+        temp = interp(earth_wl) * earth_flux
+        out.append(temp)
         i = i+1
     out = np.asarray(out) 
     out = out.transpose()
     print(np.shape(out))
-
+ 
     from matplotlib.collections import LineCollection
 
     # Create figure
@@ -405,7 +405,7 @@ def fluxes(lamin, lamax):
     ax2.axis('off')
     ax2.set_xlabel(r"Wavelength [$\mu$m]")
 
-    fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots/" + str(lamin) +  "_RV.png", bbox_inches = "tight")
+    fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots/" + str(lamin) +  "_RV_thick_line.png", bbox_inches = "tight")
 
 def basic_plot(lamin, lamax, type):
     import platform
