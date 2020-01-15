@@ -362,7 +362,7 @@ def fluxes(lamin, lamax):
     fig, ax = plt.subplots(figsize=(12,10))
     ax.set_ylabel("Phase Angle")
 
-     # Create a continuous norm to map from flux to colors
+    # Create a continuous norm to map from flux to colors
     norm = plt.Normalize(np.min(fluxes2), np.max(fluxes2))
 
     # Loop over phases
@@ -371,27 +371,27 @@ def fluxes(lamin, lamax):
         # Set dimensions
         x = obs_wl[:,i]
         y = phases[i] * np.ones_like(x)
-        z = fluxes[:,i]
+        z = fluxes2[:,i]
 
-    # Define line points and segments
-    points = np.array([x, y]).T.reshape(-1, 1, 2)
-    segments = np.concatenate([points[:-1], points[1:]], axis=1)
+        # Define line points and segments
+        points = np.array([x, y]).T.reshape(-1, 1, 2)
+        segments = np.concatenate([points[:-1], points[1:]], axis=1)
 
-    # Use linecollections to make color lines
-    lc = LineCollection(segments, cmap='bone', norm=norm)
-
-    # Set the values used for colormapping
-    lc.set_array(z)
-    lc.set_linewidth(2)
-    line = ax.add_collection(lc)
-
+        # Use linecollections to make color lines
+        lc = LineCollection(segments, cmap='bone', norm=norm)
+        
+        # Set the values used for colormapping
+        lc.set_array(z)
+        lc.set_linewidth(2)
+        line = ax.add_collection(lc)
+        
     # Set the axis ranges
-    ax.set_xlim(0.76, 0.765)
     ax.set_ylim(min(phases), max(phases))
 
     # Create colorbar
     cbar = fig.colorbar(line)
     cbar.set_label(r"Flux [W/m$^2$/$\mu$m]", rotation = 270, labelpad = 25)
+
 
 
     ax2 = ax.twinx()
