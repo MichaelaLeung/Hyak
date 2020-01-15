@@ -341,15 +341,15 @@ def fluxes(lamin, lamax):
     obs_wl = np.outer(wl,(1+rv/c))
     
     i = 0
-    out = []
+    fluxes = []
 
     while i < n_phase:
         interp = scipy.interpolate.interp1d(obs_wl[:len(flux),i],flux[:len(obs_wl)],fill_value = "extrapolate")
         temp = interp(earth_wl) * earth_flux
-        out.append(temp)
+        fluxes.append(temp)
         i = i+1
-    out = np.asarray(out) 
-    out = out.transpose()
+    fluxes = np.asarray(fluxes) 
+    fluxes = fluxes.transpose()
 
     fluxes = np.outer(out, np.ones(n_phase))
 
