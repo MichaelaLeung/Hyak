@@ -315,8 +315,6 @@ def ocean_outgassing(lamin, lamax, res):
     return(wl2, flux2)
 
 def fluxes(lamin, lamax):
-    lamin = 0.76
-    lamax = 0.765
     earth_wl, earth_flux = run_earth(lamin,lamax, 0.01)
     wl, flux = run_prox(lamin,lamax, 0.01)
     n_phase = 1000
@@ -350,15 +348,15 @@ def fluxes(lamin, lamax):
         i = i+1
     fluxes = np.asarray(fluxes) 
     fluxes = fluxes.transpose()
-
-    fluxes = np.outer(out, np.ones(n_phase))
+    print(fluxes)
+#    fluxes = np.outer(out, np.ones(n_phase))
 
     temp = np.arccos(-np.sin(inclination)*np.cos(phases))
     phase_function = ((np.sin(temp)+(np.pi-temp)*(np.cos(temp)))/(np.pi)) 
 
     fluxes2 = fluxes*(phase_function/phi_90)
 
-    
+    print(fluxes2)   
     from matplotlib.collections import LineCollection
 
     # Create figure
@@ -389,7 +387,7 @@ def fluxes(lamin, lamax):
     line = ax.add_collection(lc)
 
     # Set the axis ranges
-    ax.set_xlim(0.76, 0.765)
+#    ax.set_xlim(0.76, 0.765)
     ax.set_ylim(min(phases), max(phases))
 
     # Create colorbar
