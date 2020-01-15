@@ -335,9 +335,9 @@ def fluxes(lamin, lamax):
     rv = rv_sys + rv_orb - rv_bary
 
     inclination = np.pi/2.9
-    
+
     obs_wl = np.outer(wl,(1+rv/c))
-    
+
     i = 0
     fluxes = []
 
@@ -348,15 +348,12 @@ def fluxes(lamin, lamax):
         i = i+1
     fluxes = np.asarray(fluxes) 
     fluxes = fluxes.transpose()
-    print(fluxes)
-#    fluxes = np.outer(out, np.ones(n_phase))
 
     temp = np.arccos(-np.sin(inclination)*np.cos(phases))
     phase_function = ((np.sin(temp)+(np.pi-temp)*(np.cos(temp)))/(np.pi)) 
 
     fluxes2 = fluxes*(phase_function/phi_90)
 
-    print(fluxes2)   
     from matplotlib.collections import LineCollection
 
     # Create figure
