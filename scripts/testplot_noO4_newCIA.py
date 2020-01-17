@@ -37,8 +37,8 @@ def ocean_loss(lamin, lamax):
     sim.lblin.par_index = 7
     sim.smartin.sza = 57
 
-    sim.smartin.iraylei = 3
-    sim.smartin.vraylei = 1
+    sim.smartin.iraylei = [4]
+    sim.smartin.vraylei = [1]
     
     sim.smartin.FWHM = res
     sim.smartin.sample_res = res
@@ -100,8 +100,8 @@ def ocean_outgassing(lamin, lamax):
     sim.lblin.minwn = 1e4/lamax
     sim.lblin.maxwn = 1e4/lamin
 
-    sim.smartin.iraylei = 3
-    sim.smartin.vraylei = 1
+    sim.smartin.iraylei = [4]
+    sim.smartin.vraylei = [1]
     
     o2 = sim.atmosphere.gases[2]
     o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
@@ -155,8 +155,8 @@ def ocean_loss_noO4(lamin, lamax):
     sim2.lblin.minwn = 1e4/lamax
     sim2.lblin.maxwn = 1e4/lamin
 
-    sim2.smartin.iraylei = 3
-    sim2.smartin.vraylei = 1
+    sim2.smartin.iraylei = [4]
+    sim2.smartin.vraylei = [1]
 
     o2 = sim2.atmosphere.gases[1]
     o2.cia_file = None
@@ -211,8 +211,8 @@ def ocean_outgassing_noO4(lamin, lamax):
     sim2.lblin.minwn = 1e4/lamax
     sim2.lblin.maxwn = 1e4/lamin
 
-    sim.smartin.iraylei = 3
-    sim.smartin.vraylei = 1
+    sim2.smartin.iraylei = [4]
+    sim2.smartin.vraylei = [1]
     
     o2 = sim2.atmosphere.gases[2]
     o2.cia_file = None

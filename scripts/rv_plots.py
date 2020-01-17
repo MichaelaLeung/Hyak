@@ -250,8 +250,8 @@ def ocean_loss(lamin, lamax, res):
     sim.lblin.minwn = 1e4/lamax
     sim.lblin.maxwn = 1e4/lamin
 
-    sim.smartin.iraylei = 3
-    sim.smartin.vraylei = 1
+    sim.smartin.iraylei = [4]
+    sim.smartin.vraylei = [1]
 
     sim.gen_lblscripts()
     sim.run_lblabc()
@@ -304,8 +304,8 @@ def ocean_outgassing(lamin, lamax, res):
     o2 = sim2.atmosphere.gases[2]
     o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
 
-    sim2.smartin.iraylei = 3
-    sim2.smartin.vraylei = 1
+    sim2.smartin.iraylei = [4]
+    sim2.smartin.vraylei = [1]
 
     sim2.gen_lblscripts()
     sim2.run_lblabc()
