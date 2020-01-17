@@ -384,7 +384,7 @@ def fluxes(lamin, lamax):
         line = ax.add_collection(lc)
         
     # Set the axis ranges
-
+    ax.set_xlim(lamin, lamax)
     ax.set_ylim(min(phases), max(phases))
 
     # Create colorbar
@@ -653,7 +653,7 @@ if __name__ == '__main__':
         # On a mox compute node: ready to run
         print('job submitted') 
        # read_integ()
-        fluxes(0.76, 0.77)
+        fluxes(0.76, 0.765)
     else:
         fluxes(0.60,0.70)
 
