@@ -178,7 +178,13 @@ def ocean_loss_hyak(lamin, lamax):
     sim.smartin.maxwn = 1e4/lamin 
 
     sim.lblin.minwn = 1e4/lamax
-    sim.lblin.maxwn = 1e4/lamin 
+    sim.lblin.maxwn = 1e4/lamin
+
+    air_ray = sim.smartin.vraylei[0]
+    air_ray = 0
+
+    o2_ray = sim.smartin.vraylei[4]
+    o2_ray = 1
 
     sim.gen_lblscripts()
     sim.run_lblabc()
@@ -216,6 +222,12 @@ def ocean_outgassing_hyak(lamin, lamax):
     sim2.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
     sim2.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
     sim2.lblin.par_index = 7
+
+    air_ray = sim2.smartin.vraylei[0]
+    air_ray = 0
+
+    o2_ray = sim2.smartin.vraylei[4]
+    o2_ray = 1
 
 
     sim2.smartin.sza = 57
