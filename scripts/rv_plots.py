@@ -55,7 +55,7 @@ def run_prox(lamin, lamax, res):
     sim.smartin.maxwn = 1e4/lamin 
 
     sim.lblin.minwn = 1e4/lamax
-    sim.lblin.maxwn = 1e4/lamin 
+    sim.lblin.maxwn = 1e4/lamin
 
 
     sim.gen_lblscripts()
@@ -315,6 +315,8 @@ def ocean_outgassing(lamin, lamax, res):
     return(wl2, flux2)
 
 def fluxes(lamin, lamax):
+    lamin = 0.76
+    lamax = 0.765
     earth_wl, earth_flux = run_earth(lamin,lamax, 0.01)
     wl, flux = run_prox(lamin,lamax, 0.01)
     n_phase = 1000
@@ -353,7 +355,7 @@ def fluxes(lamin, lamax):
     phase_function = ((np.sin(temp)+(np.pi-temp)*(np.cos(temp)))/(np.pi)) 
 
     fluxes2 = fluxes*(phase_function/phi_90)
-
+    
     from matplotlib.collections import LineCollection
 
     # Create figure
@@ -384,6 +386,7 @@ def fluxes(lamin, lamax):
         line = ax.add_collection(lc)
         
     # Set the axis ranges
+
     ax.set_xlim(lamin, lamax)
     ax.set_ylim(min(phases), max(phases))
 
