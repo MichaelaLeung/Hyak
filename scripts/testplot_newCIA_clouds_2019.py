@@ -116,16 +116,49 @@ def clouds(lamin, lamax, cloud_type):
     sim.gen_lblscripts()
     sim.run_lblabc()
 
-    if cloud_type == 0:
-        sim.aerosols = smart.interface.Aerosols(cirrus=True, stratocum=False)
-        sim.tag = "prox_cirrus"
+    
+    # Create a cirrus cloud mie scattering aerosol mode
+    mie_cirrus = smart.interface.MieMode(mie_file = os.path.join(smart.interface.CLDMIEDIR, "baum_cirrus_de100.mie"),
+                                         mie_skip = 1,
+                                         mie_lines =
+                                         '1,4,5,3',
+                                         iang_smart = 2)
 
-    elif cloud_type == 1:
-        sim.aerosols = smart.interface.Aerosols(cirrus=False, stratocum=True)
-        sim.tag = "prox_strato"
+    # Create an optical depth profile
+    tau_cirrus = smart.interface.CloudTau(vert_file = os.path.join(smart.interface.CLDMIEDIR, "cld_tau.dat"),
+                                          vert_ref_wno = 15400.0,
+                                          vert_skip = 4,
+                                          vert_coord = 1,
+                                          vert_xscale = 1.0e5,
+                                          vert_yscale = 2.0)
 
-    else:
-        pass
+    # Create an Aerosol object with our cirrus mie scattering and optical depths
+    cirrus = smart.interface.Aerosols(miemodes=[mie_cirrus],
+                                      mietau=[tau_cirrus])
+
+    sim_cirrus.aerosols = cirrus
+
+    # Create a stratocumulus cloud mie scattering aerosol mode
+    mie_strato = smart.interface.MieMode(mie_file = os.path.join(smart.interface.CLDMIEDIR, "strato_cum.mie"),
+                                         mie_skip = 19,
+                                         mie_lines = '1,7,8,11',
+                                         iang_smart = 1,
+                                         mom_skip = 17)
+
+    # Create an optical depth profile
+    tau_strato = smart.interface.CloudTau(vert_file = os.path.join(smart.interface.CLDMIEDIR, "cld_tau.dat"),
+                                          vert_ref_wno = 15400.0,
+                                          vert_skip = 28,
+                                          vert_coord = 1,
+                                          vert_xscale = 1.0e5,
+                                          vert_yscale = 1.0)
+
+    # Create an Aerosol object with our stratocumulus mie scattering and optical depths
+    strato = smart.interface.Aerosols(miemodes=[mie_strato],
+                                      mietau=[tau_strato])
+
+    sim_strato.aerosols = strato
+
 
     sim.write_smart(write_file = True)
     sim.run_smart()
