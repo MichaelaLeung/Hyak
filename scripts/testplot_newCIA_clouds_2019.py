@@ -285,6 +285,109 @@ def ocean_outgassing_hyak(lamin, lamax):
     adj_flux2 = flux2/sflux2
     return(wl2, adj_flux2)
 
+def clouds_higho2(lamin, lamax):
+    res = 1/(10*lamin)
+
+    place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim = smart.interface.Smart(tag = "prox")
+    sim.set_run_in_place(place)
+    
+    sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+
+    infile = "/gscratch/vsm/mwjl/projects/high_res/inputs/10bar_O2_wet.pt_filtered.pt"
+    label = "Ocean Outgassing"
+    sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/earth_noveg_highw.alb"
+    sim.set_planet_proxima_b()
+    sim.load_atmosphere_from_pt(infile, addn2 = False)
+    
+    o2 = sim.atmosphere.gases[3]
+    o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
+    label = "Earth-Like"
+    sim.set_planet_proxima_b()
+    sim.set_star_proxima()
+
+    sim.set_executables_automatically()
+
+    sim.lblin.par_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/HITRAN2019.par'
+    sim.lblin.hitran_tag = 'hitran2016'
+    sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
+    sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
+    sim.lblin.par_index = 7
+
+
+    sim.smartin.sza = 57
+
+    sim.smartin.FWHM = res
+    sim.smartin.sample_res = res
+
+    sim.smartin.minwn = 1e4/lamax
+    sim.smartin.maxwn = 1e4/lamin 
+
+    sim.lblin.minwn = 1e4/lamax
+    sim.lblin.maxwn = 1e4/lamin 
+
+
+    sim.gen_lblscripts()
+    sim.run_lblabc()
+
+    
+    # Create a cirrus cloud mie scattering aerosol mode
+    mie_cirrus = smart.interface.MieMode(mie_file = os.path.join(smart.interface.CLDMIEDIR, "baum_cirrus_de100.mie"),
+                                         mie_skip = 1,
+                                         mie_lines =
+                                         '1,4,5,3',
+                                         iang_smart = 2)
+
+    # Create an optical depth profile
+    tau_cirrus = smart.interface.CloudTau(vert_file = os.path.join(smart.interface.CLDMIEDIR, "cld_tau.dat"),
+                                          vert_ref_wno = 15400.0,
+                                          vert_skip = 4,
+                                          vert_coord = 1,
+                                          vert_xscale = 1.0e5,
+                                          vert_yscale = 2.0)
+
+    # Create an Aerosol object with our cirrus mie scattering and optical depths
+    cirrus = smart.interface.Aerosols(miemodes=[mie_cirrus],
+                                      mietau=[tau_cirrus])
+
+    sim.aerosols = cirrus
+
+    # Create a stratocumulus cloud mie scattering aerosol mode
+    mie_strato = smart.interface.MieMode(mie_file = os.path.join(smart.interface.CLDMIEDIR, "strato_cum.mie"),
+                                         mie_skip = 19,
+                                         mie_lines = '1,7,8,11',
+                                         iang_smart = 1,
+                                         mom_skip = 17)
+
+    # Create an optical depth profile
+    tau_strato = smart.interface.CloudTau(vert_file = os.path.join(smart.interface.CLDMIEDIR, "cld_tau.dat"),
+                                          vert_ref_wno = 15400.0,
+                                          vert_skip = 28,
+                                          vert_coord = 1,
+                                          vert_xscale = 1.0e5,
+                                          vert_yscale = 1.0)
+
+    # Create an Aerosol object with our stratocumulus mie scattering and optical depths
+    strato = smart.interface.Aerosols(miemodes=[mie_strato],
+                                      mietau=[tau_strato])
+
+    sim.aerosols = strato
+
+
+    sim.write_smart(write_file = True)
+    sim.run_smart()
+
+    sim.open_outputs()
+    wl = sim.output.rad.lam
+    flux = sim.output.rad.pflux
+    sflux = sim.output.rad.sflux
+
+    adj_flux = flux/sflux
+
+    return(wl, adj_flux)
+
 def plotting(lamin, lamax, atmos, title):
     matplotlib.rc('font',**{'family':'serif','serif':['Computer Modern']})
     matplotlib.rcParams['font.size'] = 25.0
@@ -307,10 +410,13 @@ def plotting(lamin, lamax, atmos, title):
             ax.legend()
         fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots/" + str(fig_name) +  "new_CIA_clouds.png", bbox_inches = "tight")
     else:
-        wl4, flux4 = ocean_outgassing_hyak(lamin, lamax)
+        wl, flux = ocean_outgassing(lamin, lamax)
+        wl2, flux2 = clouds_higho2(lamin, lamax)
+        wl3, flux3 = clouds_o2(lamin, lamax)
+        avg_flux2 = (0.5*flux+0.25*flux2+0.25*flux3)
         fig, ax = plt.subplots(figsize = (10,10))
         ax.plot(wl, avg_flux, label = "1 bar Earth-Like")
-        ax.plot(wl4, flux4, label = "10 bar Ocean Outgassing")
+        ax.plot(wl, avg_flux2, label = "10 bar Ocean Outgassing")
         ax.set_title(title)
         ax.set_ylabel("Reflectance")
         ax.set_xlabel("Wavelength ($\mu$m)")
