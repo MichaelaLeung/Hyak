@@ -67,6 +67,32 @@ def earth_like_hyak(lamin, lamax):
     adj_flux = (flux/sflux)
     return(wl, adj_flux)
 
+def cloud_frac():
+    infile2 = "10bar_O2_wet.pt_filtered.pt"
+    data = np.genfromtxt(infile2)
+    data = data[56:61, 0:2]
+    press = data[:,0]
+    press = np.log(press)
+    temp = data[:,1]
+    interpd = interp1d(temp, press)
+    strato_temp = 281.1
+    cirrus_temp = 227.5
+    strato_out = interpd(strato_temp)
+    cirrus_out = interpd(cirrus_temp)
+    strato = np.exp(strato_out)
+    cirrus = np.exp(cirrus_out)
+    strato = strato / 10**5
+    cirrus = cirrus / 10**5
+
+    strato_bar = 0.826
+    cirrus_bar = 0.267
+
+    f_cirrus = cirrus / cirrus_bar * 10**5
+    f_strato = strato / strato_bar * 10**5
+
+    return(f_cirrus, f_strato)
+
+
 def cirrus(lamin, lamax):
     res = 1/(10*lamin)
 
@@ -114,6 +140,7 @@ def cirrus(lamin, lamax):
     sim.gen_lblscripts()
     sim.run_lblabc()
 
+    f_cirrus, f_strato = cloud_frac()
     
     # Create a cirrus cloud mie scattering aerosol mode
     mie_cirrus = smart.interface.MieMode(mie_file = os.path.join(smart.interface.CLDMIEDIR, "baum_cirrus_de100.mie"),
@@ -127,7 +154,7 @@ def cirrus(lamin, lamax):
                                           vert_ref_wno = 15400.0,
                                           vert_skip = 4,
                                           vert_coord = 1,
-                                          vert_xscale = 1.0e5,
+                                          vert_xscale = f_cirrus,
                                           vert_yscale = 2.0)
 
     # Create an Aerosol object with our cirrus mie scattering and optical depths
@@ -195,6 +222,7 @@ def strato(lamin, lamax):
     sim.gen_lblscripts()
     sim.run_lblabc()
 
+    f_cirrus, f_strato = cloud_frac()
 
     # Create a stratocumulus cloud mie scattering aerosol mode
     mie_strato = smart.interface.MieMode(mie_file = os.path.join(smart.interface.CLDMIEDIR, "strato_cum.mie"),
@@ -208,7 +236,7 @@ def strato(lamin, lamax):
                                           vert_ref_wno = 15400.0,
                                           vert_skip = 28,
                                           vert_coord = 1,
-                                          vert_xscale = 1.0e5,
+                                          vert_xscale = f_strato,
                                           vert_yscale = 1.0)
 
     # Create an Aerosol object with our stratocumulus mie scattering and optical depths
@@ -333,6 +361,7 @@ def outgassing_cirrus(lamin, lamax):
     sim.gen_lblscripts()
     sim.run_lblabc()
 
+    f_cirrus, f_strato = cloud_frac()
     
     # Create a cirrus cloud mie scattering aerosol mode
     mie_cirrus = smart.interface.MieMode(mie_file = os.path.join(smart.interface.CLDMIEDIR, "baum_cirrus_de100.mie"),
@@ -346,7 +375,7 @@ def outgassing_cirrus(lamin, lamax):
                                           vert_ref_wno = 15400.0,
                                           vert_skip = 4,
                                           vert_coord = 1,
-                                          vert_xscale = 1.0e5,
+                                          vert_xscale = f_cirrus,
                                           vert_yscale = 2.0)
 
     # Create an Aerosol object with our cirrus mie scattering and optical depths
@@ -413,6 +442,8 @@ def outgassing_strato(lamin, lamax):
 
     sim.gen_lblscripts()
     sim.run_lblabc()
+
+    f_cirrus, f_strato = cloud_frac()
     
      # Create a stratocumulus cloud mie scattering aerosol mode
     mie_strato = smart.interface.MieMode(mie_file = os.path.join(smart.interface.CLDMIEDIR, "strato_cum.mie"),
@@ -426,7 +457,7 @@ def outgassing_strato(lamin, lamax):
                                           vert_ref_wno = 15400.0,
                                           vert_skip = 28,
                                           vert_coord = 1,
-                                          vert_xscale = 1.0e5,
+                                          vert_xscale = f_strato,
                                           vert_yscale = 1.0)
 
     # Create an Aerosol object with our stratocumulus mie scattering and optical depths
@@ -498,6 +529,8 @@ def strato_noCIA(lamin, lamax):
     sim.gen_lblscripts()
     sim.run_lblabc()
 
+    f_cirrus, f_strato = cloud_frac()
+
     
     # Create a cirrus cloud mie scattering aerosol mode
     mie_cirrus = smart.interface.MieMode(mie_file = os.path.join(smart.interface.CLDMIEDIR, "baum_cirrus_de100.mie"),
@@ -511,7 +544,7 @@ def strato_noCIA(lamin, lamax):
                                           vert_ref_wno = 15400.0,
                                           vert_skip = 4,
                                           vert_coord = 1,
-                                          vert_xscale = 1.0e5,
+                                          vert_xscale = f_cirrus,
                                           vert_yscale = 2.0)
 
     # Create an Aerosol object with our cirrus mie scattering and optical depths
@@ -583,6 +616,8 @@ def cirrus_noCIA(lamin, lamax):
     sim.gen_lblscripts()
     sim.run_lblabc()
 
+    f_cirrus, f_strato = cloud_frac()
+
     
     # Create a cirrus cloud mie scattering aerosol mode
     mie_cirrus = smart.interface.MieMode(mie_file = os.path.join(smart.interface.CLDMIEDIR, "baum_cirrus_de100.mie"),
@@ -596,7 +631,7 @@ def cirrus_noCIA(lamin, lamax):
                                           vert_ref_wno = 15400.0,
                                           vert_skip = 4,
                                           vert_coord = 1,
-                                          vert_xscale = 1.0e5,
+                                          vert_xscale = f_cirrus,
                                           vert_yscale = 2.0)
 
     # Create an Aerosol object with our cirrus mie scattering and optical depths
@@ -691,7 +726,7 @@ def long():
     ax.set_xlabel("Wavelength ($\mu$m)")
     
 
-   
+
 if __name__ == '__main__':
 
     import platform
