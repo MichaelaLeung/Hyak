@@ -243,7 +243,7 @@ def strato(lamin, lamax):
     strato = smart.interface.Aerosols(miemodes=[mie_strato],
                                       mietau=[tau_strato])
 
-    sim_strato.aerosols = strato
+    sim.aerosols = strato
 
 
     sim.write_smart(write_file = True)
@@ -258,7 +258,7 @@ def strato(lamin, lamax):
 
     return(wl, adj_flux)
 
-def ocean_outgassing_hyak(lamin, lamax):
+def ocean_outgassing(lamin, lamax):
     res = 1/(10*lamin)
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
 
@@ -282,8 +282,8 @@ def ocean_outgassing_hyak(lamin, lamax):
     sim2.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
     sim2.lblin.par_index = 7
 
-    sim.smartin.iraylei = [4]
-    sim.smartin.vraylei = [1]
+    sim2.smartin.iraylei = [4]
+    sim2.smartin.vraylei = [1]
 
     sim2.smartin.sza = 57
     sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
@@ -512,7 +512,7 @@ def strato_noCIA(lamin, lamax):
 
     sim.smartin.sza = 57
 
-    o2 = sim2.atmosphere.gases[2]
+    o2 = sim.atmosphere.gases[2]
     o2.cia_file = None
 
 
@@ -599,7 +599,7 @@ def cirrus_noCIA(lamin, lamax):
 
     sim.smartin.sza = 57
 
-    o2 = sim2.atmosphere.gases[2]
+    o2 = sim.atmosphere.gases[2]
     o2.cia_file = None
 
 
@@ -654,7 +654,7 @@ def cirrus_noCIA(lamin, lamax):
 
 
 
-def plotting(lamin, lamax, atmos, title):
+def plotting(lamin, lamax, title):
     matplotlib.rc('font',**{'family':'serif','serif':['Computer Modern']})
     matplotlib.rcParams['font.size'] = 25.0
     matplotlib.rc('text', usetex=False)
@@ -672,7 +672,7 @@ def plotting(lamin, lamax, atmos, title):
 
     fig, ax = plt.subplots(figsize = (10,10))
     ax.plot(wl, avg_flux, label = "1 bar Earth-Like")
-    ax.plot(wl, avg_flux2, label = "10 bar Ocean Outgassing")
+    ax.plot(ocean_wl, avg_flux2, label = "10 bar Ocean Outgassing")
     ax.set_title(title)
     ax.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength ($\mu$m)")
@@ -681,7 +681,7 @@ def plotting(lamin, lamax, atmos, title):
     fig.savefig("/gscratch/vsm/mwjl/projects/high_res/plots/" + str(fig_name) +  "new_CIA_ocean_clouds.png", bbox_inches = "tight")
 
 
-def plotting_noO4(lamin, lamax, atmos, title):
+def plotting_noO4(lamin, lamax,  title):
     matplotlib.rc('font',**{'family':'serif','serif':['Computer Modern']})
     matplotlib.rcParams['font.size'] = 25.0
     matplotlib.rc('text', usetex=False)
@@ -690,17 +690,18 @@ def plotting_noO4(lamin, lamax, atmos, title):
     ocean_wl, ocean_flux = ocean_outgassing(lamin, lamax)
     ocean_wl2, ocean_flux2 = outgassing_cirrus(lamin, lamax)
     ocean_wl3, ocean_flux3 = outgassing_strato(lamin, lamax)
-    avg_flux2 = (0.5*ocean_flux+0.25*ocean_flux2+0.25*ocean_flux3)
+    avg_flux = (0.5*ocean_flux+0.25*ocean_flux2+0.25*ocean_flux3)
     
     noo4_wl, noo4_flux = ocean_outgassing(lamin, lamax)
     noo4_wl2, noo4_flux2 = cirrus_noCIA(lamin, lamax)
     noo4_wl3, noo4_flux3 = strato_noCIA(lamin, lamax)
+    print(len(noo4_wl), len(noo4_wl2), len(noo4_wl3))
     avg_flux2 = (0.5*noo4_flux+0.25*noo4_flux2+0.25*noo4_flux3)
 
     
     fig, ax = plt.subplots(figsize = (10,10))
     ax.plot(ocean_wl, avg_flux, label = "10 bar Ocean Outgassing")
-    ax.plot(noo4_wl, avg_flux2, label = label = "10 bar Ocean Loss, no O$_2$-O$_2$")
+    ax.plot(noo4_wl, avg_flux2, label = "10 bar Ocean Loss, no O$_2$-O$_2$")
     ax.set_title(title)
     ax.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength ($\mu$m)")
@@ -756,6 +757,7 @@ if __name__ == '__main__':
         plotting_noO4(0.67,0.71, "Oxygen B band (0.69) Ocean Outgassing")
         plotting_nO4(0.74,0.78,"Oxygen A band (0.76) Ocean Outgassing")
         plotting_noO4(1.25,1.29,"1.27 Ocean Outgassing")
+        long()
     else:
         plotting(0.61,0.645,1,"Gamma band (0.63) Ocean Outgassing")
 
