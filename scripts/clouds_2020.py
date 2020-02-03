@@ -697,19 +697,23 @@ def plotting_noO4(lamin, lamax,  title):
     ocean_wl, ocean_flux = ocean_outgassing(lamin, lamax)
     ocean_wl2, ocean_flux2 = outgassing_cirrus(lamin, lamax)
     ocean_wl3, ocean_flux3 = outgassing_strato(lamin, lamax)
-    m, m_clouds = smart.utils.get_common_masks(ocean_wl, ocean_wl2)
-    avg_flux = (0.5*ocean_flux[m_clouds]+0.25*ocean_flux2[m_clouds]+0.25*ocean_flux3[m_clouds])
+    m, m_clouds = smart.utils.get_common_masks(ocean_wl, ocean_wl3)
+    print(len(m_clouds), len(ocean_wl), len(ocean_wl2), len(ocean_wl3))
+    avg_flux = (0.5*ocean_flux[m]+0.25*ocean_flux2[m]+0.25*ocean_flux3[m])
+    fig, ax = plt.subplots(figsize = (10,10))
+    ax.plot(ocean_wl2[m], avg_flux[m], label = "10 bar Ocean Outgassing")
     
     noo4_wl, noo4_flux = ocean_outgassing(lamin, lamax)
     noo4_wl2, noo4_flux2 = cirrus_noCIA(lamin, lamax)
     noo4_wl3, noo4_flux3 = strato_noCIA(lamin, lamax)
     print(len(noo4_wl), len(noo4_wl2), len(noo4_wl3))
-    m, m_clouds = smart.utils.get_common_masks(noo4_wl, noo4_wl2)
-    avg_flux = (0.5*noo4_flux[m_clouds]+0.25*noo4_flux2[m_clouds]+0.25*noo4_flux3[m_clouds])
+    m, m_clouds = smart.utils.get_common_masks(noo4_wl, noo4_wl3)
+    m_clouds = m_clouds[:-1]
+    avg_flux2 = (0.5*noo4_flux[m_clouds]+0.25*noo4_flux2[m_clouds]+0.25*noo4_flux3[m_clouds])
 
     
-    fig, ax = plt.subplots(figsize = (10,10))
-    ax.plot(ocean_wl[m_clouds], avg_flux[m_clouds], label = "10 bar Ocean Outgassing")
+   # fig, ax = plt.subplots(figsize = (10,10))
+   # ax.plot(ocean_wl2[m_clouds], avg_flux[m_clouds], label = "10 bar Ocean Outgassing")
     ax.plot(noo4_wl[m_clouds], avg_flux2[m_clouds], label = "10 bar Ocean Loss, no O$_2$-O$_2$")
     ax.set_title(title)
     ax.set_ylabel("Reflectance")
@@ -757,15 +761,16 @@ if __name__ == '__main__':
                                rm_after_submit = True)
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
-        plotting(0.61,0.65, "Gamma band (0.63) Ocean Outgassing")
-        plotting(0.67,0.71, "Oxygen B band (0.69) Ocean Outgassing")
-        plotting(0.74,0.78,"Oxygen A band (0.76) Ocean Outgassing")
-        plotting(1.25,1.29,"1.27 Ocean Outgassing")
+#        plotting(0.61,0.65, "Gamma band (0.63) Ocean Outgassing")
+#        plotting(0.67,0.71, "Oxygen B band (0.69) Ocean Outgassing")
+#        plotting(0.74,0.78,"Oxygen A band (0.76) Ocean Outgassing")
+#        plotting(1.25,1.29,"1.27 Ocean Outgassing")
 
         plotting_noO4(0.61,0.65, "Gamma band (0.63) Ocean Outgassing")
         plotting_noO4(0.67,0.71, "Oxygen B band (0.69) Ocean Outgassing")
-        plotting_nO4(0.74,0.78,"Oxygen A band (0.76) Ocean Outgassing")
+        plotting_noO4(0.74,0.78,"Oxygen A band (0.76) Ocean Outgassing")
         plotting_noO4(1.25,1.29,"1.27 Ocean Outgassing")
+
         long()
     else:
         plotting(0.61,0.645,1,"Gamma band (0.63) Ocean Outgassing")
