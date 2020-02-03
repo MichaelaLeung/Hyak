@@ -665,20 +665,21 @@ def plotting(lamin, lamax, title):
     wl2, flux2 = cirrus(lamin, lamax)
     wl3, flux3 = strato(lamin, lamax)
     m, m_clouds = smart.utils.get_common_masks(wl, wl2)
-    print(len(flux[m]), len(flux2[m_clouds]), len(flux3[m_clouds]))
-    avg_flux = (0.5*flux[m]+0.25*flux2[m_clouds]+0.25*flux3[m_clouds])
+    print(m, m_clouds)
+    print(len(flux[m_clouds]), len(flux2[m_clouds]), len(flux3[m_clouds]))
+    avg_flux = (0.5*flux[m_clouds]+0.25*flux2[m_clouds]+0.25*flux3[m_clouds])
     
     ocean_wl, ocean_flux = ocean_outgassing(lamin, lamax)
     ocean_wl2, ocean_flux2 = outgassing_cirrus(lamin, lamax)
     ocean_wl3, ocean_flux3 = outgassing_strato(lamin, lamax)
     m, m_clouds = smart.utils.get_common_masks(ocean_wl, ocean_wl2)
-
+    print(m, m_clouds)
     print(len(ocean_flux), len(ocean_flux2), len(ocean_flux3))
-    avg_flux2 = (0.5*ocean_flux[m]+0.25*ocean_flux2[m_clouds]+0.25*ocean_flux3[m_clouds])
+    avg_flux2 = (0.5*ocean_flux[m_clouds]+0.25*ocean_flux2[m_clouds]+0.25*ocean_flux3[m_clouds])
 
     fig, ax = plt.subplots(figsize = (10,10))
-    ax.plot(wl, avg_flux, label = "1 bar Earth-Like")
-    ax.plot(ocean_wl, avg_flux2, label = "10 bar Ocean Outgassing")
+    ax.plot(wl[m_clouds], avg_flux[m_clouds], label = "1 bar Earth-Like")
+    ax.plot(ocean_wl[m_clouds], avg_flux2[m_clouds], label = "10 bar Ocean Outgassing")
     ax.set_title(title)
     ax.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength ($\mu$m)")
@@ -708,8 +709,8 @@ def plotting_noO4(lamin, lamax,  title):
 
     
     fig, ax = plt.subplots(figsize = (10,10))
-    ax.plot(ocean_wl, avg_flux, label = "10 bar Ocean Outgassing")
-    ax.plot(noo4_wl, avg_flux2, label = "10 bar Ocean Loss, no O$_2$-O$_2$")
+    ax.plot(ocean_wl[m_clouds], avg_flux[m_clouds], label = "10 bar Ocean Outgassing")
+    ax.plot(noo4_wl[m_clouds], avg_flux2[m_clouds], label = "10 bar Ocean Loss, no O$_2$-O$_2$")
     ax.set_title(title)
     ax.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength ($\mu$m)")
