@@ -664,7 +664,7 @@ def plotting(lamin, lamax, title):
     wl, flux = earth_like_hyak(lamin, lamax)
     wl2, flux2 = cirrus(lamin, lamax)
     wl3, flux3 = strato(lamin, lamax)
-    m, m_clouds = get_common_masks(wl, wl2)
+    m, m_clouds = smart.utils.get_common_masks(wl, wl2)
     print(len(flux[m]), len(flux2[m_clouds]), len(flux3[m_clouds]))
     avg_flux = (0.5*flux[m]+0.25*flux2[m_clouds]+0.25*flux3[m_clouds])
     
