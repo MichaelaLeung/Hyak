@@ -9,6 +9,7 @@ import datetime
 matplotlib.rcParams['text.usetex'] = False
 import random
 import math
+from scipy.interpolate import interp1d
 
 def earth_like_hyak(lamin, lamax):
     
@@ -68,7 +69,7 @@ def earth_like_hyak(lamin, lamax):
     return(wl, adj_flux)
 
 def cloud_frac():
-    infile2 = "10bar_O2_wet.pt_filtered.pt"
+    infile2 = "/gscratch/vsm/mwjl/projects/high_res/inputs/10bar_O2_wet.pt_filtered.pt"
     data = np.genfromtxt(infile2)
     data = data[56:61, 0:2]
     press = data[:,0]
@@ -84,8 +85,8 @@ def cloud_frac():
     strato = strato / 10**5
     cirrus = cirrus / 10**5
 
-    strato_bar = 0.826
-    cirrus_bar = 0.267
+    strato_bar = 0.847
+    cirrus_bar = 0.331
 
     f_cirrus = cirrus / cirrus_bar * 10**5
     f_strato = strato / strato_bar * 10**5
@@ -97,7 +98,7 @@ def cirrus(lamin, lamax):
     res = 1/(10*lamin)
 
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim = smart.interface.Smart(tag = "prox")
+    sim = smart.interface.Smart(tag = "prox_cirrus")
     sim.set_run_in_place(place)
     
     sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
@@ -151,7 +152,7 @@ def cirrus(lamin, lamax):
 
     # Create an optical depth profile
     tau_cirrus = smart.interface.CloudTau(vert_file = os.path.join(smart.interface.CLDMIEDIR, "cld_tau.dat"),
-                                          vert_ref_wno = 15400.0,
+                                          vert_ref_wno = 1e4/lamax,
                                           vert_skip = 4,
                                           vert_coord = 1,
                                           vert_xscale = f_cirrus,
@@ -179,7 +180,7 @@ def strato(lamin, lamax):
     res = 1/(10*lamin)
 
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim = smart.interface.Smart(tag = "prox")
+    sim = smart.interface.Smart(tag = "prox_strato")
     sim.set_run_in_place(place)
     
     sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
@@ -233,7 +234,7 @@ def strato(lamin, lamax):
 
     # Create an optical depth profile
     tau_strato = smart.interface.CloudTau(vert_file = os.path.join(smart.interface.CLDMIEDIR, "cld_tau.dat"),
-                                          vert_ref_wno = 15400.0,
+                                          vert_ref_wno = 1e4/lamax,
                                           vert_skip = 28,
                                           vert_coord = 1,
                                           vert_xscale = f_strato,
@@ -318,7 +319,7 @@ def outgassing_cirrus(lamin, lamax):
     res = 1/(10*lamin)
 
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim = smart.interface.Smart(tag = "prox")
+    sim = smart.interface.Smart(tag = "highw_cirrus")
     sim.set_run_in_place(place)
     
     sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
@@ -372,7 +373,7 @@ def outgassing_cirrus(lamin, lamax):
 
     # Create an optical depth profile
     tau_cirrus = smart.interface.CloudTau(vert_file = os.path.join(smart.interface.CLDMIEDIR, "cld_tau.dat"),
-                                          vert_ref_wno = 15400.0,
+                                          vert_ref_wno = 1e4/lamax,
                                           vert_skip = 4,
                                           vert_coord = 1,
                                           vert_xscale = f_cirrus,
@@ -400,7 +401,7 @@ def outgassing_strato(lamin, lamax):
     res = 1/(10*lamin)
 
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim = smart.interface.Smart(tag = "prox")
+    sim = smart.interface.Smart(tag = "highw_strato")
     sim.set_run_in_place(place)
     
     sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
@@ -454,7 +455,7 @@ def outgassing_strato(lamin, lamax):
 
     # Create an optical depth profile
     tau_strato = smart.interface.CloudTau(vert_file = os.path.join(smart.interface.CLDMIEDIR, "cld_tau.dat"),
-                                          vert_ref_wno = 15400.0,
+                                          vert_ref_wno = 1e4/lamax,
                                           vert_skip = 28,
                                           vert_coord = 1,
                                           vert_xscale = f_strato,
@@ -482,7 +483,7 @@ def strato_noCIA(lamin, lamax):
     res = 1/(10*lamin)
 
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim = smart.interface.Smart(tag = "prox")
+    sim = smart.interface.Smart(tag = "highw_strato_noO4")
     sim.set_run_in_place(place)
     
     sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
@@ -541,7 +542,7 @@ def strato_noCIA(lamin, lamax):
 
     # Create an optical depth profile
     tau_cirrus = smart.interface.CloudTau(vert_file = os.path.join(smart.interface.CLDMIEDIR, "cld_tau.dat"),
-                                          vert_ref_wno = 15400.0,
+                                          vert_ref_wno = 1e4/lamax,
                                           vert_skip = 4,
                                           vert_coord = 1,
                                           vert_xscale = f_cirrus,
@@ -569,7 +570,7 @@ def cirrus_noCIA(lamin, lamax):
     res = 1/(10*lamin)
 
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim = smart.interface.Smart(tag = "prox")
+    sim = smart.interface.Smart(tag = "highw_cirrus_noO4")
     sim.set_run_in_place(place)
     
     sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
@@ -628,7 +629,7 @@ def cirrus_noCIA(lamin, lamax):
 
     # Create an optical depth profile
     tau_cirrus = smart.interface.CloudTau(vert_file = os.path.join(smart.interface.CLDMIEDIR, "cld_tau.dat"),
-                                          vert_ref_wno = 15400.0,
+                                          vert_ref_wno = 1e4/lamax,
                                           vert_skip = 4,
                                           vert_coord = 1,
                                           vert_xscale = f_cirrus,
@@ -663,11 +664,13 @@ def plotting(lamin, lamax, title):
     wl, flux = earth_like_hyak(lamin, lamax)
     wl2, flux2 = cirrus(lamin, lamax)
     wl3, flux3 = strato(lamin, lamax)
+    print(len(flux), len(flux2), len(flux3))
     avg_flux = (0.5*flux+0.25*flux2+0.25*flux3)
     
     ocean_wl, ocean_flux = ocean_outgassing(lamin, lamax)
     ocean_wl2, ocean_flux2 = outgassing_cirrus(lamin, lamax)
     ocean_wl3, ocean_flux3 = outgassing_strato(lamin, lamax)
+    print(len(ocean_flux), len(ocean_flux2), len(ocean_flux3))
     avg_flux2 = (0.5*ocean_flux+0.25*ocean_flux2+0.25*ocean_flux3)
 
     fig, ax = plt.subplots(figsize = (10,10))
@@ -719,7 +722,7 @@ def long():
     ocean_wl, ocean_flux = ocean_outgassing(lamin, lamax)
     ocean_wl2, ocean_flux2 = outgassing_cirrus(lamin, lamax)
     ocean_wl3, ocean_flux3 = outgassing_strato(lamin, lamax)
-    avg_flux2 = (0.5*ocean_flux+0.25*ocean_flux2+0.25*ocean_flux3)
+    avg_flux = (0.5*ocean_flux+0.25*ocean_flux2+0.25*ocean_flux3)
 
     ax.plot(wl, avg_flux)
     ax.set_title("Simulated 10 bar oxygen ocean planet orbiting Proxima Centauri")
@@ -748,12 +751,12 @@ if __name__ == '__main__':
                                rm_after_submit = True)
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
-        plotting(0.61,0.645, "Gamma band (0.63) Ocean Outgassing")
+        plotting(0.61,0.65, "Gamma band (0.63) Ocean Outgassing")
         plotting(0.67,0.71, "Oxygen B band (0.69) Ocean Outgassing")
         plotting(0.74,0.78,"Oxygen A band (0.76) Ocean Outgassing")
         plotting(1.25,1.29,"1.27 Ocean Outgassing")
 
-        plotting_noO4(0.61,0.645, "Gamma band (0.63) Ocean Outgassing")
+        plotting_noO4(0.61,0.65, "Gamma band (0.63) Ocean Outgassing")
         plotting_noO4(0.67,0.71, "Oxygen B band (0.69) Ocean Outgassing")
         plotting_nO4(0.74,0.78,"Oxygen A band (0.76) Ocean Outgassing")
         plotting_noO4(1.25,1.29,"1.27 Ocean Outgassing")
