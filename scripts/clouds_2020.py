@@ -671,8 +671,10 @@ def plotting(lamin, lamax, title):
     ocean_wl, ocean_flux = ocean_outgassing(lamin, lamax)
     ocean_wl2, ocean_flux2 = outgassing_cirrus(lamin, lamax)
     ocean_wl3, ocean_flux3 = outgassing_strato(lamin, lamax)
+    m, m_clouds = smart.utils.get_common_masks(ocean_wl, ocean_wl2)
+
     print(len(ocean_flux), len(ocean_flux2), len(ocean_flux3))
-    avg_flux2 = (0.5*ocean_flux+0.25*ocean_flux2+0.25*ocean_flux3)
+    avg_flux2 = (0.5*ocean_flux[m]+0.25*ocean_flux2[m_clouds]+0.25*ocean_flux3[m_clouds])
 
     fig, ax = plt.subplots(figsize = (10,10))
     ax.plot(wl, avg_flux, label = "1 bar Earth-Like")
@@ -694,13 +696,15 @@ def plotting_noO4(lamin, lamax,  title):
     ocean_wl, ocean_flux = ocean_outgassing(lamin, lamax)
     ocean_wl2, ocean_flux2 = outgassing_cirrus(lamin, lamax)
     ocean_wl3, ocean_flux3 = outgassing_strato(lamin, lamax)
-    avg_flux = (0.5*ocean_flux+0.25*ocean_flux2+0.25*ocean_flux3)
+    m, m_clouds = smart.utils.get_common_masks(ocean_wl, ocean_wl2)
+    avg_flux = (0.5*ocean_flux[m]+0.25*ocean_flux2[m_clouds]+0.25*ocean_flux3[m_clouds])
     
     noo4_wl, noo4_flux = ocean_outgassing(lamin, lamax)
     noo4_wl2, noo4_flux2 = cirrus_noCIA(lamin, lamax)
     noo4_wl3, noo4_flux3 = strato_noCIA(lamin, lamax)
     print(len(noo4_wl), len(noo4_wl2), len(noo4_wl3))
-    avg_flux2 = (0.5*noo4_flux+0.25*noo4_flux2+0.25*noo4_flux3)
+    m, m_clouds = smart.utils.get_common_masks(noo4_wl, noo4_wl2)
+    avg_flux = (0.5*noo4_flux[m]+0.25*noo4_flux2[m_clouds]+0.25*noo4_flux3[m_clouds])
 
     
     fig, ax = plt.subplots(figsize = (10,10))
@@ -723,8 +727,8 @@ def long():
     ocean_wl, ocean_flux = ocean_outgassing(lamin, lamax)
     ocean_wl2, ocean_flux2 = outgassing_cirrus(lamin, lamax)
     ocean_wl3, ocean_flux3 = outgassing_strato(lamin, lamax)
-    avg_flux = (0.5*ocean_flux+0.25*ocean_flux2+0.25*ocean_flux3)
-
+    m, m_clouds = smart.utils.get_common_masks(ocean_wl, ocean_wl2)
+    avg_flux = (0.5*ocean_flux[m]+0.25*ocean_flux2[m_clouds]+0.25*ocean_flux3[m_clouds])
     ax.plot(wl, avg_flux)
     ax.set_title("Simulated 10 bar oxygen ocean planet orbiting Proxima Centauri")
     ax.set_ylabel("Reflectance")
