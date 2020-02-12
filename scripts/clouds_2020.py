@@ -9,12 +9,11 @@ import datetime
 matplotlib.rcParams['text.usetex'] = False
 import random
 import math
+import scipy
 from scipy.interpolate import interp1d
-
-def earth_like_hyak(lamin, lamax):
+import scipy.integrate as integrate
+def earth_like_hyak(lamin, lamax, res):
     
-    res = 1/(10*lamin)
-
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim = smart.interface.Smart(tag = "prox")
     sim.set_run_in_place(place)
@@ -27,7 +26,7 @@ def earth_like_hyak(lamin, lamax):
     label = "Simulated Earth-like planet orbiting Proxima Centauri"
     sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/composite1_txt.txt"
     sim.set_planet_proxima_b()
-    sim.load_atmosphere_from_pt(infile, addn2 = False)
+    sim.load_atmosphere_from_pt(infile, addn2 = True)
     
     o2 = sim.atmosphere.gases[3]
     o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
@@ -68,6 +67,76 @@ def earth_like_hyak(lamin, lamax):
     adj_flux = (flux/sflux)
     return(wl, adj_flux)
 
+def earth(lamin, lamax, res):
+    
+    place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim = smart.interface.Smart(tag = "earth")
+    sim.set_run_in_place(place)
+    sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+
+    infile = "/gscratch/vsm/mwjl/projects/high_res/inputs/earth_avg.pt"
+    label = "Simulated Earth-like planet orbiting Proxima Centauri"
+    sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/composite1_txt.txt"
+    sim.set_planet_proxima_b()
+    sim.load_atmosphere_from_pt(infile, addn2 = True)
+    
+    o2 = sim.atmosphere.gases[3]
+    o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
+    label = "Earth"
+
+    sim.set_executables_automatically()
+
+    sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016.par' #/gscratch/vsm/alinc/fixed_input/
+    sim.lblin.hitran_tag = 'hitran2016'
+    sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
+    sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
+
+    sim.smartin.sza = 57
+
+    sim.smartin.FWHM = res
+    sim.smartin.sample_res = res
+
+    sim.smartin.minwn = 1e4/lamax
+    sim.smartin.maxwn = 1e4/lamin 
+
+    sim.lblin.minwn = 1e4/lamax
+    sim.lblin.maxwn = 1e4/lamin 
+
+    sim.lblin.par_index = 7
+    sim.smartin.out_level = 3
+    sim.gen_lblscripts()
+    sim.run_lblabc()
+    sim.write_smart(write_file = True)
+    sim.run_smart()
+
+    sim.open_outputs()
+    sur_path_temp = str(sim.output.rad.path)
+    sur_path = sur_path_temp[:-7] + "sur.rad"
+
+    infile = sur_path
+
+    # Convert each line to vector, compose array of vectors
+    arrays = np.array([np.array(list(map(float, line.split()))) for line in open(infile)])
+
+    # Flatten and reshape into rectangle grid
+    arr = np.hstack(arrays).reshape((14, -1), order='F')
+
+    # Parse columns
+    lam   = arr[0,:]
+    wno   = arr[1,:]
+    solar = arr[2,:]
+    dir_flux  = arr[3,:]
+    diff_flux  = arr[4,:]
+
+    total_flux = dir_flux + diff_flux 
+    print(len(lam), len(total_flux))
+    transmiss = total_flux / solar
+    transmiss = transmiss / max(transmiss)
+    return(lam, transmiss)
+
+
 def cloud_frac():
     infile2 = "/gscratch/vsm/mwjl/projects/high_res/inputs/10bar_O2_wet.pt_filtered.pt"
     data = np.genfromtxt(infile2)
@@ -94,8 +163,7 @@ def cloud_frac():
     return(f_cirrus, f_strato)
 
 
-def cirrus(lamin, lamax):
-    res = 1/(10*lamin)
+def cirrus(lamin, lamax, res):
 
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim = smart.interface.Smart(tag = "prox_cirrus")
@@ -176,9 +244,7 @@ def cirrus(lamin, lamax):
 
     return(wl, adj_flux)
 
-def strato(lamin, lamax):
-    res = 1/(10*lamin)
-
+def strato(lamin, lamax, res):
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim = smart.interface.Smart(tag = "prox_strato")
     sim.set_run_in_place(place)
@@ -259,8 +325,7 @@ def strato(lamin, lamax):
 
     return(wl, adj_flux)
 
-def ocean_outgassing(lamin, lamax):
-    res = 1/(10*lamin)
+def ocean_outgassing(lamin, lamax, res):
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
 
     sim2 = smart.interface.Smart(tag = "highw")
@@ -315,8 +380,7 @@ def ocean_outgassing(lamin, lamax):
     adj_flux2 = flux2/sflux2
     return(wl2, adj_flux2)
 
-def outgassing_cirrus(lamin, lamax):
-    res = 1/(10*lamin)
+def outgassing_cirrus(lamin, lamax, res):
 
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim = smart.interface.Smart(tag = "highw_cirrus")
@@ -397,8 +461,7 @@ def outgassing_cirrus(lamin, lamax):
 
     return(wl, adj_flux)
 
-def outgassing_strato(lamin, lamax):
-    res = 1/(10*lamin)
+def outgassing_strato(lamin, lamax, res):
 
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim = smart.interface.Smart(tag = "highw_strato")
@@ -479,8 +542,179 @@ def outgassing_strato(lamin, lamax):
 
     return(wl, adj_flux)
 
-def strato_noCIA(lamin, lamax):
-    res = 1/(10*lamin)
+def strato_noCIA(lamin, lamax, res):
+
+    place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim = smart.interface.Smart(tag = "strato_noO4")
+    sim.set_run_in_place(place)
+    
+    sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+
+    infile = "/gscratch/vsm/mwjl/projects/high_res/inputs/profile_Earth_proxb_.pt_filtered"
+    label = "Simulated Earth-like planet orbiting Proxima Centauri"
+    sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/composite1_txt.txt"
+    sim.set_planet_proxima_b()
+    sim.load_atmosphere_from_pt(infile, addn2 = True)
+    
+    o2 = sim.atmosphere.gases[3]
+    o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
+    label = "Earth-Like"
+    sim.set_planet_proxima_b()
+    sim.set_star_proxima()
+
+    sim.set_executables_automatically()
+
+    sim.lblin.par_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/HITRAN2019.par'
+    sim.lblin.hitran_tag = 'hitran2016'
+    sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
+    sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
+    sim.lblin.par_index = 7
+
+
+    sim.smartin.sza = 57
+
+    o2 = sim.atmosphere.gases[2]
+    o2.cia_file = None
+
+
+    sim.smartin.FWHM = res
+    sim.smartin.sample_res = res
+
+    sim.smartin.minwn = 1e4/lamax
+    sim.smartin.maxwn = 1e4/lamin 
+
+    sim.lblin.minwn = 1e4/lamax
+    sim.lblin.maxwn = 1e4/lamin 
+
+
+    sim.gen_lblscripts()
+    sim.run_lblabc()
+
+    f_cirrus, f_strato = cloud_frac()
+
+    
+    # Create a cirrus cloud mie scattering aerosol mode
+    mie_cirrus = smart.interface.MieMode(mie_file = os.path.join(smart.interface.CLDMIEDIR, "baum_cirrus_de100.mie"),
+                                         mie_skip = 1,
+                                         mie_lines =
+                                         '1,4,5,3',
+                                         iang_smart = 2)
+
+    # Create an optical depth profile
+    tau_cirrus = smart.interface.CloudTau(vert_file = os.path.join(smart.interface.CLDMIEDIR, "cld_tau.dat"),
+                                          vert_ref_wno = 1e4/lamax,
+                                          vert_skip = 4,
+                                          vert_coord = 1,
+                                          vert_xscale = f_cirrus,
+                                          vert_yscale = 2.0)
+
+    # Create an Aerosol object with our cirrus mie scattering and optical depths
+    cirrus = smart.interface.Aerosols(miemodes=[mie_cirrus],
+                                      mietau=[tau_cirrus])
+
+    sim.aerosols = cirrus
+
+    sim.write_smart(write_file = True)
+    sim.run_smart()
+
+    sim.open_outputs()
+    wl = sim.output.rad.lam
+    flux = sim.output.rad.pflux
+    sflux = sim.output.rad.sflux
+
+    adj_flux = flux/sflux
+
+    return(wl, adj_flux)
+
+def cirrus_noCIA(lamin, lamax, res):
+
+    place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim = smart.interface.Smart(tag = "cirrus_noO4")
+    sim.set_run_in_place(place)
+    
+    sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+
+    infile = "/gscratch/vsm/mwjl/projects/high_res/inputs/profile_Earth_proxb_.pt_filtered"
+    label = "Simulated Earth-like planet orbiting Proxima Centauri"
+    sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/composite1_txt.txt"
+    sim.set_planet_proxima_b()
+    sim.load_atmosphere_from_pt(infile, addn2 = True)
+    
+    o2 = sim.atmosphere.gases[3]
+    o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
+    label = "Earth-Like"
+    sim.set_planet_proxima_b()
+    sim.set_star_proxima()
+
+    sim.set_executables_automatically()
+
+    sim.lblin.par_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/HITRAN2019.par'
+    sim.lblin.hitran_tag = 'hitran2016'
+    sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
+    sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
+    sim.lblin.par_index = 7
+
+
+    sim.smartin.sza = 57
+
+    o2 = sim.atmosphere.gases[2]
+    o2.cia_file = None
+
+
+    sim.smartin.FWHM = res
+    sim.smartin.sample_res = res
+
+    sim.smartin.minwn = 1e4/lamax
+    sim.smartin.maxwn = 1e4/lamin 
+
+    sim.lblin.minwn = 1e4/lamax
+    sim.lblin.maxwn = 1e4/lamin 
+
+
+    sim.gen_lblscripts()
+    sim.run_lblabc()
+
+    f_cirrus, f_strato = cloud_frac()
+
+    
+    # Create a cirrus cloud mie scattering aerosol mode
+    mie_cirrus = smart.interface.MieMode(mie_file = os.path.join(smart.interface.CLDMIEDIR, "baum_cirrus_de100.mie"),
+                                         mie_skip = 1,
+                                         mie_lines =
+                                         '1,4,5,3',
+                                         iang_smart = 2)
+
+    # Create an optical depth profile
+    tau_cirrus = smart.interface.CloudTau(vert_file = os.path.join(smart.interface.CLDMIEDIR, "cld_tau.dat"),
+                                          vert_ref_wno = 1e4/lamax,
+                                          vert_skip = 4,
+                                          vert_coord = 1,
+                                          vert_xscale = f_cirrus,
+                                          vert_yscale = 2.0)
+
+    # Create an Aerosol object with our cirrus mie scattering and optical depths
+    cirrus = smart.interface.Aerosols(miemodes=[mie_cirrus],
+                                      mietau=[tau_cirrus])
+
+    sim.aerosols = cirrus
+
+    sim.write_smart(write_file = True)
+    sim.run_smart()
+
+    sim.open_outputs()
+    wl = sim.output.rad.lam
+    flux = sim.output.rad.pflux
+    sflux = sim.output.rad.sflux
+
+    adj_flux = flux/sflux
+
+    return(wl, adj_flux)
+
+def outgassing_strato_noCIA(lamin, lamax, res):
 
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim = smart.interface.Smart(tag = "highw_strato_noO4")
@@ -566,8 +800,7 @@ def strato_noCIA(lamin, lamax):
 
     return(wl, adj_flux)
 
-def cirrus_noCIA(lamin, lamax):
-    res = 1/(10*lamin)
+def outgassing_cirrus_noCIA(lamin, lamax, res):
 
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim = smart.interface.Smart(tag = "highw_cirrus_noO4")
@@ -661,20 +894,20 @@ def plotting(lamin, lamax, title):
     matplotlib.rc('text', usetex=False)
     plt.switch_backend('agg')
     fig_name = int(100*(float(lamin) + float(lamax))/2)
-    wl, flux = earth_like_hyak(lamin, lamax)
-    wl2, flux2 = cirrus(lamin, lamax)
-    wl3, flux3 = strato(lamin, lamax)
+    wl, flux = earth_like_hyak(lamin, lamax, 0.01)
+    wl2, flux2 = cirrus(lamin, lamax, 0.01)
+    wl3, flux3 = strato(lamin, lamax, 0.01)
     m, m_clouds = smart.utils.get_common_masks(wl, wl2)
-    print(m, m_clouds)
-    print(len(flux[m_clouds]), len(flux2[m_clouds]), len(flux3[m_clouds]))
+    print("m,m_clouds", m, m_clouds)
+    print("length of fluxes with m cloud mask applied", len(flux[m_clouds]), len(flux2[m_clouds]), len(flux3[m_clouds]))
     avg_flux = (0.5*flux[m_clouds]+0.25*flux2[m_clouds]+0.25*flux3[m_clouds])
     
-    ocean_wl, ocean_flux = ocean_outgassing(lamin, lamax)
-    ocean_wl2, ocean_flux2 = outgassing_cirrus(lamin, lamax)
-    ocean_wl3, ocean_flux3 = outgassing_strato(lamin, lamax)
+    ocean_wl, ocean_flux = ocean_outgassing(lamin, lamax, 0.01)
+    ocean_wl2, ocean_flux2 = outgassing_cirrus(lamin, lamax, 0.01)
+    ocean_wl3, ocean_flux3 = outgassing_strato(lamin, lamax, 0.01)
     m, m_clouds = smart.utils.get_common_masks(ocean_wl, ocean_wl2)
-    print(m, m_clouds)
-    print(len(ocean_flux), len(ocean_flux2), len(ocean_flux3))
+    print("m, m_clouds (ocean)",m, m_clouds)
+    print("length of ocean fluxes with m cloud mask applied",len(ocean_flux), len(ocean_flux2), len(ocean_flux3))
     avg_flux2 = (0.5*ocean_flux[m_clouds]+0.25*ocean_flux2[m_clouds]+0.25*ocean_flux3[m_clouds])
 
     fig, ax = plt.subplots(figsize = (10,10))
@@ -694,27 +927,26 @@ def plotting_noO4(lamin, lamax,  title):
     matplotlib.rc('text', usetex=False)
     plt.switch_backend('agg')
     fig_name = int(100*(float(lamin) + float(lamax))/2)
-    ocean_wl, ocean_flux = ocean_outgassing(lamin, lamax)
-    ocean_wl2, ocean_flux2 = outgassing_cirrus(lamin, lamax)
-    ocean_wl3, ocean_flux3 = outgassing_strato(lamin, lamax)
-    m, m_clouds = smart.utils.get_common_masks(ocean_wl, ocean_wl3)
-    print(len(m_clouds), len(ocean_wl), len(ocean_wl2), len(ocean_wl3))
+
+    ocean_wl, ocean_flux = ocean_outgassing(lamin, lamax, 0.01)
+    ocean_wl2, ocean_flux2 = outgassing_cirrus(lamin, lamax, 0.01)
+    ocean_wl3, ocean_flux3 = outgassing_strato(lamin, lamax, 0.01)
+    m, m_clouds = smart.utils.get_common_masks(ocean_wl, ocean_wl2)
     avg_flux = (0.5*ocean_flux[m]+0.25*ocean_flux2[m]+0.25*ocean_flux3[m])
-    fig, ax = plt.subplots(figsize = (10,10))
-    ax.plot(ocean_wl2[m], avg_flux[m], label = "10 bar Ocean Outgassing")
     
-    noo4_wl, noo4_flux = ocean_outgassing(lamin, lamax)
-    noo4_wl2, noo4_flux2 = cirrus_noCIA(lamin, lamax)
-    noo4_wl3, noo4_flux3 = strato_noCIA(lamin, lamax)
+    noo4_wl, noo4_flux = ocean_outgassing(lamin, lamax, 0.01)
+    noo4_wl2, noo4_flux2 = cirrus_noCIA(lamin, lamax, 0.01)
+    noo4_wl3, noo4_flux3 = strato_noCIA(lamin, lamax,0.01)
     print(len(noo4_wl), len(noo4_wl2), len(noo4_wl3))
     m, m_clouds = smart.utils.get_common_masks(noo4_wl, noo4_wl3)
     m_clouds = m_clouds[:-1]
-    avg_flux2 = (0.5*noo4_flux[m_clouds]+0.25*noo4_flux2[m_clouds]+0.25*noo4_flux3[m_clouds])
+    avg_flux2 = (0.5*noo4_flux[m]+0.25*noo4_flux2[m]+0.25*noo4_flux3[m])
 
     
-   # fig, ax = plt.subplots(figsize = (10,10))
-   # ax.plot(ocean_wl2[m_clouds], avg_flux[m_clouds], label = "10 bar Ocean Outgassing")
-    ax.plot(noo4_wl[m_clouds], avg_flux2[m_clouds], label = "10 bar Ocean Loss, no O$_2$-O$_2$")
+    fig, ax = plt.subplots(figsize = (10,10))
+    print("oceanwl, avg flux", len(ocean_wl2), len(avg_flux))
+    ax.plot(ocean_wl2[:len(avg_flux)], avg_flux[:len(ocean_wl2)], label = "10 bar Ocean Outgassing")
+    ax.plot(noo4_wl[:len(avg_flux2)], avg_flux2[:len(avg_flux2)], label = "10 bar Ocean Loss, no O$_2$-O$_2$")
     ax.set_title(title)
     ax.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength ($\mu$m)")
@@ -729,15 +961,135 @@ def long():
     
     fig, ax = plt.subplots(figsize = (30,10))
     
-    ocean_wl, ocean_flux = ocean_outgassing(lamin, lamax)
-    ocean_wl2, ocean_flux2 = outgassing_cirrus(lamin, lamax)
-    ocean_wl3, ocean_flux3 = outgassing_strato(lamin, lamax)
+    ocean_wl, ocean_flux = ocean_outgassing(lamin, lamax,0.01)
+    ocean_wl2, ocean_flux2 = outgassing_cirrus(lamin, lamax, 0.01)
+    ocean_wl3, ocean_flux3 = outgassing_strato(lamin, lamax, 0.01)
     m, m_clouds = smart.utils.get_common_masks(ocean_wl, ocean_wl2)
-    avg_flux = (0.5*ocean_flux[m_clouds]+0.25*ocean_flux2[m_clouds]+0.25*ocean_flux3[m_clouds])
+    avg_flux = (0.5*ocean_flux[m]+0.25*ocean_flux2[m]+0.25*ocean_flux3[m])
     ax.plot(wl, avg_flux)
     ax.set_title("Simulated 10 bar oxygen ocean planet orbiting Proxima Centauri")
     ax.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength ($\mu$m)")
+
+def cloud_weight_highw(lamin, lamax, res):
+    ocean_wl, ocean_flux = ocean_outgassing(lamin, lamax, res)
+    ocean_wl2, ocean_flux2 = outgassing_cirrus(lamin, lamax,res)
+    ocean_wl3, ocean_flux3 = outgassing_strato(lamin, lamax, res)
+    m, m_clouds = smart.utils.get_common_masks(ocean_wl, ocean_wl2, res)
+    avg_flux = (0.5*ocean_flux[m_clouds]+0.25*ocean_flux2[m_clouds]+0.25*ocean_flux3[m_clouds])
+    return(ocean_wl, avg_flux)
+
+def cloud_weight_highw_noo4(lamin, lamax, res):
+    noo4_wl, noo4_flux = ocean_outgassing(lamin, lamax, res)
+    noo4_wl2, noo4_flux2 = cirrus_noCIA(lamin, lamax, res)
+    noo4_wl3, noo4_flux3 = strato_noCIA(lamin, lamax, res)
+    print(len(noo4_wl), len(noo4_wl2), len(noo4_wl3))
+    m, m_clouds = smart.utils.get_common_masks(noo4_wl, noo4_wl2)
+    avg_flux = (0.5*noo4_flux[m]+0.25*noo4_flux2[m]+0.25*noo4_flux3[m])
+    return(noo4_wl, avg_flux)
+
+def cloud_weight(lamin, lamax, res):
+    ocean_wl, ocean_flux = ocean_outgassing(lamin, lamax, res)
+    ocean_wl2, ocean_flux2 = cirrus(lamin, lamax,res)
+    ocean_wl3, ocean_flux3 = strato(lamin, lamax, res)
+    m, m_clouds = smart.utils.get_common_masks(ocean_wl, ocean_wl2)
+    avg_flux = (0.5*ocean_flux[m]+0.25*ocean_flux2[m]+0.25*ocean_flux3[m])
+    return(ocean_wl, avg_flux)
+
+def cloud_weight_noo4(lamin, lamax, res):
+    noo4_wl, noo4_flux = ocean_outgassing(lamin, lamax, res)
+    noo4_wl2, noo4_flux2 = cirrus_noCIA(lamin, lamax, res)
+    noo4_wl3, noo4_flux3 = strato_noCIA(lamin, lamax, res)
+    print(len(noo4_wl), len(noo4_wl2), len(noo4_wl3))
+    m, m_clouds = smart.utils.get_common_masks(noo4_wl, noo4_wl2)
+    avg_flux = (0.5*noo4_flux[m]+0.25*noo4_flux2[m]+0.25*noo4_flux3[m])
+    return(noo4_wl, avg_flux)
+    
+def high_pass(wl, flux, lamin, lamax, type):
+    if type == 1:
+        wl_low, flux_low = earth(lamin,lamax, 1)
+    if type == 2: 
+        wl_low, flux_low = cloud_weight(lamin,lamax, 1)
+
+    long_flux = []
+    for i in flux_low:
+        j = 0
+        while j < 101: 
+            long_flux.append(i)
+            j = j+1
+    mixed = []
+    i = 0
+    while i < len(flux):
+        temp = (flux[i] + long_flux[i]) / 2
+        mixed.append(temp)
+        i = i+1
+
+    i = 0
+    flattened = []
+    while i < len(long_flux)- 25: 
+        avg = np.mean(flux[i:i+25])
+        j = 0
+        while j < 25:
+            flattened.append(avg)
+            j = j+1
+        i = i+25
+    out = []
+    i = 0
+    while i < len(mixed[:-25]): 
+        diff = abs(mixed[i] - flattened[i])
+        out.append(diff)
+        i = i+1
+    return(wl[:len(out)], out[:len(wl)])
+
+def phase_calc(lamin,lamax):
+    earth_wl, earth_flux = earth(lamin,lamax, 0.01)
+    
+    wl, flux = cloud_weight(lamin,lamax, 0.01)
+
+    n_phase = 100
+    phases = np.linspace(0,2*np.pi,n_phase)
+    inclination = np.pi/2
+    phi_90 = np.pi/2
+    sma = 7500000
+    c = 299792.458
+
+    fluxes = np.outer(earth_flux, np.ones(n_phase))
+    temp = np.arccos(-np.sin(inclination)*np.cos(phases))
+    phase_function = ((np.sin(temp)+(np.pi-temp)*(np.cos(temp)))/(np.pi))
+    #season = 0.55 #0-2PI march max
+    season = -0.55 #july min?
+    rv_bary = (29.8 * np.sin((11.2/365.)*phases + season))
+    #rv_orb = (np.sqrt((G*m_prox)/(sma_m)) * np.sin(inclination)/1000 *np.sin(phases))
+    rv_orb = (sma*2*np.pi)/967680* np.sin(inclination) *np.sin(phases)
+    rv_sys = -21.7 * np.ones_like(phases)
+    #rv_bary = (29.8 * np.sin((11.2/365.)*phases))
+    rv = rv_sys + rv_orb - rv_bary
+    inclination = np.pi/2.9
+    obs_wl = np.outer(wl,(1+rv/c))
+
+    i = 0
+    out = []
+    while i < n_phase:
+        print("length of flux, obs_wl",len(flux), np.shape(obs_wl))
+        high_pass_wl, high_pass_flux = high_pass(obs_wl[:len(flux),i],flux[:len(obs_wl)], lamin,lamax,2) 
+        print("len high pass wl, flux", len(high_pass_wl), len(high_pass_flux))
+        interp = scipy.interpolate.interp1d(high_pass_wl, high_pass_flux,fill_value = "extrapolate")
+        out.append(interp(earth_wl) * earth_flux)
+        i = i+1
+    return(wl, out)
+
+def integ_calc(lamin,lamax):
+    f = open("/gscratch/vsm/mwjl/projects/high_res/scripts/integrations_highw.txt", "a")
+    wl, flux = cloud_weight(lamin, lamax, 0.01)
+    wl, out = high_pass(wl, flux, lamin, lamax, 2)
+    print("wl, out", np.shape(wl), np.shape(out))
+    adds = integrate.trapz(out[:len(wl)], wl[:len(out)])
+
+    print(adds)    
+    name = str(abs(adds)) 
+    f = open("/gscratch/vsm/mwjl/projects/high_res/scripts/integrations_highw.txt", "a")
+    f.write(str(name) + "\n")
+    f.close()
     
 
 
@@ -761,10 +1113,15 @@ if __name__ == '__main__':
                                rm_after_submit = True)
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
-#        plotting(0.61,0.65, "Gamma band (0.63) Ocean Outgassing")
-#        plotting(0.67,0.71, "Oxygen B band (0.69) Ocean Outgassing")
-#        plotting(0.74,0.78,"Oxygen A band (0.76) Ocean Outgassing")
-#        plotting(1.25,1.29,"1.27 Ocean Outgassing")
+       # plotting(0.61,0.65, "Gamma band (0.63) Ocean Outgassing")
+      #  plotting(0.67,0.71, "Oxygen B band (0.69) Ocean Outgassing")
+      #  plotting(0.74,0.78,"Oxygen A band (0.76) Ocean Outgassing")
+      #  plotting(1.25,1.29,"1.27 Ocean Outgassing")
+        
+        integ_calc(0.61, 0.65)
+        integ_calc(0.67, 0.71)
+        integ_calc(0.74, 0.78)
+        integ_calc(1.25,1.29)
 
         plotting_noO4(0.61,0.65, "Gamma band (0.63) Ocean Outgassing")
         plotting_noO4(0.67,0.71, "Oxygen B band (0.69) Ocean Outgassing")
@@ -772,6 +1129,8 @@ if __name__ == '__main__':
         plotting_noO4(1.25,1.29,"1.27 Ocean Outgassing")
 
         long()
+
+        
     else:
         plotting(0.61,0.645,1,"Gamma band (0.63) Ocean Outgassing")
 
