@@ -1079,7 +1079,6 @@ def phase_calc(lamin,lamax):
     return(wl, out)
 
 def integ_calc(lamin,lamax):
-    f = open("/gscratch/vsm/mwjl/projects/high_res/scripts/integrations_highw.txt", "a")
     wl, flux = cloud_weight(lamin, lamax, 0.01)
     wl, out = high_pass(wl, flux, lamin, lamax, 2)
     print("wl, out", np.shape(wl), np.shape(out))
@@ -1087,9 +1086,46 @@ def integ_calc(lamin,lamax):
 
     print(adds)    
     name = str(abs(adds)) 
-    f = open("/gscratch/vsm/mwjl/projects/high_res/scripts/integrations_highw.txt", "a")
+    f = open("/gscratch/vsm/mwjl/projects/high_res/scripts/integrations_" + str(lamin) + ".txt", "a")
     f.write(str(name) + "\n")
     f.close()
+
+
+def integ_calc(lamin,lamax, type):
+    f = open("/gscratch/vsm/mwjl/projects/high_res/scripts/integrations_" + str(lamin) + "transmiss" + str(type) +".txt", "a")
+    wl, out = flux_calc(lamin, lamax, type)
+    adds = integrate.trapz(out[:len(wl)], wl[:len(out)])
+    print(adds)    
+    name = str(z) + "   " + str(abs(adds)) 
+    f = open("/gscratch/vsm/mwjl/projects/high_res/scripts/integrations_" + str(lamin) + "transmiss" + str(type) +".txt", "a")
+    f.write(str(name) + "\n")
+    f.close()
+    
+def master_plot():
+    integ_calc(0.74, 0.78)
+    integ_calc(0.67, 0.71)
+    integ_calc(0.61, 0.65)
+    integ_calc(1.25, 1.27)
+
+def read_integ():
+    print('starting read_integ')
+    master_plot()
+    files = "integrations_0.61.txt","integrations_0.67.txt", "integrations_0.74.txt", "integrations_1.25.txt"
+    for name in files: 
+        output = np.genfromtxt(name)
+        phase = output[:,0] * 2 * np.math.pi / 100
+        phase.astype(np.float)
+        fig, ax = plt.subplots(figsize = (12,12))
+        ax.plot(phase, output[:,1])
+        ax.set_title("Integration Metric over Phase")
+        ax.set_ylabel("Integration Metric")
+        ax.set_xlabel("Phase")
+        out_name = name[:-4] + ".png"
+        fig.savefig(out_name, bbox_inches = 'tight')
+        integ = integrate.trapz(output[:,1],phase) 
+        f = open("/gscratch/vsm/mwjl/projects/high_res/scripts/integrations_fin_w.txt", "a")
+        f.write(str(integ) + '\n')
+        f.close()
     
 
 
