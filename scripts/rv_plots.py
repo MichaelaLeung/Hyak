@@ -17,6 +17,8 @@ from scipy import interpolate
 print('import finished') 
 import scipy.integrate as integrate
 
+from clouds_2020 import cloud_weight_highw
+
 
 def run_prox(lamin, lamax, res):
 
@@ -529,7 +531,7 @@ def flux_calc(lamin,lamax, type):
     elif type == 1:
          wl, flux = ocean_loss(lamin,lamax,0.01)
     elif type == 2:
-         wl, flux = ocean_outgassing(lamin,lamax, 0.01)
+         wl, flux = cloud_weight_highw(lamin,lamax, 0.01)
 
     n_phase = 100
     phases = np.linspace(0,2*np.pi,n_phase)
@@ -566,7 +568,7 @@ def high_pass(wl, flux, type):
     elif type == 1:
          wl_low, flux_low = ocean_loss(lamin,lamax, 1)
     elif type == 2:      
-         wl_low, flux_low = ocean_outgassing(lamin,lamax, 1)
+         wl_low, flux_low = cloud_weight_highw(lamin,lamax, 1)
     long_flux = []
     for i in flux_low:
         j = 0
@@ -598,24 +600,24 @@ def high_pass(wl, flux, type):
     return(wl, out)
 
 def integ_calc(lamin,lamax, type):
-    f = open("/gscratch/vsm/mwjl/projects/high_res/scripts/integrations_" + str(lamin) + "transmiss" + str(type) +".txt", "a")
+    f = open("/gscratch/vsm/mwjl/projects/high_res/scripts/integrations_" + str(lamin) + "w"  +".txt", "a")
     wl, out = flux_calc(lamin, lamax, type)
     adds = integrate.trapz(out[:len(wl)], wl[:len(out)])
     print(adds)    
     name = str(z) + "   " + str(abs(adds)) 
-    f = open("/gscratch/vsm/mwjl/projects/high_res/scripts/integrations_" + str(lamin) + "transmiss" + str(type) +".txt", "a")
+    f = open("/gscratch/vsm/mwjl/projects/high_res/scripts/integrations_" + str(lamin) + "w"  +".txt", "a")
     f.write(str(name) + "\n")
     f.close()
     
 def master_plot():
-    integ_calc(0.74, 0.78, 0)
-    integ_calc(0.67, 0.71, 0)
-    integ_calc(0.61, 0.65, 0)
-    integ_calc(1.25, 1.27, 0)
-    integ_calc(0.74, 0.78, 1)
-    integ_calc(0.67, 0.71, 1)
-    integ_calc(0.61, 0.65, 1)
-    integ_calc(1.25, 1.27, 1)
+ #   integ_calc(0.74, 0.78, 0)
+ #   integ_calc(0.67, 0.71, 0)
+ #   integ_calc(0.61, 0.65, 0)
+ #   integ_calc(1.25, 1.27, 0)
+ #   integ_calc(0.74, 0.78, 1)
+ #   integ_calc(0.67, 0.71, 1)
+ #   integ_calc(0.61, 0.65, 1)
+ #   integ_calc(1.25, 1.27, 1)
     integ_calc(0.74, 0.78, 2)
     integ_calc(0.67, 0.71, 2)
     integ_calc(0.61, 0.65, 2)
@@ -624,18 +626,18 @@ def master_plot():
 def read_integ():
     print('starting read_integ')
     master_plot()
-    files = "integrations_0.61transmiss0.txt","integrations_0.61transmiss1.txt","integrations_0.61transmiss2.txt","integrations_0.67transmiss0.txt", "integrations_0.67transmiss1.txt", "integrations_0.67transmiss2.txt","integrations_0.74transmiss0.txt","integrations_0.74transmiss1.txt","integrations_0.74transmiss2.txt", "integrations_1.25transmiss0.txt", "integrations_1.25transmiss1.txt", "integrations_1.25transmiss2.txt"
+    files = "integrations_0.61.txt","integrations_0.67.txt", "integrations_0.74.txt", "integrations_1.25.txt"
     for name in files: 
         output = np.genfromtxt(name)
         phase = output[:,0] * 2 * np.math.pi / 100
         phase.astype(np.float)
-        fig, ax = plt.subplots(figsize = (12,12))
-        ax.plot(phase, output[:,1])
-        ax.set_title("Integration Metric over Phase")
-        ax.set_ylabel("Integration Metric")
-        ax.set_xlabel("Phase")
-        out_name = name[:-4] + ".png"
-        fig.savefig(out_name, bbox_inches = 'tight')
+    #    fig, ax = plt.subplots(figsize = (12,12))
+    #    ax.plot(phase, output[:,1])
+    #    ax.set_title("Integration Metric over Phase")
+    #    ax.set_ylabel("Integration Metric")
+    #    ax.set_xlabel("Phase")
+    #    out_name = name[:-4] + ".png"
+    #    fig.savefig(out_name, bbox_inches = 'tight')
         integ = integrate.trapz(output[:,1],phase) 
         f = open("/gscratch/vsm/mwjl/projects/high_res/scripts/integrations_fin.txt", "a")
         f.write(str(integ) + '\n')
@@ -661,8 +663,8 @@ if __name__ == '__main__':
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
         print('job submitted') 
-       # read_integ()
-        fluxes(0.76, 0.765)
+        read_integ()
+        #fluxes(0.76, 0.765)
     else:
         fluxes(0.60,0.70)
 
