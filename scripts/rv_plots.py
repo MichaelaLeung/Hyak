@@ -531,7 +531,7 @@ def flux_calc(lamin,lamax, type):
     elif type == 2:
          wl, flux = ocean_outgassing(lamin,lamax, 0.01)
 
-    n_phase = 100
+    n_phase = 1000
     phases = np.linspace(0,2*np.pi,n_phase)
     inclination = np.pi/2
     phi_90 = np.pi/2
