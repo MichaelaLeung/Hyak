@@ -524,16 +524,19 @@ def make_gif(lamin,lamax):
             writer.append_data(imageio.imread(inputs[i].format(i=i)))
 
 def flux_calc(lamin,lamax, type):
-    earth_wl, earth_flux = run_earth(lamin,lamax, 0.01)
-    earth_wl_low, earth_flux_low = run_earth(lamin, lamax, 1)
+    print("flux calc", lamin)
+    earth_wl, earth_flux = run_earth(lamin,lamax, 0.1)
+    earth_wl_low, earth_flux_low = run_earth(lamin, lamax, 10)
     if type == 0:
-         wl, flux = clouds_out(lamin, lamax,0.01)
+         wl, flux = clouds_out(lamin, lamax,0.1)
+         wl_low, flux_low = clouds_out(lamin, lamax, 10)
     elif type == 1:
-         wl, flux = ocean_loss(lamin,lamax,0.01)
+         wl, flux = ocean_loss(lamin,lamax,0.1)
+         wl_low, flux_low = ocean_loss(lamin, lamax, 10)
     elif type == 2:
-         wl, flux = cloud_weight_highw(lamin,lamax, 0.01)
-
-    n_phase = 1000
+         wl, flux = cloud_weight_highw(lamin,lamax, 0.1)
+         wl_low, flux_low = cloud_weight_highw(lamin, lamax,10)
+    n_phase = 100
     phases = np.linspace(0,2*np.pi,n_phase)
     inclination = np.pi/2
     phi_90 = np.pi/2
@@ -554,21 +557,18 @@ def flux_calc(lamin,lamax, type):
     inclination = np.pi/2.9
     obs_wl = np.outer(wl,(1+rv/c))
 
+    out =[]
     i = 0
-    while i < n_phase:
-        high_pass_wl, high_pass_flux = high_pass(obs_wl[:len(flux),i],flux[:len(obs_wl)], type) 
-        interp = scipy.interpolate.interp1d(high_pass_wl, high_pass_flux,fill_value = "extrapolate")
-        out.append(interp(earth_wl) * earth_flux)
+    while i <= n_phase:
+        high_pass_wl, high_pass_flux = high_pass(obs_wl[:len(flux),i],flux[:len(obs_wl)],lamin, lamax,wl_low, flux_low, type) 
+        interp = scipy.interpolate.interp1d(high_pass_wl[:len(high_pass_flux)], high_pass_flux[:len(high_pass_wl)],fill_value = "extrapolate")
+        out.append(np.asarray(interp(earth_wl) * earth_flux)) 
         i = i+1
+    print(len(wl), len(flux))
     return(wl, out)
 
-def high_pass(wl, flux, type):
-    if type == 0: 
-         wl_low, flux_low = clouds_out(lamin, lamax, 1)
-    elif type == 1:
-         wl_low, flux_low = ocean_loss(lamin,lamax, 1)
-    elif type == 2:      
-         wl_low, flux_low = cloud_weight_highw(lamin,lamax, 1)
+def high_pass(wl, flux, lamin, lamax, wl_low, flux_low, type):
+    print("high_pass", lamin)
     long_flux = []
     for i in flux_low:
         j = 0
@@ -600,24 +600,61 @@ def high_pass(wl, flux, type):
     return(wl, out)
 
 def integ_calc(lamin,lamax, type):
-    f = open("/gscratch/vsm/mwjl/projects/high_res/scripts/integrations_" + str(lamin) + "w"  +".txt", "a")
+    print("integ calc", lamin)
+    f = open("/gscratch/vsm/mwjl/projects/high_res/scripts/integrations_" + str(lamin) + str(type)  +".txt", "a")
     wl, out = flux_calc(lamin, lamax, type)
+    while i <= len(out):
+        adds = integrate.trapz(out[:len(wl)], wl[i,:len(out)])
+        print("adds", lamin, type, adds)    
+        name = str(abs(adds)) 
+        f = open("/gscratch/vsm/mwjl/projects/high_res/scripts/integrations_" + str(lamin) + str(type)  +".txt", "a")
+        f.write(str(name) + "\n")
+        f.close()
+
+def no_phase(lamin, lamax, type):
+    f = open("/gscratch/vsm/mwjl/projects/high_res/scripts/integrations_" + str(lamin) + str(type)  +".txt", "a")
+    if type == 0:
+         wl, flux = clouds_out(lamin, lamax,0.01)
+         wl_low, flux_low = clouds_out(lamin, lamax, 1)
+    elif type == 1:
+         wl, flux = ocean_loss(lamin,lamax, 0.01)
+         wl_low, flux_low = ocean_loss(lamin, lamax,1)
+    elif type == 2:
+         wl, flux = cloud_weight_highw(lamin,lamax,0.01)
+         wl_low, flux_low = cloud_weight_highw(lamin, lamax,0.01)
+    wl, out = high_pass(wl, flux, lamin, lamax, wl_low, flux_low, type)
     adds = integrate.trapz(out[:len(wl)], wl[:len(out)])
-    print(adds)    
-    name = str(z) + "   " + str(abs(adds)) 
-    f = open("/gscratch/vsm/mwjl/projects/high_res/scripts/integrations_" + str(lamin) + "w"  +".txt", "a")
+    print("nophase", lamin, type, adds)
+    name = str(abs(adds))
+    f = open("/gscratch/vsm/mwjl/projects/high_res/scripts/integrations_nophase_" + str(lamin) + str(type)  +".txt", "a")
     f.write(str(name) + "\n")
     f.close()
+
+
     
+def master_plot_nophase():
+    no_phase(0.74, 0.78, 0)
+    no_phase(0.67, 0.71, 0)
+    no_phase(0.61, 0.65, 0)
+    no_phase(1.25, 1.27, 0)
+    no_phase(0.74, 0.78, 1)
+    no_phase(0.67, 0.71, 1)
+    no_phase(0.61, 0.65, 1)
+    no_phase(1.25, 1.27, 1)
+    no_phase(0.74, 0.78, 2)
+    no_phase(0.67, 0.71, 2)
+    no_phase(0.61, 0.65, 2)
+    no_phase(1.25, 1.27, 2)
+
 def master_plot():
- #   integ_calc(0.74, 0.78, 0)
- #   integ_calc(0.67, 0.71, 0)
- #   integ_calc(0.61, 0.65, 0)
- #   integ_calc(1.25, 1.27, 0)
- #   integ_calc(0.74, 0.78, 1)
- #   integ_calc(0.67, 0.71, 1)
- #   integ_calc(0.61, 0.65, 1)
- #   integ_calc(1.25, 1.27, 1)
+    integ_calc(0.74, 0.78, 0)
+    integ_calc(0.67, 0.71, 0)
+    integ_calc(0.61, 0.65, 0)
+    integ_calc(1.25, 1.27, 0)
+    integ_calc(0.74, 0.78, 1)
+    integ_calc(0.67, 0.71, 1)
+    integ_calc(0.61, 0.65, 1)
+    integ_calc(1.25, 1.27, 1)
     integ_calc(0.74, 0.78, 2)
     integ_calc(0.67, 0.71, 2)
     integ_calc(0.61, 0.65, 2)
@@ -625,12 +662,19 @@ def master_plot():
 
 def read_integ():
     print('starting read_integ')
-    master_plot()
-    files = "integrations_0.61.txt","integrations_0.67.txt", "integrations_0.74.txt", "integrations_1.25.txt"
+#    master_plot_nophase()
+#    master_plot()
+
+    files = "integrations_0.610.txt","integrations_0.611.txt","integrations_0.612.txt","integrations_0.670.txt","integrations_0.671.txt","integrations_0.672.txt", "integrations_0.740.txt","integrations_0.741.txt","integrations_0.742.txt", "integrations_1.250.txt", "integrations_1.251.txt","integrations_1.252.txt"
     for name in files: 
+        print(name)
         output = np.genfromtxt(name)
-        phase = output[:,0] * 2 * np.math.pi / 100
+        print(output)
+        phase = np.asarray(range(100))
+        phase = phase* 2 * np.math.pi / 100
+        print("output, phase", np.shape(output), np.shape(phase))
         phase.astype(np.float)
+       
     #    fig, ax = plt.subplots(figsize = (12,12))
     #    ax.plot(phase, output[:,1])
     #    ax.set_title("Integration Metric over Phase")
@@ -638,7 +682,7 @@ def read_integ():
     #    ax.set_xlabel("Phase")
     #    out_name = name[:-4] + ".png"
     #    fig.savefig(out_name, bbox_inches = 'tight')
-        integ = integrate.trapz(output[:,1],phase) 
+        integ = integrate.trapz(output,phase) 
         f = open("/gscratch/vsm/mwjl/projects/high_res/scripts/integrations_fin.txt", "a")
         f.write(str(integ) + '\n')
         f.close()
@@ -663,8 +707,8 @@ if __name__ == '__main__':
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
         print('job submitted') 
-        read_integ()
-        #fluxes(0.76, 0.765)
+#        read_integ()
+        flux_calc(0.74, 0.78,2)
     else:
         fluxes(0.60,0.70)
 
