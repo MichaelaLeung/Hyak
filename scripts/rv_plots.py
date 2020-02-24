@@ -19,6 +19,9 @@ import scipy.integrate as integrate
 
 from clouds_2020 import cloud_weight_highw
 
+high_res = 0.1
+
+low_res = 10
 
 def run_prox(lamin, lamax, res):
 
@@ -525,17 +528,17 @@ def make_gif(lamin,lamax):
 
 def flux_calc(lamin,lamax, type):
     print("flux calc", lamin)
-    earth_wl, earth_flux = run_earth(lamin,lamax, 0.1)
-    earth_wl_low, earth_flux_low = run_earth(lamin, lamax, 10)
+    earth_wl, earth_flux = run_earth(lamin,lamax, high_res)
+    earth_wl_low, earth_flux_low = run_earth(lamin, lamax,low_res)
     if type == 0:
-         wl, flux = clouds_out(lamin, lamax,0.1)
-         wl_low, flux_low = clouds_out(lamin, lamax, 10)
+         wl, flux = clouds_out(lamin, lamax,high_res)
+         wl_low, flux_low = clouds_out(lamin, lamax, low_res)
     elif type == 1:
-         wl, flux = ocean_loss(lamin,lamax,0.1)
-         wl_low, flux_low = ocean_loss(lamin, lamax, 10)
+         wl, flux = ocean_loss(lamin,lamax,high_res)
+         wl_low, flux_low = ocean_loss(lamin, lamax, low_res)
     elif type == 2:
-         wl, flux = cloud_weight_highw(lamin,lamax, 0.1)
-         wl_low, flux_low = cloud_weight_highw(lamin, lamax,10)
+         wl, flux = cloud_weight_highw(lamin,lamax, high_res)
+         wl_low, flux_low = cloud_weight_highw(lamin, lamax,low_res)
     n_phase = 100
     phases = np.linspace(0,2*np.pi,n_phase)
     inclination = np.pi/2
@@ -614,14 +617,14 @@ def integ_calc(lamin,lamax, type):
 def no_phase(lamin, lamax, type):
     f = open("/gscratch/vsm/mwjl/projects/high_res/scripts/integrations_" + str(lamin) + str(type)  +".txt", "a")
     if type == 0:
-         wl, flux = clouds_out(lamin, lamax,0.01)
-         wl_low, flux_low = clouds_out(lamin, lamax, 1)
+         wl, flux = clouds_out(lamin, lamax,high_res)
+         wl_low, flux_low = clouds_out(lamin, lamax, low_res)
     elif type == 1:
-         wl, flux = ocean_loss(lamin,lamax, 0.01)
-         wl_low, flux_low = ocean_loss(lamin, lamax,1)
+         wl, flux = ocean_loss(lamin,lamax, high_res)
+         wl_low, flux_low = ocean_loss(lamin, lamax,low_res)
     elif type == 2:
-         wl, flux = cloud_weight_highw(lamin,lamax,0.01)
-         wl_low, flux_low = cloud_weight_highw(lamin, lamax,0.01)
+         wl, flux = cloud_weight_highw(lamin,lamax,high_res)
+         wl_low, flux_low = cloud_weight_highw(lamin, lamax,low_res)
     wl, out = high_pass(wl, flux, lamin, lamax, wl_low, flux_low, type)
     adds = integrate.trapz(out[:len(wl)], wl[:len(out)])
     print("nophase", lamin, type, adds)
@@ -699,7 +702,7 @@ if __name__ == '__main__':
                                workdir = "",
                                nodes = 1,
                                mem = "500G",
-                               walltime = "96:00:00",
+                               walltime = "108:00:00",
                                ntasks = 28,
                                account = "vsm",
                                submit = True,
