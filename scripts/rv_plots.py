@@ -33,7 +33,7 @@ def run_prox(lamin, lamax, res):
     maxwn = int(1e4/lamin)
     smart_file = name + "_" + str(minwn) + "_" + str(maxwn) + "cm_toa.rad"
     try:
-        f = open('/gscratch/vsm/mwjl/projects/high_res/smart_output'+smart_file)
+        f = open('/gscratch/vsm/mwjl/projects/high_res/smart_output/'+smart_file)
         print("file exists")
         data = smart.readsmart.read_rad(smart_file)
         wl = data.lam
@@ -42,7 +42,6 @@ def run_prox(lamin, lamax, res):
         flux = flux/sflux
     except IOError:
         print("File does not exist")
-        sim.set_run_in_place(place)
         place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
         sim.set_run_in_place(place)
         sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
@@ -94,6 +93,29 @@ def run_prox(lamin, lamax, res):
 
 
 def run_earth(lamin, lamax, res):
+
+
+    infile = name + "_" + str(minwn) + "_" + str(maxwn) + "cm_toa.rad"
+
+    # Convert each line to vector, compose array of vectors
+    arrays = np.array([np.array(list(map(float, line.split()))) for line in open(infile)])
+
+    # Flatten and reshape into rectangle grid
+    arr = np.hstack(arrays).reshape((14, -1), order='F')
+
+    # Parse columns
+    lam   = arr[0,:]
+    wno   = arr[1,:]
+    solar = arr[2,:]
+    dir_flux  = arr[3,:]
+    diff_flux  = arr[4,:]
+
+    total_flux = dir_flux + diff_flux 
+    print(len(lam), len(total_flux))
+    transmiss = total_flux / solar
+    transmiss = transmiss / max(transmiss)
+    return(lam, transmiss)
+
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim = smart.interface.Smart(tag = "earth")
     sim.set_run_in_place(place)
@@ -163,8 +185,8 @@ def run_earth(lamin, lamax, res):
 
 def clouds_out(lamin, lamax, res):
     wl, flux = run_prox(lamin, lamax, res)
-    wl2, flux2 = clouds(lamin, lamax, 0, res)
-    wl3, flux3 = clouds(lamin, lamax, 1, res)
+    wl2, flux2 = cloud_weight(lamin, lamax, 0, res)
+    wl3, flux3 = cloud_weight(lamin, lamax, 1, res)
     avg_flux = (0.5*flux[:min(len(flux), len(flux2), len(flux3))]+0.25*flux2[:min(len(flux), len(flux2), len(flux3))]+0.25*flux3[:min(len(flux), len(flux2), len(flux3))])
     return(wl, avg_flux)
 
@@ -175,7 +197,7 @@ def ocean_loss(lamin, lamax, res):
     maxwn = int(1e4/lamin)
     smart_file = name + "_" + str(minwn) + "_" + str(maxwn) + "cm_toa.rad"
     try:
-        f = open('/gscratch/vsm/mwjl/projects/high_res/smart_output'+smart_file)
+        f = open('/gscratch/vsm/mwjl/projects/high_res/smart_output/'+smart_file)
         print("file exists")
         data = smart.readsmart.read_rad(smart_file)
         wl = data.lam
@@ -243,7 +265,7 @@ def ocean_outgassing(lamin, lamax, res):
     maxwn = int(1e4/lamin)
     smart_file = name + "_" + str(minwn) + "_" + str(maxwn) + "cm_toa.rad"
     try:
-        f = open('/gscratch/vsm/mwjl/projects/high_res/smart_output'+smart_file)
+        f = open('/gscratch/vsm/mwjl/projects/high_res/smart_output/'+smart_file)
         print("file exists")
         data = smart.readsmart.read_rad(smart_file)
         wl = data.lam
