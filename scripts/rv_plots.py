@@ -18,6 +18,7 @@ print('import finished')
 import scipy.integrate as integrate
 
 from clouds_2020 import cloud_weight_highw
+from clouds_2020 import cloud_weight
 
 high_res = 0.1
 
@@ -26,124 +27,70 @@ low_res = 10
 n_phase = 10
 
 def run_prox(lamin, lamax, res):
+    name = 'prox'
+    sim = smart.interface.Smart(tag = name)
+    minwn = int(1e4/lamax)
+    maxwn = int(1e4/lamin)
+    smart_file = name + "_" + str(minwn) + "_" + str(maxwn) + "cm_toa.rad"
+    try:
+        f = open(smart_file)
+        print("file exists")
+        data = smart.readsmart.read_rad(smart_file)
+        wl = data.lam
+        flux = data.pflux
+        sflux = data.sflux
+        flux = flux/sflux
+    except IOError:
+        print("File does not exist")
+        place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        sim.set_run_in_place(place)
+        sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
 
-    place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim = smart.interface.Smart(tag = "prox")
-    sim.set_run_in_place(place)
-    sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        infile = "/gscratch/vsm/mwjl/projects/high_res/inputs/profile_Earth_proxb_.pt_filtered"
+        label = "Simulated Earth-like planet orbiting Proxima Centauri"
+        sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/composite1_txt.txt"
+        sim.set_planet_proxima_b()
+        sim.load_atmosphere_from_pt(infile, addn2 = True)
+        
+        o2 = sim.atmosphere.gases[3]
+        o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
+        label = "Earth-Like"
+        sim.set_planet_proxima_b()
+        sim.set_star_proxima()
 
-    infile = "/gscratch/vsm/mwjl/projects/high_res/inputs/profile_Earth_proxb_.pt_filtered"
-    label = "Simulated Earth-like planet orbiting Proxima Centauri"
-    sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/composite1_txt.txt"
-    sim.set_planet_proxima_b()
-    sim.load_atmosphere_from_pt(infile, addn2 = True)
-    
-    o2 = sim.atmosphere.gases[3]
-    o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
-    label = "Earth-Like"
-    sim.set_planet_proxima_b()
-    sim.set_star_proxima()
+        sim.set_executables_automatically()
 
-    sim.set_executables_automatically()
+        sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016.par' #/gscratch/vsm/alinc/fixed_input/
+        sim.lblin.hitran_tag = 'hitran2016'
+        sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
+        sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
+        sim.smartin.out_level = 1
+        sim.smartin.sza = 57
 
-    sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016.par' #/gscratch/vsm/alinc/fixed_input/
-    sim.lblin.hitran_tag = 'hitran2016'
-    sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
-    sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
-    sim.smartin.out_level = 1
-    sim.smartin.sza = 57
+        sim.smartin.FWHM = res
+        sim.smartin.sample_res = res
 
-    sim.smartin.FWHM = res
-    sim.smartin.sample_res = res
+        sim.smartin.minwn = 1e4/lamax
+        sim.smartin.maxwn = 1e4/lamin 
 
-    sim.smartin.minwn = 1e4/lamax
-    sim.smartin.maxwn = 1e4/lamin 
-
-    sim.lblin.minwn = 1e4/lamax
-    sim.lblin.maxwn = 1e4/lamin
+        sim.lblin.minwn = 1e4/lamax
+        sim.lblin.maxwn = 1e4/lamin
 
 
-    sim.gen_lblscripts()
-    sim.run_lblabc()
-    sim.write_smart(write_file = True)
-    sim.run_smart()
+        sim.gen_lblscripts()
+        sim.run_lblabc()
+        sim.write_smart(write_file = True)
+        sim.run_smart()
 
-    sim.open_outputs()
-    wl = sim.output.rad.lam
-    flux = sim.output.rad.pflux
-    sflux = sim.output.rad.sflux
-    adj_flux = math.pi * (flux/sflux)
+        sim.open_outputs()
+        wl = sim.output.rad.lam
+        flux = sim.output.rad.pflux
+        sflux = sim.output.rad.sflux
+        flux = math.pi * (flux/sflux)
     return(wl, flux)
 
-def clouds(lamin, lamax, cloud_type, res):
-    place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim = smart.interface.Smart(tag = "prox")
-    sim.set_run_in_place(place)
-    
-    sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-
-    infile = "/gscratch/vsm/mwjl/projects/high_res/inputs/profile_Earth_proxb_.pt_filtered"
-    label = "Simulated Earth-like planet orbiting Proxima Centauri"
-    sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/composite1_txt.txt"
-    sim.set_planet_proxima_b()
-    sim.load_atmosphere_from_pt(infile, addn2 = False)
-    
-    o2 = sim.atmosphere.gases[3]
-    o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
-    label = "Earth-Like"
-    sim.set_planet_proxima_b()
-    sim.set_star_proxima()
-
-    sim.set_executables_automatically()
-
-    sim.lblin.par_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/HITRAN2019.par'
-    sim.lblin.hitran_tag = 'hitran2016'
-    sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
-    sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
-    sim.lblin.par_index = 7
-
-
-    sim.smartin.sza = 57
-
-    sim.smartin.FWHM = res
-    sim.smartin.sample_res = res
-
-    sim.smartin.minwn = 1e4/lamax
-    sim.smartin.maxwn = 1e4/lamin 
-
-    sim.lblin.minwn = 1e4/lamax
-    sim.lblin.maxwn = 1e4/lamin 
-
-
-    sim.gen_lblscripts()
-    sim.run_lblabc()
-
-    if cloud_type == 0:
-        sim.aerosols = smart.interface.Aerosols(cirrus=True, stratocum=False)
-        sim.tag = "prox_cirrus"
-
-    elif cloud_type == 1:
-        sim.aerosols = smart.interface.Aerosols(cirrus=False, stratocum=True)
-        sim.tag = "prox_strato"
-
-    else:
-        pass
-
-    sim.write_smart(write_file = True)
-    sim.run_smart()
-
-    sim.open_outputs()
-    wl = sim.output.rad.lam
-    flux = sim.output.rad.pflux
-    sflux = sim.output.rad.sflux
-
-    adj_flux = flux/sflux
-
-    return(wl, flux)
 
 def run_earth(lamin, lamax, res):
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
@@ -215,117 +162,147 @@ def run_earth(lamin, lamax, res):
 
 def clouds_out(lamin, lamax, res):
     wl, flux = run_prox(lamin, lamax, res)
-    wl2, flux2 = clouds(lamin, lamax, 0, res)
-    wl3, flux3 = clouds(lamin, lamax, 1, res)
+    wl2, flux2 = cloud_weight(lamin, lamax, res)
+    wl3, flux3 = cloud_weight(lamin, lamax, res)
     avg_flux = (0.5*flux[:min(len(flux), len(flux2), len(flux3))]+0.25*flux2[:min(len(flux), len(flux2), len(flux3))]+0.25*flux3[:min(len(flux), len(flux2), len(flux3))])
     return(wl, avg_flux)
 
 def ocean_loss(lamin, lamax, res):
-    place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    name = 'highd'
+    sim = smart.interface.Smart(tag = name)
+    minwn = int(1e4/lamax)
+    maxwn = int(1e4/lamin)
+    smart_file = name + "_" + str(minwn) + "_" + str(maxwn) + "cm_toa.rad"
+    try:
+        f = open(smart_file)
+        print("file exists")
+        data = smart.readsmart.read_rad(smart_file)
+        wl = data.lam
+        flux = data.pflux
+        sflux = data.sflux
+        flux = flux/sflux
+    except IOError:
+        print("File does not exist")
+        place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
 
-    sim = smart.interface.Smart(tag = "highd")
-    sim.set_run_in_place(place)
-    sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    
-    infile = "/gscratch/vsm/mwjl/projects/high_res/inputs/10bar_O2_dry.pt_filtered.pt"
-    label = "Simulated post ocean-loss planet orbiting Proxima Centauri"
-    sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/desert_highd.alb"
-    sim.set_planet_proxima_b()
-    sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
-   
-    o2 = sim.atmosphere.gases[1]
-    o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
+        sim = smart.interface.Smart(tag = "highd")
+        sim.set_run_in_place(place)
+        sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        
+        infile = "/gscratch/vsm/mwjl/projects/high_res/inputs/10bar_O2_dry.pt_filtered.pt"
+        label = "Simulated post ocean-loss planet orbiting Proxima Centauri"
+        sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/desert_highd.alb"
+        sim.set_planet_proxima_b()
+        sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
+       
+        o2 = sim.atmosphere.gases[1]
+        o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
 
-    sim.set_run_in_place() 
-    sim.set_executables_automatically()
+        sim.set_run_in_place() 
+        sim.set_executables_automatically()
 
-    sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016.par' #/gscratch/vsm/alinc/fixed_input/
-    sim.lblin.hitran_tag = 'hitran2016'
-    sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
-    sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
+        sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016.par' #/gscratch/vsm/alinc/fixed_input/
+        sim.lblin.hitran_tag = 'hitran2016'
+        sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
+        sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
 
-    sim.smartin.sza = 57
+        sim.smartin.sza = 57
 
-    sim.smartin.FWHM = res
-    sim.smartin.sample_res = res
+        sim.smartin.FWHM = res
+        sim.smartin.sample_res = res
 
-    sim.smartin.minwn = 1e4/lamax
-    sim.smartin.maxwn = 1e4/lamin 
+        sim.smartin.minwn = 1e4/lamax
+        sim.smartin.maxwn = 1e4/lamin 
 
-    sim.lblin.minwn = 1e4/lamax
-    sim.lblin.maxwn = 1e4/lamin
+        sim.lblin.minwn = 1e4/lamax
+        sim.lblin.maxwn = 1e4/lamin
 
-    sim.smartin.iraylei = [4]
-    sim.smartin.vraylei = [1]
+        sim.smartin.iraylei = [4]
+        sim.smartin.vraylei = [1]
 
-    sim.gen_lblscripts()
-    sim.run_lblabc()
-    sim.write_smart(write_file = True)
-    sim.run_smart()
+        sim.gen_lblscripts()
+        sim.run_lblabc()
+        sim.write_smart(write_file = True)
+        sim.run_smart()
 
-    sim.open_outputs()
-    wl2 = sim.output.rad.lam
-    flux2 = sim.output.rad.pflux
-    sflux2 = sim.output.rad.sflux
+        sim.open_outputs()
+        wl = sim.output.rad.lam
+        flux = sim.output.rad.pflux
+        sflux = sim.output.rad.sflux
 
-    adj_flux2 = flux2/sflux2
-    return(wl2, flux2)
+        flux = flux2/sflux2
+    return(wl, flux)
 
 def ocean_outgassing(lamin, lamax, res):
-    place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    name = 'highw'
+    sim = smart.interface.Smart(tag = name)
+    minwn = int(1e4/lamax)
+    maxwn = int(1e4/lamin)
+    smart_file = name + "_" + str(minwn) + "_" + str(maxwn) + "cm_toa.rad"
+    try:
+        f = open(smart_file)
+        print("file exists")
+        data = smart.readsmart.read_rad(smart_file)
+        wl = data.lam
+        flux = data.pflux
+        sflux = data.sflux
+        flux = flux/sflux
+    except IOError:
+        print("File does not exist")
+        place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
 
-    sim2 = smart.interface.Smart(tag = "highw")
-    sim2.set_run_in_place(place)
-    sim2.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim2.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim2.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    infile2 = "/gscratch/vsm/mwjl/projects/high_res/inputs/10bar_O2_wet.pt_filtered.pt"
-    label = "Ocean Outgassing"
-    sim2.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/earth_noveg_highw.alb"
-    sim2.set_planet_proxima_b()
-    sim2.set_star_proxima()
+        sim2 = smart.interface.Smart(tag = "highw")
+        sim2.set_run_in_place(place)
+        sim2.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        sim2.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        sim2.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        infile2 = "/gscratch/vsm/mwjl/projects/high_res/inputs/10bar_O2_wet.pt_filtered.pt"
+        label = "Ocean Outgassing"
+        sim2.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/earth_noveg_highw.alb"
+        sim2.set_planet_proxima_b()
+        sim2.set_star_proxima()
 
-    sim2.set_run_in_place() 
-    sim2.set_executables_automatically()
+        sim2.set_run_in_place() 
+        sim2.set_executables_automatically()
 
-    sim2.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016.par' #/gscratch/vsm/alinc/fixed_input/
-    sim2.lblin.hitran_tag = 'hitran2016'
-    sim2.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
-    sim2.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
+        sim2.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016.par' #/gscratch/vsm/alinc/fixed_input/
+        sim2.lblin.hitran_tag = 'hitran2016'
+        sim2.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
+        sim2.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
 
-    sim2.smartin.sza = 57
-    sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
+        sim2.smartin.sza = 57
+        sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
 
-    sim2.smartin.FWHM = res
-    sim2.smartin.sample_res = res
+        sim2.smartin.FWHM = res
+        sim2.smartin.sample_res = res
 
-    sim2.smartin.minwn = 1e4/lamax
-    sim2.smartin.maxwn = 1e4/lamin 
+        sim2.smartin.minwn = 1e4/lamax
+        sim2.smartin.maxwn = 1e4/lamin 
 
-    sim2.lblin.minwn = 1e4/lamax
-    sim2.lblin.maxwn = 1e4/lamin 
+        sim2.lblin.minwn = 1e4/lamax
+        sim2.lblin.maxwn = 1e4/lamin 
 
 
-    o2 = sim2.atmosphere.gases[2]
-    o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
+        o2 = sim2.atmosphere.gases[2]
+        o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
 
-    sim2.smartin.iraylei = [4]
-    sim2.smartin.vraylei = [1]
+        sim2.smartin.iraylei = [4]
+        sim2.smartin.vraylei = [1]
 
-    sim2.gen_lblscripts()
-    sim2.run_lblabc()
-    sim2.write_smart(write_file = True)
-    sim2.run_smart()
+        sim2.gen_lblscripts()
+        sim2.run_lblabc()
+        sim2.write_smart(write_file = True)
+        sim2.run_smart()
 
-    sim2.open_outputs()
-    wl2 = sim2.output.rad.lam
-    flux2 = sim2.output.rad.pflux
-    sflux2 = sim2.output.rad.sflux
+        sim2.open_outputs()
+        wl = sim2.output.rad.lam
+        flux = sim2.output.rad.pflux
+        sflux = sim2.output.rad.sflux
 
-    adj_flux2 = flux2/sflux2 * math.pi
-    return(wl2, flux2)
+        flux = flux/sflux * math.pi
+        return(wl, flux)
 
 def fluxes(lamin, lamax):
     lamin = 0.76
@@ -686,14 +663,6 @@ def read_integ():
         phase.astype(np.float)
         output = output[:len(phase)]
         phase = phase[:len(output)]       
-    #    fig, ax = plt.subplots(figsize = (12,12))
-    #    ax.plot(phase, output[:,1])
-    #    ax.set_title("Integration Metric over Phase")
-    #    ax.set_ylabel("Integration Metric")
-    #    ax.set_xlabel("Phase")
-    #    out_name = name[:-4] + ".png"
-    #    fig.savefig(out_name, bbox_inches = 'tight')
-
         integ = integrate.trapz(output,phase) 
         f = open("/gscratch/vsm/mwjl/projects/high_res/scripts/integrations_fin.txt", "a")
         f.write(str(integ) + '\n')
@@ -720,8 +689,8 @@ if __name__ == '__main__':
         # On a mox compute node: ready to run
         print('job submitted') 
 #        integ_calc(0.74, 0.78, 0)
-#        read_integ()
-        flux_calc(0.76, 0.78,0)
+        read_integ()
+#        flux_calc(0.76, 0.78,0)
     else:
         fluxes(0.60,0.70)
 

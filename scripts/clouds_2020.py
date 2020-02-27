@@ -12,60 +12,75 @@ import math
 import scipy
 from scipy.interpolate import interp1d
 import scipy.integrate as integrate
+
 def earth_like_hyak(lamin, lamax, res):
-    
-    place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim = smart.interface.Smart(tag = "prox")
-    sim.set_run_in_place(place)
-    
-    sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    name = 'prox'
+    sim = smart.interface.Smart(tag = name)
+    minwn = int(1e4/lamax)
+    maxwn = int(1e4/lamin)
+    smart_file = name + "_" + str(minwn) + "_" + str(maxwn) + "cm_toa.rad"
+    try:
+        f = open(smart_file)
+        print("file exists")
+        data = smart.readsmart.read_rad(smart_file)
+        wl = data.lam
+        flux = data.pflux
+        sflux = data.sflux
+        flux = flux/sflux
+    except IOError:
+        print("File does not exist")
+        
+        place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        sim.set_run_in_place(place)
+        
+        sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
 
-    infile = "/gscratch/vsm/mwjl/projects/high_res/inputs/profile_Earth_proxb_.pt_filtered"
-    label = "Simulated Earth-like planet orbiting Proxima Centauri"
-    sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/composite1_txt.txt"
-    sim.set_planet_proxima_b()
-    sim.load_atmosphere_from_pt(infile, addn2 = True)
-    
-    o2 = sim.atmosphere.gases[3]
-    o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
-    label = "Earth-Like"
-    sim.set_planet_proxima_b()
-    sim.set_star_proxima()
+        infile = "/gscratch/vsm/mwjl/projects/high_res/inputs/profile_Earth_proxb_.pt_filtered"
+        label = "Simulated Earth-like planet orbiting Proxima Centauri"
+        sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/composite1_txt.txt"
+        sim.set_planet_proxima_b()
+        sim.load_atmosphere_from_pt(infile, addn2 = True)
+        
+        o2 = sim.atmosphere.gases[3]
+        o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
+        label = "Earth-Like"
+        sim.set_planet_proxima_b()
+        sim.set_star_proxima()
 
-    sim.set_executables_automatically()
+        sim.set_executables_automatically()
 
-    sim.lblin.par_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/HITRAN2019.par' #/gscratch/vsm/alinc/fixed_input/
-    sim.lblin.hitran_tag = 'hitran2016'
-    sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
-    sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
-    sim.lblin.par_index = 7
-
-
-    sim.smartin.sza = 57
-
-    sim.smartin.FWHM = res
-    sim.smartin.sample_res = res
-
-    sim.smartin.minwn = 1e4/lamax
-    sim.smartin.maxwn = 1e4/lamin 
-
-    sim.lblin.minwn = 1e4/lamax
-    sim.lblin.maxwn = 1e4/lamin 
+        sim.lblin.par_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/HITRAN2019.par' #/gscratch/vsm/alinc/fixed_input/
+        sim.lblin.hitran_tag = 'hitran2016'
+        sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
+        sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
+        sim.lblin.par_index = 7
 
 
-    sim.gen_lblscripts()
-    sim.run_lblabc()
-    sim.write_smart(write_file = True)
-    sim.run_smart()
+        sim.smartin.sza = 57
 
-    sim.open_outputs()
-    wl = sim.output.rad.lam
-    flux = sim.output.rad.pflux
-    sflux = sim.output.rad.sflux
-    adj_flux = (flux/sflux)
-    return(wl, adj_flux)
+        sim.smartin.FWHM = res
+        sim.smartin.sample_res = res
+
+        sim.smartin.minwn = 1e4/lamax
+        sim.smartin.maxwn = 1e4/lamin 
+
+        sim.lblin.minwn = 1e4/lamax
+        sim.lblin.maxwn = 1e4/lamin 
+
+
+        sim.gen_lblscripts()
+        sim.run_lblabc()
+        sim.write_smart(write_file = True)
+        sim.run_smart()
+
+        sim.open_outputs()
+        wl = sim.output.rad.lam
+        flux = sim.output.rad.pflux
+        sflux = sim.output.rad.sflux
+        flux = (flux/sflux)
+    return(wl, flux)
 
 def earth(lamin, lamax, res):
     
@@ -165,382 +180,455 @@ def cloud_frac():
 
 def cirrus(lamin, lamax, res):
 
-    place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim = smart.interface.Smart(tag = "prox_cirrus")
-    sim.set_run_in_place(place)
-    
-    sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    name = 'prox_cirrus'
+    sim = smart.interface.Smart(tag = name)
+    minwn = int(1e4/lamax)
+    maxwn = int(1e4/lamin)
+    smart_file = name + "_" + str(minwn) + "_" + str(maxwn) + "cm_toa.rad"
+    try:
+        f = open(smart_file)
+        print("file exists")
+        data = smart.readsmart.read_rad(smart_file)
+        wl = data.lam
+        flux = data.pflux
+        sflux = data.sflux
+        flux = flux/sflux
+    except IOError:
+        print("File does not exist")
 
-    infile = "/gscratch/vsm/mwjl/projects/high_res/inputs/profile_Earth_proxb_.pt_filtered"
-    label = "Simulated Earth-like planet orbiting Proxima Centauri"
-    sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/composite1_txt.txt"
-    sim.set_planet_proxima_b()
-    sim.load_atmosphere_from_pt(infile, addn2 = False)
-    
-    o2 = sim.atmosphere.gases[3]
-    o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
-    label = "Earth-Like"
-    sim.set_planet_proxima_b()
-    sim.set_star_proxima()
+        place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        sim.set_run_in_place(place)
+        
+        sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
 
-    sim.set_executables_automatically()
+        infile = "/gscratch/vsm/mwjl/projects/high_res/inputs/profile_Earth_proxb_.pt_filtered"
+        label = "Simulated Earth-like planet orbiting Proxima Centauri"
+        sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/composite1_txt.txt"
+        sim.set_planet_proxima_b()
+        sim.load_atmosphere_from_pt(infile, addn2 = False)
+        
+        o2 = sim.atmosphere.gases[3]
+        o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
+        label = "Earth-Like"
+        sim.set_planet_proxima_b()
+        sim.set_star_proxima()
 
-    sim.lblin.par_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/HITRAN2019.par'
-    sim.lblin.hitran_tag = 'hitran2016'
-    sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
-    sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
-    sim.lblin.par_index = 7
+        sim.set_executables_automatically()
 
-
-    sim.smartin.sza = 57
-
-    sim.smartin.FWHM = res
-    sim.smartin.sample_res = res
-
-    sim.smartin.minwn = 1e4/lamax
-    sim.smartin.maxwn = 1e4/lamin 
-
-    sim.lblin.minwn = 1e4/lamax
-    sim.lblin.maxwn = 1e4/lamin 
+        sim.lblin.par_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/HITRAN2019.par'
+        sim.lblin.hitran_tag = 'hitran2016'
+        sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
+        sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
+        sim.lblin.par_index = 7
 
 
-    sim.gen_lblscripts()
-    sim.run_lblabc()
+        sim.smartin.sza = 57
 
-    f_cirrus, f_strato = cloud_frac()
-    
-    # Create a cirrus cloud mie scattering aerosol mode
-    mie_cirrus = smart.interface.MieMode(mie_file = os.path.join(smart.interface.CLDMIEDIR, "baum_cirrus_de100.mie"),
-                                         mie_skip = 1,
-                                         mie_lines =
-                                         '1,4,5,3',
-                                         iang_smart = 2)
+        sim.smartin.FWHM = res
+        sim.smartin.sample_res = res
 
-    # Create an optical depth profile
-    tau_cirrus = smart.interface.CloudTau(vert_file = os.path.join(smart.interface.CLDMIEDIR, "cld_tau.dat"),
-                                          vert_ref_wno = 1e4/lamax,
-                                          vert_skip = 4,
-                                          vert_coord = 1,
-                                          vert_xscale = f_cirrus,
-                                          vert_yscale = 2.0)
+        sim.smartin.minwn = 1e4/lamax
+        sim.smartin.maxwn = 1e4/lamin 
 
-    # Create an Aerosol object with our cirrus mie scattering and optical depths
-    cirrus = smart.interface.Aerosols(miemodes=[mie_cirrus],
-                                      mietau=[tau_cirrus])
+        sim.lblin.minwn = 1e4/lamax
+        sim.lblin.maxwn = 1e4/lamin 
 
-    sim.aerosols = cirrus
 
-    sim.write_smart(write_file = True)
-    sim.run_smart()
+        sim.gen_lblscripts()
+        sim.run_lblabc()
 
-    sim.open_outputs()
-    wl = sim.output.rad.lam
-    flux = sim.output.rad.pflux
-    sflux = sim.output.rad.sflux
+        f_cirrus, f_strato = cloud_frac()
+        
+        # Create a cirrus cloud mie scattering aerosol mode
+        mie_cirrus = smart.interface.MieMode(mie_file = os.path.join(smart.interface.CLDMIEDIR, "baum_cirrus_de100.mie"),
+                                             mie_skip = 1,
+                                             mie_lines =
+                                             '1,4,5,3',
+                                             iang_smart = 2)
 
-    adj_flux = flux/sflux
+        # Create an optical depth profile
+        tau_cirrus = smart.interface.CloudTau(vert_file = os.path.join(smart.interface.CLDMIEDIR, "cld_tau.dat"),
+                                              vert_ref_wno = 1e4/lamax,
+                                              vert_skip = 4,
+                                              vert_coord = 1,
+                                              vert_xscale = f_cirrus,
+                                              vert_yscale = 2.0)
 
-    return(wl, adj_flux)
+        # Create an Aerosol object with our cirrus mie scattering and optical depths
+        cirrus = smart.interface.Aerosols(miemodes=[mie_cirrus],
+                                          mietau=[tau_cirrus])
+
+        sim.aerosols = cirrus
+
+        sim.write_smart(write_file = True)
+        sim.run_smart()
+
+        sim.open_outputs()
+        wl = sim.output.rad.lam
+        flux = sim.output.rad.pflux
+        sflux = sim.output.rad.sflux
+
+        flux = flux/sflux
+
+    return(wl, flux)
 
 def strato(lamin, lamax, res):
-    place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim = smart.interface.Smart(tag = "prox_strato")
-    sim.set_run_in_place(place)
+    name = 'prox_strato'
+    sim = smart.interface.Smart(tag = name)
+    minwn = int(1e4/lamax)
+    maxwn = int(1e4/lamin)
+    smart_file = name + "_" + str(minwn) + "_" + str(maxwn) + "cm_toa.rad"
+    try:
+        f = open(smart_file)
+        print("file exists")
+        data = smart.readsmart.read_rad(smart_file)
+        wl = data.lam
+        flux = data.pflux
+        sflux = data.sflux
+        flux = flux/sflux
+    except IOError:
+        print("File does not exist")
+
+        place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        sim = smart.interface.Smart(tag = "prox_strato")
+        sim.set_run_in_place(place)
     
-    sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
 
-    infile = "/gscratch/vsm/mwjl/projects/high_res/inputs/profile_Earth_proxb_.pt_filtered"
-    label = "Simulated Earth-like planet orbiting Proxima Centauri"
-    sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/composite1_txt.txt"
-    sim.set_planet_proxima_b()
-    sim.load_atmosphere_from_pt(infile, addn2 = False)
-    
-    o2 = sim.atmosphere.gases[3]
-    o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
-    label = "Earth-Like"
-    sim.set_planet_proxima_b()
-    sim.set_star_proxima()
+        infile = "/gscratch/vsm/mwjl/projects/high_res/inputs/profile_Earth_proxb_.pt_filtered"
+        label = "Simulated Earth-like planet orbiting Proxima Centauri"
+        sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/composite1_txt.txt"
+        sim.set_planet_proxima_b()
+        sim.load_atmosphere_from_pt(infile, addn2 = False)
+        
+        o2 = sim.atmosphere.gases[3]
+        o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
+        label = "Earth-Like"
+        sim.set_planet_proxima_b()
+        sim.set_star_proxima()
 
-    sim.set_executables_automatically()
+        sim.set_executables_automatically()
 
-    sim.lblin.par_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/HITRAN2019.par'
-    sim.lblin.hitran_tag = 'hitran2016'
-    sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
-    sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
-    sim.lblin.par_index = 7
-
-
-    sim.smartin.sza = 57
-
-    sim.smartin.FWHM = res
-    sim.smartin.sample_res = res
-
-    sim.smartin.minwn = 1e4/lamax
-    sim.smartin.maxwn = 1e4/lamin 
-
-    sim.lblin.minwn = 1e4/lamax
-    sim.lblin.maxwn = 1e4/lamin 
+        sim.lblin.par_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/HITRAN2019.par'
+        sim.lblin.hitran_tag = 'hitran2016'
+        sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
+        sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
+        sim.lblin.par_index = 7
 
 
-    sim.gen_lblscripts()
-    sim.run_lblabc()
+        sim.smartin.sza = 57
 
-    f_cirrus, f_strato = cloud_frac()
+        sim.smartin.FWHM = res
+        sim.smartin.sample_res = res
 
-    # Create a stratocumulus cloud mie scattering aerosol mode
-    mie_strato = smart.interface.MieMode(mie_file = os.path.join(smart.interface.CLDMIEDIR, "strato_cum.mie"),
-                                         mie_skip = 19,
-                                         mie_lines = '1,7,8,11',
-                                         iang_smart = 1,
-                                         mom_skip = 17)
+        sim.smartin.minwn = 1e4/lamax
+        sim.smartin.maxwn = 1e4/lamin 
 
-    # Create an optical depth profile
-    tau_strato = smart.interface.CloudTau(vert_file = os.path.join(smart.interface.CLDMIEDIR, "cld_tau.dat"),
-                                          vert_ref_wno = 1e4/lamax,
-                                          vert_skip = 28,
-                                          vert_coord = 1,
-                                          vert_xscale = f_strato,
-                                          vert_yscale = 1.0)
-
-    # Create an Aerosol object with our stratocumulus mie scattering and optical depths
-    strato = smart.interface.Aerosols(miemodes=[mie_strato],
-                                      mietau=[tau_strato])
-
-    sim.aerosols = strato
+        sim.lblin.minwn = 1e4/lamax
+        sim.lblin.maxwn = 1e4/lamin 
 
 
-    sim.write_smart(write_file = True)
-    sim.run_smart()
+        sim.gen_lblscripts()
+        sim.run_lblabc()
 
-    sim.open_outputs()
-    wl = sim.output.rad.lam
-    flux = sim.output.rad.pflux
-    sflux = sim.output.rad.sflux
+        f_cirrus, f_strato = cloud_frac()
 
-    adj_flux = flux/sflux
+        # Create a stratocumulus cloud mie scattering aerosol mode
+        mie_strato = smart.interface.MieMode(mie_file = os.path.join(smart.interface.CLDMIEDIR, "strato_cum.mie"),
+                                             mie_skip = 19,
+                                             mie_lines = '1,7,8,11',
+                                             iang_smart = 1,
+                                             mom_skip = 17)
 
-    return(wl, adj_flux)
+        # Create an optical depth profile
+        tau_strato = smart.interface.CloudTau(vert_file = os.path.join(smart.interface.CLDMIEDIR, "cld_tau.dat"),
+                                              vert_ref_wno = 1e4/lamax,
+                                              vert_skip = 28,
+                                              vert_coord = 1,
+                                              vert_xscale = f_strato,
+                                              vert_yscale = 1.0)
+
+        # Create an Aerosol object with our stratocumulus mie scattering and optical depths
+        strato = smart.interface.Aerosols(miemodes=[mie_strato],
+                                          mietau=[tau_strato])
+
+        sim.aerosols = strato
+
+
+        sim.write_smart(write_file = True)
+        sim.run_smart()
+
+        sim.open_outputs()
+        wl = sim.output.rad.lam
+        flux = sim.output.rad.pflux
+        sflux = sim.output.rad.sflux
+
+        flux = flux/sflux
+
+    return(wl, flux)
 
 def ocean_outgassing(lamin, lamax, res):
-    place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+    name = 'highw'
+    sim = smart.interface.Smart(tag = name)
+    minwn = int(1e4/lamax)
+    maxwn = int(1e4/lamin)
+    smart_file = name + "_" + str(minwn) + "_" + str(maxwn) + "cm_toa.rad"
+    try:
+        f = open(smart_file)
+        print("file exists")
+        data = smart.readsmart.read_rad(smart_file)
+        wl = data.lam
+        flux = data.pflux
+        sflux = data.sflux
+        flux = flux/sflux
+    except IOError:
+        print("File does not exist")
 
-    sim2 = smart.interface.Smart(tag = "highw")
-    sim2.set_run_in_place(place)
-    sim2.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim2.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim2.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    infile2 = "/gscratch/vsm/mwjl/projects/high_res/inputs/10bar_O2_wet.pt_filtered.pt"
-    label = "Ocean Outgassing"
-    sim2.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/earth_noveg_highw.alb"
-    sim2.set_planet_proxima_b()
-    sim2.set_star_proxima()
+        place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
 
-    sim2.set_run_in_place() 
-    sim2.set_executables_automatically()
+        sim2.set_run_in_place(place)
+        sim2.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        sim2.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        sim2.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        infile2 = "/gscratch/vsm/mwjl/projects/high_res/inputs/10bar_O2_wet.pt_filtered.pt"
+        label = "Ocean Outgassing"
+        sim2.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/earth_noveg_highw.alb"
+        sim2.set_planet_proxima_b()
+        sim2.set_star_proxima()
 
-    sim2.lblin.par_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/HITRAN2019.par' #/gscratch/vsm/alinc/fixed_input/
-    sim2.lblin.hitran_tag = 'hitran2016'
-    sim2.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
-    sim2.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
-    sim2.lblin.par_index = 7
+        sim2.set_run_in_place() 
+        sim2.set_executables_automatically()
 
-    sim2.smartin.iraylei = [4]
-    sim2.smartin.vraylei = [1]
+        sim2.lblin.par_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/HITRAN2019.par' #/gscratch/vsm/alinc/fixed_input/
+        sim2.lblin.hitran_tag = 'hitran2016'
+        sim2.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
+        sim2.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
+        sim2.lblin.par_index = 7
 
-    sim2.smartin.sza = 57
-    sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
+        sim2.smartin.iraylei = [4]
+        sim2.smartin.vraylei = [1]
 
-    sim2.smartin.FWHM = res
-    sim2.smartin.sample_res = res
+        sim2.smartin.sza = 57
+        sim2.load_atmosphere_from_pt(infile2, addn2 = False, scaleP = 1.0)
 
-    sim2.smartin.minwn = 1e4/lamax
-    sim2.smartin.maxwn = 1e4/lamin 
+        sim2.smartin.FWHM = res
+        sim2.smartin.sample_res = res
 
-    sim2.lblin.minwn = 1e4/lamax
-    sim2.lblin.maxwn = 1e4/lamin 
+        sim2.smartin.minwn = 1e4/lamax
+        sim2.smartin.maxwn = 1e4/lamin 
+
+        sim2.lblin.minwn = 1e4/lamax
+        sim2.lblin.maxwn = 1e4/lamin 
 
 
-    o2 = sim2.atmosphere.gases[2]
-    o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
+        o2 = sim2.atmosphere.gases[2]
+        o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
 
-    sim2.gen_lblscripts()
-    sim2.run_lblabc()
-    sim2.write_smart(write_file = True)
-    sim2.run_smart()
+        sim2.gen_lblscripts()
+        sim2.run_lblabc()
+        sim2.write_smart(write_file = True)
+        sim2.run_smart()
 
-    sim2.open_outputs()
-    wl2 = sim2.output.rad.lam
-    flux2 = sim2.output.rad.pflux
-    sflux2 = sim2.output.rad.sflux
+        sim2.open_outputs()
+        wl = sim2.output.rad.lam
+        flux = sim2.output.rad.pflux
+        sflux = sim2.output.rad.sflux
 
-    adj_flux2 = flux2/sflux2
-    return(wl2, adj_flux2)
+        flux = flux/sflux
+    return(wl, flux)
 
 def outgassing_cirrus(lamin, lamax, res):
+    name = 'highw_cirrus'
+    sim = smart.interface.Smart(tag = name)
+    minwn = int(1e4/lamax)
+    maxwn = int(1e4/lamin)
+    smart_file = name + "_" + str(minwn) + "_" + str(maxwn) + "cm_toa.rad"
+    try:
+        f = open(smart_file)
+        print("file exists")
+        data = smart.readsmart.read_rad(smart_file)
+        wl = data.lam
+        flux = data.pflux
+        sflux = data.sflux
+        flux = flux/sflux
+    except IOError:
+        print("File does not exist")
 
-    place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim = smart.interface.Smart(tag = "highw_cirrus")
-    sim.set_run_in_place(place)
-    
-    sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        sim.set_run_in_place(place)
+        
+        sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
 
-    infile = "/gscratch/vsm/mwjl/projects/high_res/inputs/10bar_O2_wet.pt_filtered.pt"
-    label = "Ocean Outgassing"
-    sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/earth_noveg_highw.alb"
-    sim.set_planet_proxima_b()
-    sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
-    
-    o2 = sim.atmosphere.gases[3]
-    o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
-    label = "Earth-Like"
-    sim.set_planet_proxima_b()
-    sim.set_star_proxima()
+        infile = "/gscratch/vsm/mwjl/projects/high_res/inputs/10bar_O2_wet.pt_filtered.pt"
+        label = "Ocean Outgassing"
+        sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/earth_noveg_highw.alb"
+        sim.set_planet_proxima_b()
+        sim.load_atmosphere_from_pt(infile, addn2 = False)
+        
+        o2 = sim.atmosphere.gases[3]
+        o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
+        label = "Earth-Like"
+        sim.set_planet_proxima_b()
+        sim.set_star_proxima()
 
-    sim.set_executables_automatically()
+        sim.set_executables_automatically()
 
-    sim.lblin.par_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/HITRAN2019.par'
-    sim.lblin.hitran_tag = 'hitran2016'
-    sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
-    sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
-    sim.lblin.par_index = 7
-
-
-    sim.smartin.sza = 57
-
-    sim.smartin.FWHM = res
-    sim.smartin.sample_res = res
-
-    sim.smartin.minwn = 1e4/lamax
-    sim.smartin.maxwn = 1e4/lamin 
-
-    sim.lblin.minwn = 1e4/lamax
-    sim.lblin.maxwn = 1e4/lamin 
+        sim.lblin.par_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/HITRAN2019.par'
+        sim.lblin.hitran_tag = 'hitran2016'
+        sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
+        sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
+        sim.lblin.par_index = 7
 
 
-    sim.gen_lblscripts()
-    sim.run_lblabc()
+        sim.smartin.sza = 57
 
-    f_cirrus, f_strato = cloud_frac()
-    
-    # Create a cirrus cloud mie scattering aerosol mode
-    mie_cirrus = smart.interface.MieMode(mie_file = os.path.join(smart.interface.CLDMIEDIR, "baum_cirrus_de100.mie"),
-                                         mie_skip = 1,
-                                         mie_lines =
-                                         '1,4,5,3',
-                                         iang_smart = 2)
+        sim.smartin.FWHM = res
+        sim.smartin.sample_res = res
 
-    # Create an optical depth profile
-    tau_cirrus = smart.interface.CloudTau(vert_file = os.path.join(smart.interface.CLDMIEDIR, "cld_tau.dat"),
-                                          vert_ref_wno = 1e4/lamax,
-                                          vert_skip = 4,
-                                          vert_coord = 1,
-                                          vert_xscale = f_cirrus,
-                                          vert_yscale = 2.0)
+        sim.smartin.minwn = 1e4/lamax
+        sim.smartin.maxwn = 1e4/lamin 
 
-    # Create an Aerosol object with our cirrus mie scattering and optical depths
-    cirrus = smart.interface.Aerosols(miemodes=[mie_cirrus],
-                                      mietau=[tau_cirrus])
+        sim.lblin.minwn = 1e4/lamax
+        sim.lblin.maxwn = 1e4/lamin 
 
-    sim.aerosols = cirrus
 
-    sim.write_smart(write_file = True)
-    sim.run_smart()
+        sim.gen_lblscripts()
+        sim.run_lblabc()
 
-    sim.open_outputs()
-    wl = sim.output.rad.lam
-    flux = sim.output.rad.pflux
-    sflux = sim.output.rad.sflux
+        f_cirrus, f_strato = cloud_frac()
+        
+        # Create a cirrus cloud mie scattering aerosol mode
+        mie_cirrus = smart.interface.MieMode(mie_file = os.path.join(smart.interface.CLDMIEDIR, "baum_cirrus_de100.mie"),
+                                             mie_skip = 1,
+                                             mie_lines =
+                                             '1,4,5,3',
+                                             iang_smart = 2)
 
-    adj_flux = flux/sflux
+        # Create an optical depth profile
+        tau_cirrus = smart.interface.CloudTau(vert_file = os.path.join(smart.interface.CLDMIEDIR, "cld_tau.dat"),
+                                              vert_ref_wno = 1e4/lamax,
+                                              vert_skip = 4,
+                                              vert_coord = 1,
+                                              vert_xscale = f_cirrus,
+                                              vert_yscale = 2.0)
 
-    return(wl, adj_flux)
+        # Create an Aerosol object with our cirrus mie scattering and optical depths
+        cirrus = smart.interface.Aerosols(miemodes=[mie_cirrus],
+                                          mietau=[tau_cirrus])
+
+        sim.aerosols = cirrus
+
+        sim.write_smart(write_file = True)
+        sim.run_smart()
+
+        sim.open_outputs()
+        wl = sim.output.rad.lam
+        flux = sim.output.rad.pflux
+        sflux = sim.output.rad.sflux
+
+        flux = flux/sflux
+
+    return(wl, flux)
 
 def outgassing_strato(lamin, lamax, res):
+    name = 'highw_strato'
+    sim = smart.interface.Smart(tag = name)
+    minwn = int(1e4/lamax)
+    maxwn = int(1e4/lamin)
+    smart_file = name + "_" + str(minwn) + "_" + str(maxwn) + "cm_toa.rad"
+    try:
+        f = open(smart_file)
+        print("file exists")
+        data = smart.readsmart.read_rad(smart_file)
+        wl = data.lam
+        flux = data.pflux
+        sflux = data.sflux
+        flux = flux/sflux
+    except IOError:
+        print("File does not exist")
+        place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        sim.set_run_in_place(place)
+        
+        sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
 
-    place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim = smart.interface.Smart(tag = "highw_strato")
-    sim.set_run_in_place(place)
-    
-    sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        infile = "/gscratch/vsm/mwjl/projects/high_res/inputs/10bar_O2_wet.pt_filtered.pt"
+        label = "Ocean Outgassing"
+        sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/earth_noveg_highw.alb"
+        sim.set_planet_proxima_b()
+        sim.load_atmosphere_from_pt(infile, addn2 = False)
+        
+        o2 = sim.atmosphere.gases[3]
+        o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
+        label = "Earth-Like"
+        sim.set_planet_proxima_b()
+        sim.set_star_proxima()
 
-    infile = "/gscratch/vsm/mwjl/projects/high_res/inputs/10bar_O2_wet.pt_filtered.pt"
-    label = "Ocean Outgassing"
-    sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/earth_noveg_highw.alb"
-    sim.set_planet_proxima_b()
-    sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
-    
-    o2 = sim.atmosphere.gases[3]
-    o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
-    label = "Earth-Like"
-    sim.set_planet_proxima_b()
-    sim.set_star_proxima()
+        sim.set_executables_automatically()
 
-    sim.set_executables_automatically()
-
-    sim.lblin.par_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/HITRAN2019.par'
-    sim.lblin.hitran_tag = 'hitran2016'
-    sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
-    sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
-    sim.lblin.par_index = 7
+        sim.lblin.par_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/HITRAN2019.par'
+        sim.lblin.hitran_tag = 'hitran2016'
+        sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
+        sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
+        sim.lblin.par_index = 7
 
 
-    sim.smartin.sza = 57
+        sim.smartin.sza = 57
 
-    sim.smartin.FWHM = res
-    sim.smartin.sample_res = res
+        sim.smartin.FWHM = res
+        sim.smartin.sample_res = res
 
-    sim.smartin.minwn = 1e4/lamax
-    sim.smartin.maxwn = 1e4/lamin 
+        sim.smartin.minwn = 1e4/lamax
+        sim.smartin.maxwn = 1e4/lamin 
 
-    sim.lblin.minwn = 1e4/lamax
-    sim.lblin.maxwn = 1e4/lamin 
+        sim.lblin.minwn = 1e4/lamax
+        sim.lblin.maxwn = 1e4/lamin 
 
 
-    sim.gen_lblscripts()
-    sim.run_lblabc()
+        sim.gen_lblscripts()
+        sim.run_lblabc()
 
-    f_cirrus, f_strato = cloud_frac()
-    
-     # Create a stratocumulus cloud mie scattering aerosol mode
-    mie_strato = smart.interface.MieMode(mie_file = os.path.join(smart.interface.CLDMIEDIR, "strato_cum.mie"),
-                                         mie_skip = 19,
-                                         mie_lines = '1,7,8,11',
-                                         iang_smart = 1,
-                                         mom_skip = 17)
+        f_cirrus, f_strato = cloud_frac()
+        
+         # Create a stratocumulus cloud mie scattering aerosol mode
+        mie_strato = smart.interface.MieMode(mie_file = os.path.join(smart.interface.CLDMIEDIR, "strato_cum.mie"),
+                                             mie_skip = 19,
+                                             mie_lines = '1,7,8,11',
+                                             iang_smart = 1,
+                                             mom_skip = 17)
 
-    # Create an optical depth profile
-    tau_strato = smart.interface.CloudTau(vert_file = os.path.join(smart.interface.CLDMIEDIR, "cld_tau.dat"),
-                                          vert_ref_wno = 1e4/lamax,
-                                          vert_skip = 28,
-                                          vert_coord = 1,
-                                          vert_xscale = f_strato,
-                                          vert_yscale = 1.0)
+        # Create an optical depth profile
+        tau_strato = smart.interface.CloudTau(vert_file = os.path.join(smart.interface.CLDMIEDIR, "cld_tau.dat"),
+                                              vert_ref_wno = 1e4/lamax,
+                                              vert_skip = 28,
+                                              vert_coord = 1,
+                                              vert_xscale = f_strato,
+                                              vert_yscale = 1.0)
 
-    # Create an Aerosol object with our stratocumulus mie scattering and optical depths
-    strato = smart.interface.Aerosols(miemodes=[mie_strato],
-                                      mietau=[tau_strato])
+        # Create an Aerosol object with our stratocumulus mie scattering and optical depths
+        strato = smart.interface.Aerosols(miemodes=[mie_strato],
+                                          mietau=[tau_strato])
 
-    sim.aerosols = strato
+        sim.aerosols = strato
 
-    sim.write_smart(write_file = True)
-    sim.run_smart()
+        sim.write_smart(write_file = True)
+        sim.run_smart()
 
-    sim.open_outputs()
-    wl = sim.output.rad.lam
-    flux = sim.output.rad.pflux
-    sflux = sim.output.rad.sflux
+        sim.open_outputs()
+        wl = sim.output.rad.lam
+        flux = sim.output.rad.pflux
+        sflux = sim.output.rad.sflux
 
-    adj_flux = flux/sflux
+        flux = flux/sflux
 
-    return(wl, adj_flux)
+    return(wl, flux)
 
 def strato_noCIA(lamin, lamax, res):
 
@@ -989,7 +1077,7 @@ def cloud_weight_highw_noo4(lamin, lamax, res):
     return(noo4_wl, avg_flux)
 
 def cloud_weight(lamin, lamax, res):
-    ocean_wl, ocean_flux = ocean_outgassing(lamin, lamax, res)
+    ocean_wl, ocean_flux = earth_like_hyak(lamin, lamax, res)
     ocean_wl2, ocean_flux2 = cirrus(lamin, lamax,res)
     ocean_wl3, ocean_flux3 = strato(lamin, lamax, res)
     m, m_clouds = smart.utils.get_common_masks(ocean_wl, ocean_wl2)
@@ -997,7 +1085,7 @@ def cloud_weight(lamin, lamax, res):
     return(ocean_wl, avg_flux)
 
 def cloud_weight_noo4(lamin, lamax, res):
-    noo4_wl, noo4_flux = ocean_outgassing(lamin, lamax, res)
+    noo4_wl, noo4_flux = earth_like_hyak(lamin, lamax, res)
     noo4_wl2, noo4_flux2 = cirrus_noCIA(lamin, lamax, res)
     noo4_wl3, noo4_flux3 = strato_noCIA(lamin, lamax, res)
     print(len(noo4_wl), len(noo4_wl2), len(noo4_wl3))
