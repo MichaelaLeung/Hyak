@@ -33,7 +33,7 @@ def run_prox(lamin, lamax, res):
     maxwn = int(1e4/lamin)
     smart_file = name + "_" + str(minwn) + "_" + str(maxwn) + "cm_toa.rad"
     try:
-        f = open(smart_file)
+        f = open('/gscratch/vsm/mwjl/projects/high_res/smart_output'+smart_file)
         print("file exists")
         data = smart.readsmart.read_rad(smart_file)
         wl = data.lam
@@ -42,6 +42,7 @@ def run_prox(lamin, lamax, res):
         flux = flux/sflux
     except IOError:
         print("File does not exist")
+        sim.set_run_in_place(place)
         place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
         sim.set_run_in_place(place)
         sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
@@ -162,8 +163,8 @@ def run_earth(lamin, lamax, res):
 
 def clouds_out(lamin, lamax, res):
     wl, flux = run_prox(lamin, lamax, res)
-    wl2, flux2 = cloud_weight(lamin, lamax, res)
-    wl3, flux3 = cloud_weight(lamin, lamax, res)
+    wl2, flux2 = clouds(lamin, lamax, 0, res)
+    wl3, flux3 = clouds(lamin, lamax, 1, res)
     avg_flux = (0.5*flux[:min(len(flux), len(flux2), len(flux3))]+0.25*flux2[:min(len(flux), len(flux2), len(flux3))]+0.25*flux3[:min(len(flux), len(flux2), len(flux3))])
     return(wl, avg_flux)
 
@@ -174,7 +175,7 @@ def ocean_loss(lamin, lamax, res):
     maxwn = int(1e4/lamin)
     smart_file = name + "_" + str(minwn) + "_" + str(maxwn) + "cm_toa.rad"
     try:
-        f = open(smart_file)
+        f = open('/gscratch/vsm/mwjl/projects/high_res/smart_output'+smart_file)
         print("file exists")
         data = smart.readsmart.read_rad(smart_file)
         wl = data.lam
@@ -242,7 +243,7 @@ def ocean_outgassing(lamin, lamax, res):
     maxwn = int(1e4/lamin)
     smart_file = name + "_" + str(minwn) + "_" + str(maxwn) + "cm_toa.rad"
     try:
-        f = open(smart_file)
+        f = open('/gscratch/vsm/mwjl/projects/high_res/smart_output'+smart_file)
         print("file exists")
         data = smart.readsmart.read_rad(smart_file)
         wl = data.lam
@@ -689,8 +690,8 @@ if __name__ == '__main__':
         # On a mox compute node: ready to run
         print('job submitted') 
 #        integ_calc(0.74, 0.78, 0)
-        read_integ()
-#        flux_calc(0.76, 0.78,0)
+#        read_integ()
+        flux_calc(0.76, 0.78,0)
     else:
         fluxes(0.60,0.70)
 
