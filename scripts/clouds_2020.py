@@ -394,7 +394,7 @@ def outgassing_cirrus(lamin, lamax, res):
     label = "Ocean Outgassing"
     sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/earth_noveg_highw.alb"
     sim.set_planet_proxima_b()
-    sim.load_atmosphere_from_pt(infile, addn2 = False)
+    sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
     
     o2 = sim.atmosphere.gases[3]
     o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
@@ -475,7 +475,7 @@ def outgassing_strato(lamin, lamax, res):
     label = "Ocean Outgassing"
     sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/earth_noveg_highw.alb"
     sim.set_planet_proxima_b()
-    sim.load_atmosphere_from_pt(infile, addn2 = False)
+    sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
     
     o2 = sim.atmosphere.gases[3]
     o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
@@ -975,7 +975,7 @@ def cloud_weight_highw(lamin, lamax, res):
     ocean_wl, ocean_flux = ocean_outgassing(lamin, lamax, res)
     ocean_wl2, ocean_flux2 = outgassing_cirrus(lamin, lamax,res)
     ocean_wl3, ocean_flux3 = outgassing_strato(lamin, lamax, res)
-    m, m_clouds = smart.utils.get_common_masks(ocean_wl, ocean_wl2, res)
+    m, m_clouds = smart.utils.get_common_masks(ocean_wl, ocean_wl2)
     avg_flux = (0.5*ocean_flux[m_clouds]+0.25*ocean_flux2[m_clouds]+0.25*ocean_flux3[m_clouds])
     return(ocean_wl, avg_flux)
 
@@ -1089,17 +1089,6 @@ def integ_calc(lamin,lamax):
     f = open("/gscratch/vsm/mwjl/projects/high_res/scripts/integrations_" + str(lamin) + ".txt", "a")
     f.write(str(name) + "\n")
     f.close()
-
-
-def integ_calc(lamin,lamax, type):
-    f = open("/gscratch/vsm/mwjl/projects/high_res/scripts/integrations_" + str(lamin) + "transmiss" + str(type) +".txt", "a")
-    wl, out = flux_calc(lamin, lamax, type)
-    adds = integrate.trapz(out[:len(wl)], wl[:len(out)])
-    print(adds)    
-    name = str(z) + "   " + str(abs(adds)) 
-    f = open("/gscratch/vsm/mwjl/projects/high_res/scripts/integrations_" + str(lamin) + "transmiss" + str(type) +".txt", "a")
-    f.write(str(name) + "\n")
-    f.close()
     
 def master_plot():
     integ_calc(0.74, 0.78)
@@ -1112,17 +1101,20 @@ def read_integ():
     master_plot()
     files = "integrations_0.61.txt","integrations_0.67.txt", "integrations_0.74.txt", "integrations_1.25.txt"
     for name in files: 
+       
         output = np.genfromtxt(name)
-        phase = output[:,0] * 2 * np.math.pi / 100
+        phase = np.asarray(range(100))
+        phase = phase* 2 * np.math.pi / 100
+        print("output, phase", np.shape(output), np.shape(phase))
         phase.astype(np.float)
-        fig, ax = plt.subplots(figsize = (12,12))
-        ax.plot(phase, output[:,1])
-        ax.set_title("Integration Metric over Phase")
-        ax.set_ylabel("Integration Metric")
-        ax.set_xlabel("Phase")
-        out_name = name[:-4] + ".png"
-        fig.savefig(out_name, bbox_inches = 'tight')
-        integ = integrate.trapz(output[:,1],phase) 
+#        fig, ax = plt.subplots(figsize = (12,12))
+#        ax.plot(phase, output)
+#        ax.set_title("Integration Metric over Phase")
+#        ax.set_ylabel("Integration Metric")
+#        ax.set_xlabel("Phase")
+#        out_name = name[:-4] + ".png"
+#        fig.savefig(out_name, bbox_inches = 'tight')
+        integ = integrate.trapz(output,phase) 
         f = open("/gscratch/vsm/mwjl/projects/high_res/scripts/integrations_fin_w.txt", "a")
         f.write(str(integ) + '\n')
         f.close()
@@ -1154,18 +1146,19 @@ if __name__ == '__main__':
       #  plotting(0.74,0.78,"Oxygen A band (0.76) Ocean Outgassing")
       #  plotting(1.25,1.29,"1.27 Ocean Outgassing")
         
-        integ_calc(0.61, 0.65)
-        integ_calc(0.67, 0.71)
-        integ_calc(0.74, 0.78)
-        integ_calc(1.25,1.29)
+#        integ_calc(0.61, 0.65)
+#        integ_calc(0.67, 0.71)
+#        integ_calc(0.74, 0.78)
+#        integ_calc(1.25,1.29)
 
-        plotting_noO4(0.61,0.65, "Gamma band (0.63) Ocean Outgassing")
-        plotting_noO4(0.67,0.71, "Oxygen B band (0.69) Ocean Outgassing")
-        plotting_noO4(0.74,0.78,"Oxygen A band (0.76) Ocean Outgassing")
-        plotting_noO4(1.25,1.29,"1.27 Ocean Outgassing")
+#        plotting_noO4(0.61,0.65, "Gamma band (0.63) Ocean Outgassing")
+#        plotting_noO4(0.67,0.71, "Oxygen B band (0.69) Ocean Outgassing")
+#        plotting_noO4(0.74,0.78,"Oxygen A band (0.76) Ocean Outgassing")
+#        plotting_noO4(1.25,1.29,"1.27 Ocean Outgassing")
 
         long()
-
+#        master_plot()
+#        read_integ()
         
     else:
         plotting(0.61,0.645,1,"Gamma band (0.63) Ocean Outgassing")
