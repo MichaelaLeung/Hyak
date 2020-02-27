@@ -94,99 +94,105 @@ def run_prox(lamin, lamax, res):
 
 def run_earth(lamin, lamax, res):
 
+    name = 'earth'
+    sim = smart.interface.Smart(tag = name)
+    minwn = int(1e4/lamax)
+    maxwn = int(1e4/lamin)
+    smart_file = name + "_" + str(minwn) + "_" + str(maxwn) + "cm_toa.rad"
+    try:
+        f = open('/gscratch/vsm/mwjl/projects/high_res/smart_output/'+smart_file)
+        print("file exists")
 
-    infile = name + "_" + str(minwn) + "_" + str(maxwn) + "cm_toa.rad"
+        infile = name + "_" + str(minwn) + "_" + str(maxwn) + "cm_sur.rad"
 
-    # Convert each line to vector, compose array of vectors
-    arrays = np.array([np.array(list(map(float, line.split()))) for line in open(infile)])
+        # Convert each line to vector, compose array of vectors
+        arrays = np.array([np.array(list(map(float, line.split()))) for line in open(infile)])
 
-    # Flatten and reshape into rectangle grid
-    arr = np.hstack(arrays).reshape((14, -1), order='F')
+        # Flatten and reshape into rectangle grid
+        arr = np.hstack(arrays).reshape((14, -1), order='F')
 
-    # Parse columns
-    lam   = arr[0,:]
-    wno   = arr[1,:]
-    solar = arr[2,:]
-    dir_flux  = arr[3,:]
-    diff_flux  = arr[4,:]
+        # Parse columns
+        lam   = arr[0,:]
+        wno   = arr[1,:]
+        solar = arr[2,:]
+        dir_flux  = arr[3,:]
+        diff_flux  = arr[4,:]
 
-    total_flux = dir_flux + diff_flux 
-    print(len(lam), len(total_flux))
-    transmiss = total_flux / solar
-    transmiss = transmiss / max(transmiss)
-    return(lam, transmiss)
+        total_flux = dir_flux + diff_flux 
+        print(len(lam), len(total_flux))
+        transmiss = total_flux / solar
+        transmiss = transmiss / max(transmiss)
+    except IOError: 
+        place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        sim.set_run_in_place(place)
+        sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
 
-    place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim = smart.interface.Smart(tag = "earth")
-    sim.set_run_in_place(place)
-    sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        infile = "/gscratch/vsm/mwjl/projects/high_res/inputs/earth_avg.pt"
+        label = "Simulated Earth-like planet orbiting Proxima Centauri"
+        sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/composite1_txt.txt"
+        sim.set_planet_proxima_b()
+        sim.load_atmosphere_from_pt(infile, addn2 = True)
+        
+        o2 = sim.atmosphere.gases[3]
+        o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
+        label = "Earth"
 
-    infile = "/gscratch/vsm/mwjl/projects/high_res/inputs/earth_avg.pt"
-    label = "Simulated Earth-like planet orbiting Proxima Centauri"
-    sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/composite1_txt.txt"
-    sim.set_planet_proxima_b()
-    sim.load_atmosphere_from_pt(infile, addn2 = True)
-    
-    o2 = sim.atmosphere.gases[3]
-    o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
-    label = "Earth"
+        sim.set_executables_automatically()
 
-    sim.set_executables_automatically()
+        sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016.par' #/gscratch/vsm/alinc/fixed_input/
+        sim.lblin.hitran_tag = 'hitran2016'
+        sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
+        sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
 
-    sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016.par' #/gscratch/vsm/alinc/fixed_input/
-    sim.lblin.hitran_tag = 'hitran2016'
-    sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
-    sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
+        sim.smartin.sza = 57
 
-    sim.smartin.sza = 57
+        sim.smartin.FWHM = res
+        sim.smartin.sample_res = res
 
-    sim.smartin.FWHM = res
-    sim.smartin.sample_res = res
+        sim.smartin.minwn = 1e4/lamax
+        sim.smartin.maxwn = 1e4/lamin 
 
-    sim.smartin.minwn = 1e4/lamax
-    sim.smartin.maxwn = 1e4/lamin 
+        sim.lblin.minwn = 1e4/lamax
+        sim.lblin.maxwn = 1e4/lamin 
 
-    sim.lblin.minwn = 1e4/lamax
-    sim.lblin.maxwn = 1e4/lamin 
+        sim.lblin.par_index = 7
+        sim.smartin.out_level = 3
+        sim.gen_lblscripts()
+        sim.run_lblabc()
+        sim.write_smart(write_file = True)
+        sim.run_smart()
 
-    sim.lblin.par_index = 7
-    sim.smartin.out_level = 3
-    sim.gen_lblscripts()
-    sim.run_lblabc()
-    sim.write_smart(write_file = True)
-    sim.run_smart()
+        sim.open_outputs()
+        sur_path_temp = str(sim.output.rad.path)
+        sur_path = sur_path_temp[:-7] + "sur.rad"
 
-    sim.open_outputs()
-    sur_path_temp = str(sim.output.rad.path)
-    sur_path = sur_path_temp[:-7] + "sur.rad"
+        infile = sur_path
 
-    infile = sur_path
+        # Convert each line to vector, compose array of vectors
+        arrays = np.array([np.array(list(map(float, line.split()))) for line in open(infile)])
 
-    # Convert each line to vector, compose array of vectors
-    arrays = np.array([np.array(list(map(float, line.split()))) for line in open(infile)])
+        # Flatten and reshape into rectangle grid
+        arr = np.hstack(arrays).reshape((14, -1), order='F')
 
-    # Flatten and reshape into rectangle grid
-    arr = np.hstack(arrays).reshape((14, -1), order='F')
+        # Parse columns
+        lam   = arr[0,:]
+        wno   = arr[1,:]
+        solar = arr[2,:]
+        dir_flux  = arr[3,:]
+        diff_flux  = arr[4,:]
 
-    # Parse columns
-    lam   = arr[0,:]
-    wno   = arr[1,:]
-    solar = arr[2,:]
-    dir_flux  = arr[3,:]
-    diff_flux  = arr[4,:]
-
-    total_flux = dir_flux + diff_flux 
-    print(len(lam), len(total_flux))
-    transmiss = total_flux / solar
-    transmiss = transmiss / max(transmiss)
+        total_flux = dir_flux + diff_flux 
+        print(len(lam), len(total_flux))
+        transmiss = total_flux / solar
+        transmiss = transmiss / max(transmiss)
     return(lam, transmiss)
 
 def clouds_out(lamin, lamax, res):
     wl, flux = run_prox(lamin, lamax, res)
-    wl2, flux2 = cloud_weight(lamin, lamax, 0, res)
-    wl3, flux3 = cloud_weight(lamin, lamax, 1, res)
+    wl2, flux2 = cloud_weight(lamin, lamax, res)
+    wl3, flux3 = cloud_weight(lamin, lamax, res)
     avg_flux = (0.5*flux[:min(len(flux), len(flux2), len(flux3))]+0.25*flux2[:min(len(flux), len(flux2), len(flux3))]+0.25*flux3[:min(len(flux), len(flux2), len(flux3))])
     return(wl, avg_flux)
 
