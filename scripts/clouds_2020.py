@@ -14,11 +14,12 @@ from scipy.interpolate import interp1d
 import scipy.integrate as integrate
 
 def earth_like_hyak(lamin, lamax, res):
-    name = 'prox'
-    sim = smart.interface.Smart(tag = name)
+    name = '/gscratch/vsm/mwjl/projects/high_res/smart_output/'+'prox' + str(res)
+    sim = smart.interface.Smart(tag = 'prox'+str(res))
     minwn = int(1e4/lamax)
     maxwn = int(1e4/lamin)
     smart_file = name + "_" + str(minwn) + "_" + str(maxwn) + "cm_toa.rad"
+    print(smart_file)
     try:
         f = open(smart_file)
         print("file exists")
@@ -80,12 +81,22 @@ def earth_like_hyak(lamin, lamax, res):
         flux = sim.output.rad.pflux
         sflux = sim.output.rad.sflux
         flux = (flux/sflux)
-    return(wl, flux)
+        return(wl, flux)
+    else:
+        data = smart.readsmart.read_rad(smart_file)
+        wl = data.lam
+        flux = data.pflux
+        sflux = data.sflux
+        flux = flux/sflux
+        return(wl, flux)
+        f = open('/gscratch/vsm/mwjl/projects/high_res/smart_output/'+smart_file)
+        print('/gscratch/vsm/mwjl/projects/high_res/smart_output/'+smart_file)
+        return(wl, flux) 
 
 def earth(lamin, lamax, res):
     
     place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
-    sim = smart.interface.Smart(tag = "earth")
+    sim = smart.interface.Smart(tag = "earth"+str(res))
     sim.set_run_in_place(place)
     sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
     sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
@@ -180,11 +191,12 @@ def cloud_frac():
 
 def cirrus(lamin, lamax, res):
 
-    name = 'prox_cirrus'
-    sim = smart.interface.Smart(tag = name)
+    name = '/gscratch/vsm/mwjl/projects/high_res/smart_output/'+'prox_cirrus'+str(res)
+    sim = smart.interface.Smart(tag = 'prox_cirrus'+str(res))
     minwn = int(1e4/lamax)
     maxwn = int(1e4/lamin)
     smart_file = name + "_" + str(minwn) + "_" + str(maxwn) + "cm_toa.rad"
+    print(smart_file)
     try:
         f = open(smart_file)
         print("file exists")
@@ -271,12 +283,23 @@ def cirrus(lamin, lamax, res):
         sflux = sim.output.rad.sflux
 
         flux = flux/sflux
+    else:
+        data = smart.readsmart.read_rad(smart_file)
+        wl = data.lam
+        flux = data.pflux
+        sflux = data.sflux
+        flux = flux/sflux
+        return(wl, flux)
+        f = open('/gscratch/vsm/mwjl/projects/high_res/smart_output/'+smart_file)
+        print('/gscratch/vsm/mwjl/projects/high_res/smart_output/'+smart_file)
+        return(wl, flux)
+
 
     return(wl, flux)
 
 def strato(lamin, lamax, res):
-    name = 'prox_strato'
-    sim = smart.interface.Smart(tag = name)
+    name = '/gscratch/vsm/mwjl/projects/high_res/smart_output/'+'prox_strato'+str(res)
+    sim = smart.interface.Smart(tag = 'prox_strato'+str(res))
     minwn = int(1e4/lamax)
     maxwn = int(1e4/lamin)
     smart_file = name + "_" + str(minwn) + "_" + str(maxwn) + "cm_toa.rad"
@@ -368,17 +391,28 @@ def strato(lamin, lamax, res):
         sflux = sim.output.rad.sflux
 
         flux = flux/sflux
+    else:
+        data = smart.readsmart.read_rad(smart_file)
+        wl = data.lam
+        flux = data.pflux
+        sflux = data.sflux
+        flux = flux/sflux
+        return(wl, flux)
+        f = open('/gscratch/vsm/mwjl/projects/high_res/smart_output/'+smart_file)
+        print('/gscratch/vsm/mwjl/projects/high_res/smart_output/'+smart_file)
+        return(wl, flux)
+
 
     return(wl, flux)
 
 def ocean_outgassing(lamin, lamax, res):
-    name = 'highw'
-    sim = smart.interface.Smart(tag = name)
+    name = '/gscratch/vsm/mwjl/projects/high_res/smart_output/'+'highw'+str(res)
+    sim2 = smart.interface.Smart(tag = 'highw'+str(res))
     minwn = int(1e4/lamax)
     maxwn = int(1e4/lamin)
     smart_file = name + "_" + str(minwn) + "_" + str(maxwn) + "cm_toa.rad"
     try:
-        f = open(smart_file)
+        f = open("/gscratch/vsm/mwjl/projects/high_res/smart_output/"+smart_file)
         print("file exists")
         data = smart.readsmart.read_rad(smart_file)
         wl = data.lam
@@ -442,13 +476,13 @@ def ocean_outgassing(lamin, lamax, res):
     return(wl, flux)
 
 def outgassing_cirrus(lamin, lamax, res):
-    name = 'highw_cirrus'
-    sim = smart.interface.Smart(tag = name)
+    name = '/gscratch/vsm/mwjl/projects/high_res/smart_output/'+'highw_cirrus'+str(res)
+    sim = smart.interface.Smart(tag = 'highw_cirrus'+str(res))
     minwn = int(1e4/lamax)
     maxwn = int(1e4/lamin)
     smart_file = name + "_" + str(minwn) + "_" + str(maxwn) + "cm_toa.rad"
     try:
-        f = open(smart_file)
+        f = open("/gscratch/vsm/mwjl/projects/high_res/smart_output/" + smart_file)
         print("file exists")
         data = smart.readsmart.read_rad(smart_file)
         wl = data.lam
@@ -537,13 +571,13 @@ def outgassing_cirrus(lamin, lamax, res):
     return(wl, flux)
 
 def outgassing_strato(lamin, lamax, res):
-    name = 'highw_strato'
-    sim = smart.interface.Smart(tag = name)
+    name = '/gscratch/vsm/mwjl/projects/high_res/smart_output/'+'highw_strato'+str(res)
+    sim = smart.interface.Smart(tag = 'highw_strato'+str(res))
     minwn = int(1e4/lamax)
     maxwn = int(1e4/lamin)
     smart_file = name + "_" + str(minwn) + "_" + str(maxwn) + "cm_toa.rad"
     try:
-        f = open(smart_file)
+        f = open("/gscratch/vsm/mwjl/projects/high_res/smart_output/" + smart_file)
         print("file exists")
         data = smart.readsmart.read_rad(smart_file)
         wl = data.lam
@@ -1063,7 +1097,8 @@ def cloud_weight_highw(lamin, lamax, res):
     ocean_wl, ocean_flux = ocean_outgassing(lamin, lamax, res)
     ocean_wl2, ocean_flux2 = outgassing_cirrus(lamin, lamax,res)
     ocean_wl3, ocean_flux3 = outgassing_strato(lamin, lamax, res)
-    m, m_clouds = smart.utils.get_common_masks(ocean_wl, ocean_wl2)
+    m, m_clouds = smart.utils.get_common_masks(ocean_wl, ocean_wl3)
+    print(len(ocean_wl), len(ocean_wl2), len(ocean_wl3))
     avg_flux = (0.5*ocean_flux[m_clouds]+0.25*ocean_flux2[m_clouds]+0.25*ocean_flux3[m_clouds])
     return(ocean_wl, avg_flux)
 
@@ -1234,7 +1269,7 @@ if __name__ == '__main__':
       #  plotting(0.74,0.78,"Oxygen A band (0.76) Ocean Outgassing")
       #  plotting(1.25,1.29,"1.27 Ocean Outgassing")
         
-#        integ_calc(0.61, 0.65)
+         integ_calc(0.61, 0.65)
 #        integ_calc(0.67, 0.71)
 #        integ_calc(0.74, 0.78)
 #        integ_calc(1.25,1.29)
@@ -1244,10 +1279,10 @@ if __name__ == '__main__':
 #        plotting_noO4(0.74,0.78,"Oxygen A band (0.76) Ocean Outgassing")
 #        plotting_noO4(1.25,1.29,"1.27 Ocean Outgassing")
 
-        long()
+#        long()
 #        master_plot()
 #        read_integ()
-        
+         cloud_weight_highw(0.74, 0.78,0.1)       
     else:
         plotting(0.61,0.645,1,"Gamma band (0.63) Ocean Outgassing")
 
