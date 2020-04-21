@@ -599,9 +599,9 @@ def cloud_weight_highw(lamin, lamax, res):
     return(ocean_wl, avg_flux, avg_sflux)
 
 def cloud_weight(lamin, lamax, res):
-    ocean_wl, ocean_flux = earth_like_hyak(lamin, lamax, res)
-    ocean_wl2, ocean_flux2 = cirrus(lamin, lamax,res)
-    ocean_wl3, ocean_flux3 = strato(lamin, lamax, res)
+    ocean_wl, ocean_flux, ocean_sflux= earth_like_hyak(lamin, lamax, res)
+    ocean_wl2, ocean_flux2, ocean_sflux = cirrus(lamin, lamax,res)
+    ocean_wl3, ocean_flux3, ocean_sflux = strato(lamin, lamax, res)
     m, m_clouds = smart.utils.get_common_masks(ocean_wl, ocean_wl2)
     avg_flux = (0.5*ocean_flux[m]+0.25*ocean_flux2[m]+0.25*ocean_flux3[m])
     avg_sflux = (0.5*ocean_flux[m]+0.25*ocean_flux2[m]+0.25*ocean_flux3[m])
@@ -632,7 +632,7 @@ def plotting(atmos):
     ax.set_xlabel("Wavelength ($\mu$m)")
     ax2 = ax.twinx()
     ax2.set_ylabel("Planet-to-star contrast ratio")     
-    ax2.plot(wl[:len(flux)], fpfs:len(wl)])
+    ax2.plot(wl[:len(flux)], fpfs[:len(wl)])
     ax.set_title(label)
     ax.set_xlim(0.5,2)
     ax.axvspan(0.61, 0.65, alpha=0.5, color='0.85')
