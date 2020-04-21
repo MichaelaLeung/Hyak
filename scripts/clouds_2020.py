@@ -500,7 +500,7 @@ def outgassing_cirrus(lamin, lamax, res):
         label = "Ocean Outgassing"
         sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/earth_noveg_highw.alb"
         sim.set_planet_proxima_b()
-        sim.load_atmosphere_from_pt(infile, addn2 = False)
+        sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
         
         o2 = sim.atmosphere.gases[3]
         o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
@@ -594,7 +594,7 @@ def outgassing_strato(lamin, lamax, res):
         label = "Ocean Outgassing"
         sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/earth_noveg_highw.alb"
         sim.set_planet_proxima_b()
-        sim.load_atmosphere_from_pt(infile, addn2 = False)
+        sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
         
         o2 = sim.atmosphere.gases[3]
         o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
@@ -1097,6 +1097,13 @@ def cloud_weight_highw(lamin, lamax, res):
     m, m_clouds = smart.utils.get_common_masks(ocean_wl, ocean_wl3)
     print(len(ocean_wl), len(ocean_wl2), len(ocean_wl3))
     avg_flux = (0.5*ocean_flux[m_clouds]+0.25*ocean_flux2[m_clouds]+0.25*ocean_flux3[m_clouds])
+    fig, ax = plt.subplots(figsize = (10,10))
+    ax.plot(ocean_wl, ocean_flux, label = "clear sky")
+    ax.plot(ocean_wl2, ocean_flux2, label =  "all cirrus") 
+    ax.plot(ocean_wl3, ocean_flux3, label = "all strato")
+    ax.plot(ocean_wl, avg_flux, label = "50% cloudy")
+    ax.legend()
+    fig.savefig("cloud_compare"+str(lamin)+".png")
     return(ocean_wl, avg_flux)
 
 def cloud_weight_highw_noo4(lamin, lamax, res):
@@ -1279,7 +1286,8 @@ if __name__ == '__main__':
 #        long()
 #        master_plot()
 #        read_integ()
-         cloud_weight_highw(0.74, 0.78,0.1)       
+         cloud_weight_highw(0.67, 0.71,0.1) 
+         cloud_weight_highw(1.25, 1.29, 0.1)      
     else:
         plotting(0.61,0.645,1,"Gamma band (0.63) Ocean Outgassing")
 
