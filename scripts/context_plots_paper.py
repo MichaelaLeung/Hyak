@@ -606,6 +606,73 @@ def cloud_weight(lamin, lamax, res):
     avg_flux = (0.5*ocean_flux[m]+0.25*ocean_flux2[m]+0.25*ocean_flux3[m])
     avg_sflux = (0.5*ocean_flux[m]+0.25*ocean_flux2[m]+0.25*ocean_flux3[m])
     return(ocean_wl, avg_flux, avg_sflux)
+    
+def ocean_loss(lamin, lamax, res):
+    name = 'highd'
+    sim = smart.interface.Smart(tag = name)
+    minwn = int(1e4/lamax)
+    maxwn = int(1e4/lamin)
+    smart_file = name + "_" + str(minwn) + "_" + str(maxwn) + "cm_toa.rad"
+    try:
+        f = open('/gscratch/vsm/mwjl/projects/high_res/smart_output/'+smart_file)
+        print("file exists")
+        data = smart.readsmart.read_rad(smart_file)
+        wl = data.lam
+        flux = data.pflux
+        sflux = data.sflux
+        flux = flux/sflux
+    except IOError:
+        print("File does not exist")
+        place = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+
+        sim = smart.interface.Smart(tag = "highd")
+        sim.set_run_in_place(place)
+        sim.smartin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        sim.lblin.out_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        sim.smartin.abs_dir = '/gscratch/vsm/mwjl/projects/high_res/smart_output'
+        
+        infile = "/gscratch/vsm/mwjl/projects/high_res/inputs/10bar_O2_dry.pt_filtered.pt"
+        label = "Simulated post ocean-loss planet orbiting Proxima Centauri"
+        sim.smartin.alb_file = "/gscratch/vsm/mwjl/projects/high_res/inputs/desert_highd.alb"
+        sim.set_planet_proxima_b()
+        sim.load_atmosphere_from_pt(infile, addn2 = False, scaleP = 1.0)
+       
+        o2 = sim.atmosphere.gases[1]
+        o2.cia_file = '/gscratch/vsm/mwjl/projects/high_res/inputs/o4_calc.cia'
+
+        sim.set_run_in_place() 
+        sim.set_executables_automatically()
+
+        sim.lblin.par_file = '/gscratch/vsm/alinc/fixed_input/HITRAN2016.par' #/gscratch/vsm/alinc/fixed_input/
+        sim.lblin.hitran_tag = 'hitran2016'
+        sim.lblin.fundamntl_file = '/gscratch/vsm/alinc/fixed_input/fundamntl2016.dat'
+        sim.lblin.lblabc_exe = '/gscratch/vsm/alinc/exec/lblabc_2016'
+
+        sim.smartin.sza = 57
+
+        sim.smartin.FWHM = res
+        sim.smartin.sample_res = res
+
+        sim.smartin.minwn = 1e4/lamax
+        sim.smartin.maxwn = 1e4/lamin 
+
+        sim.lblin.minwn = 1e4/lamax
+        sim.lblin.maxwn = 1e4/lamin
+
+        sim.smartin.iraylei = [4]
+        sim.smartin.vraylei = [1]
+
+        sim.gen_lblscripts()
+        sim.run_lblabc()
+        sim.write_smart(write_file = True)
+        sim.run_smart()
+
+        sim.open_outputs()
+        wl = sim.output.rad.lam
+        flux = sim.output.rad.pflux
+        sflux = sim.output.rad.sflux
+
+    return(wl, flux, sflux)
 
 def plotting(atmos):
     lamin = 0.5
@@ -620,6 +687,9 @@ def plotting(atmos):
     if atmos == 'prox': 
         wl, flux, sflux = cloud_weight(lamin, lamax, res)
         label = "Simulated Earth-like planet orbiting Proxima Centauri"
+    elif atmos == 'highd':
+        wl, flux, sflux = ocean_loss(lamin, lamax, res)
+        label = "Simulated clear sky post-ocean-loss planet orbiting Proxima Centauri"
     elif atmos == 'highw':
         wl, flux, sflux = cloud_weight_highw(lamin, lamax, res)
         label = "Simulated cloudy ocean outgassing planet orbiting Proxima Centauri"
@@ -661,9 +731,9 @@ if __name__ == '__main__':
                                rm_after_submit = True)
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
-        plotting("prox")
-#        plotting("highd") 
-        plotting("highw")
+#        plotting("prox")
+        plotting("highd") 
+ #       plotting("highw")
 #    else:
         # Presumably, on a regular computer: ready to run
         plotting("prox")      
