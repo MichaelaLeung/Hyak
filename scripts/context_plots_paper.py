@@ -35,17 +35,17 @@ def plotting(atmos):
     plt.switch_backend('agg')
         
     fig, ax = plt.subplots(figsize = (30, 10))
-    if atmos = 'prox': 
+    if atmos == 'prox': 
         wl, flux = cloud_weight(lamin, lamax, res)
         label = "Simulated Earth-like planet orbiting Proxima Centauri"
-    elif atmos = 'highd':
+    elif atmos == 'highd':
         wl, flux = ocean_loss(lamin, lamax,res)
         label = "Simulated clear sky post ocean-loss planet orbiting Proxima Centauri"
-    elif atmos = 'highw':
-        wl, flux = cloud_weight_highd(lamin, lamax, res)
+    elif atmos == 'highw':
+        wl, flux = cloud_weight_highw(lamin, lamax, res)
         label = "Simulated cloudy ocean outgassing planet orbiting Proxima Centauri"
 
-    ax.plot(wl, flux)
+    ax.plot(wl[:len(flux)], flux[:len(wl)])
     ax.set_ylabel("Reflectance")
     ax.set_xlabel("Wavelength ($\mu$m)")
     ax2 = ax.twinx()
@@ -78,10 +78,10 @@ if __name__ == '__main__':
                                rm_after_submit = True)
     elif platform.node().startswith("n"):
         # On a mox compute node: ready to run
-        plotting("prox")
-        plotting("highd") 
-        plotting("highw")
-    else:
+     #   plotting("prox")
+#        plotting("highd") 
+#        plotting("highw")
+#    else:
         # Presumably, on a regular computer: ready to run
         plotting("prox")      
 
